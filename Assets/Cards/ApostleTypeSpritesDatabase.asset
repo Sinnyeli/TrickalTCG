@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41b56854d9364e524b6d627f0cee0b5e, type: 3}
+  m_Name: ApostleTypeSpritesDatabase
+  m_EditorClassIdentifier: 
+  witch: {fileID: 21300000, guid: a73eee8afe3f7e6c288472188b8ebdc5, type: 3}
+  elf: {fileID: 21300000, guid: 0c84cabc6b56d30549e7888a4567eb04, type: 3}
+  dragon: {fileID: 21300000, guid: 999a687ab71f708f7bc7d62bcdac8a01, type: 3}
+  sprite: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
+  elemental: {fileID: 21300000, guid: 13360f28d36dbb549b49cec9253544ac, type: 3}
+  ghost: {fileID: 21300000, guid: bccddf9e7940652579ea3c9bd636c7a0, type: 3}
+  Beastfolk: {fileID: 21300000, guid: c37e25460829a4b0eb24530e12fce145, type: 3}
