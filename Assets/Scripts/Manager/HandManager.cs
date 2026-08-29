@@ -7,11 +7,16 @@ public class HandManager : MonoBehaviour
     [SerializeField] private int maxHandSize = 7;
 
     [Header("UI")]
-    [SerializeField] private Transform handContainer;
+    [SerializeField] public Transform handContainer;
     [SerializeField] private Transform commanderContainer;
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private HandLayout handLayout;
+    [SerializeField] private HandLayout commanderHandLayout;
 
+    public Transform HandContainer => handContainer;
+    // Runtime card. Essentially represent card hand is holding.
+    private RuntimeCard runtimeCard;
+    public RuntimeCard RuntimeCard => runtimeCard;
     private List<RuntimeCard> hand = new List<RuntimeCard>();
 
     public IReadOnlyList<RuntimeCard> Hand => hand;
@@ -22,36 +27,44 @@ public class HandManager : MonoBehaviour
     // ADD CARD
     // =========================================================
 
-    public bool AddCard(RuntimeCard card)
+
+
+   public bool AddCard(RuntimeCard card)
+{
+    if (card == null)
+        return false;
+
+    if (card.Zone != CardZone.Hand)
     {
-        if (card == null)
-            return false;
+        Debug.LogWarning(
+            $"{card.Data.cardName} cannot be added to Hand. " +
+            $"Current Zone: {card.Zone}"
+        );
 
-        // If somehow a Commander is passed through AddCard,
-        // send it to the Commander system instead.
-        if (card.IsCommander)
-        {
-            AddCommander(card);
-            return true;
-        }
+        return false;
+    }
 
-        // Check normal hand limit
-        if (NormalCardCount() >= maxHandSize)
-        {
-            Debug.Log(
-                $"Hand full! {card.Data.cardName} was exhausted."
-            );
-
-            // Eventually this should go to an Exhaust/Discard system.
-            return false;
-        }
-
-        hand.Add(card);
-
-        CreateCardView(card);
-
+    if (card.IsCommander)
+    {
+        AddCommander(card);
         return true;
     }
+
+    if (NormalCardCount() >= maxHandSize)
+    {
+        Debug.Log(
+            $"Hand full! {card.Data.cardName} was exhausted."
+        );
+
+        return false;
+    }
+
+    hand.Add(card);
+
+    CreateCardView(card);
+
+    return true;
+}
 
     // =========================================================
     // ADD COMMANDER
@@ -93,7 +106,7 @@ public class HandManager : MonoBehaviour
 
         if (cardView != null)
         {
-            cardView.SetCard(card.Data);
+            cardView.SetCard(card);
         }
         else
         {
@@ -105,6 +118,21 @@ public class HandManager : MonoBehaviour
         RefreshHandLayout();
     }
 
+    // =========================================================
+    // Set Card UI
+    // =========================================================
+
+    public void SetCard(RuntimeCard card)
+        {
+            runtimeCard = card;
+
+            // Display the card's data
+            // Keep whatever UI code you already have here.
+            //
+            // Example:
+            // nameText.text = card.Data.cardName;
+            // descriptionText.text = card.Data.description;
+        }
     // =========================================================
     // CREATE COMMANDER UI
     // =========================================================
@@ -121,7 +149,7 @@ public class HandManager : MonoBehaviour
 
         if (cardView != null)
         {
-            cardView.SetCard(commander.Data);
+            cardView.SetCard(commander);
         }
         else
         {
@@ -130,17 +158,43 @@ public class HandManager : MonoBehaviour
             );
         }
     }
+    // =========================================================
+    // Destroy COMMANDER UI
+    // =========================================================
+
+    private void DestroyCommanderView(RuntimeCard commander)
+{
+    foreach (Transform child in commanderContainer)
+    {
+        CardView cardView =
+            child.GetComponent<CardView>();
+
+        if (cardView == null)
+            continue;
+
+        if (cardView.runtimeCard == commander)
+        {
+            Destroy(cardView.gameObject);
+            return;
+        }
+    }
+}
 
     // =========================================================
     // HAND LAYOUT
     // =========================================================
 
-    private void RefreshHandLayout()
+    public void RefreshHandLayout()
     {
         if (handLayout != null)
         {
             handLayout.RefreshLayout();
         }
+    }
+    public void RefreshCommanderLayout()
+    {
+    if (commanderHandLayout != null)
+        commanderHandLayout.RefreshLayout();
     }
 
     // =========================================================
@@ -216,39 +270,87 @@ public class HandManager : MonoBehaviour
     }
 
     // =========================================================
-    // RETURN COMMANDER TO HAND
+    // PlayCardFromHand
     // =========================================================
 
-    public void ReturnCommanderToHand(RuntimeCard commander)
+  
+public bool PlayCardFromHand(RuntimeCard card)
+{
+    
+    if (card == null)
+        return false;
+
+    BattlefieldManager battlefield =
+        GameManager.Instance.playerBattlefieldManager;
+
+    if (battlefield == null)
+        return false;
+
+    bool success =
+        battlefield.PlayCard(card);
+
+    if (!success)
+        return false;
+
+    // Remove from Hand.
+    RemoveCardFromHand(card);
+
+    return true;
+}
+
+
+    // =========================================================
+    // Find card from hand. 
+    // =========================================================
+
+private CardView FindCardView(RuntimeCard card)
+{
+    foreach (Transform child in handContainer)
     {
-        if (commander == null)
-            return;
+        CardView cardView =
+            child.GetComponent<CardView>();
 
-        if (!commander.IsCommander)
-        {
-            Debug.LogError(
-                "Attempted to return a non-Commander card " +
-                "as Commander."
-            );
+        if (cardView == null)
+            continue;
 
-            return;
-        }
-
-        if (!(commander.Data is ApostleData))
-        {
-            Debug.LogError(
-                "Only Apostles can be Commanders."
-            );
-
-            return;
-        }
-
-        // Make sure it isn't already in hand.
-        if (hand.Contains(commander))
-            return;
-
-        hand.Add(commander);
-
-        CreateCommanderView(commander);
+        if (cardView.runtimeCard == card)
+            return cardView;
     }
+
+    return null;
+}
+    // =========================================================
+    // Delete card from hand
+    // =========================================================
+
+public bool RemoveCardFromHand(RuntimeCard card)
+{
+    if (!hand.Contains(card))
+        return false;
+
+    hand.Remove(card);
+
+    if (card.IsCommander)
+    {
+        DestroyCommanderView(card);
+    }
+    else
+    {
+        DestroyHandView(card);
+    }
+
+    RefreshHandLayout();
+
+    return true;
+}
+
+private void DestroyHandView(RuntimeCard card)
+{
+    CardView cardView = FindCardView(card);
+
+    if (cardView != null)
+    {
+        Destroy(cardView.gameObject);
+    }
+}
 }

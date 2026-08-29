@@ -24,6 +24,7 @@ public class DeckManager : MonoBehaviour
                 deckData.commander,
                 true
             );
+            Commander.ChangeZone(CardZone.Hand);
         }
         else
         {
@@ -63,6 +64,8 @@ public class DeckManager : MonoBehaviour
 
         RuntimeCard card = drawPile[0];
         drawPile.RemoveAt(0);
+
+        card.ChangeZone(CardZone.Hand);
 
         return card;
     }

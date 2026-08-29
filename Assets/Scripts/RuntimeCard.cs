@@ -9,6 +9,8 @@ public class RuntimeCard
 
     public CardZone Zone { get; private set; }
 
+    public PlayerSide Owner { get; private set; }
+
     public RuntimeCard(CardData data, bool isCommander = false)
     {
         Data = data;
@@ -20,4 +22,8 @@ public class RuntimeCard
     {
         Zone = newZone;
     }
+    public void SetOwner(PlayerSide owner)
+{
+    Owner = owner;
+}
 }
