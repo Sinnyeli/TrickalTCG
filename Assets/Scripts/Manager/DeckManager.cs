@@ -48,11 +48,16 @@ public class DeckManager : MonoBehaviour
             $"Cards: {drawPile.Count}"
         );
     }
+      public int GetDeckCount()
+    {
+        return drawPile.Count;
+    }
 
     public RuntimeCard GetCommander()
     {
         return Commander;
     }
+  
 
     public RuntimeCard DrawCard()
     {

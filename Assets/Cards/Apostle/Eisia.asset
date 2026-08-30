@@ -14,10 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "\uC544\uC774\uC2DC\uC544"
   description: "\uB4F1\uC7A5: \uB0C9\uB3D9\uACE0 \uD558\uB098\uB97C \uC18C\uD658\uD55C\uB2E4."
-  cardType: 1
   artwork: {fileID: 21300000, guid: 90df300fa7b1ce205be835511122f93b, type: 3}
-  manaCost: 5
-  apostleType: 4
+  manaCost: 1
   typeIcon: {fileID: 21300000, guid: 0c84cabc6b56d30549e7888a4567eb04, type: 3}
   attack: 3
   health: 3

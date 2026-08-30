@@ -18,7 +18,9 @@ public class BattlefieldManager : MonoBehaviour
     private GameManager gameManager;
 
     private List<RuntimeCard> minions = new List<RuntimeCard>();
-
+    // This has the list of cards in field
+    private Dictionary<RuntimeCard, MinionView> minionViews =
+        new Dictionary<RuntimeCard, MinionView>();
     public IReadOnlyList<RuntimeCard> Minions => minions;
 
     public bool PlayCard(RuntimeCard card)
@@ -58,17 +60,18 @@ public class BattlefieldManager : MonoBehaviour
             return false;
         }
 
-        // Change logical zone.
-        card.ChangeZone(CardZone.Field);
 
         // Add to battlefield list.
         minions.Add(card);
 
+        // Change logical zone.
+        card.ChangeZone(CardZone.Field);
+         card.InitializeCombatStats();
         // Create visual representation.
         CreateMinionView(card);
 
         Debug.Log(
-            $"{card.Data.cardName} entered the battlefield."
+            $"{card.Data.cardName} entered the {side} battlefield."
         );
 
         return true;
@@ -76,13 +79,10 @@ public class BattlefieldManager : MonoBehaviour
 
     private void CreateMinionView(RuntimeCard card)
     {
-        GameObject minionObject = Instantiate(
-            minionPrefab,
-            minionContainer
-        );
+        GameObject minionObject = Instantiate(minionPrefab,minionContainer);
 
-        MinionView minionView =
-            minionObject.GetComponent<MinionView>();
+        MinionView minionView = minionObject.GetComponent<MinionView>();
+        minionViews[card] = minionView;
 
         if (minionView != null)
         {
@@ -95,60 +95,43 @@ public class BattlefieldManager : MonoBehaviour
             );
         }
     }
-
-    public bool PlayCardAtPosition(
-    RuntimeCard card,
-    Vector2 screenPosition)
-{
-    if (card == null)
-        return false;
-
-    if (card.Zone != CardZone.Hand)
-        return false;
-
-    if (minions.Count >= maxMinions)
+    private void RemoveMinionView(RuntimeCard card)
     {
-        Debug.Log("Battlefield is full!");
-        return false;
+        if (!minionViews.TryGetValue(card, out MinionView view))
+            return;
+
+        if (view != null)
+            Destroy(view.gameObject);
+
+        minionViews.Remove(card);
     }
 
-    RectTransform rect =
-        minionContainer as RectTransform;
 
-    Vector2 localPosition;
+    public void RefreshAttackers(PlayerSide side)
+    {
+        foreach (RuntimeCard card in minions)
+        {
+            if (card.Owner == side)
+            {
+                card.ResetForTurn();
+            }
+        }
+    }
+    public bool RemoveCard(RuntimeCard card)
+    {
+        if (card == null)
+            return false;
 
-    RectTransformUtility.ScreenPointToLocalPointInRectangle(
-        rect,
-        screenPosition,
-        null,
-        out localPosition
-    );
+        if (!minions.Contains(card))
+            return false;
 
-    int insertionIndex =
-        battlefieldLayout.GetInsertionIndex(
-            localPosition.x
-        );
+        minions.Remove(card);
 
-    // Remove from hand
-    bool removed =
-        GameManager.Instance.HandManager
-            .RemoveCardFromHand(card);
+        card.ChangeZone(CardZone.Graveyard);
 
-    if (!removed)
-        return false;
+        RemoveMinionView(card);
 
-    // Add to battlefield
-    card.ChangeZone(CardZone.Field);
+        return true;
+    }
 
-    minions.Insert(
-        insertionIndex,
-        card
-    );
-
-    CreateMinionView(card);
-
-    battlefieldLayout.RefreshLayout();
-
-    return true;
-}
 }

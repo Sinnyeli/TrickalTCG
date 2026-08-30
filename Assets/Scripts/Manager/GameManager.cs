@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -7,25 +8,33 @@ public class GameManager : MonoBehaviour
     [Header("Game Systems")]
     [SerializeField] private DeckManager deckManager;
     [SerializeField] private HandManager handManager;
-    [SerializeField]
-    public BattlefieldManager playerBattlefieldManager;
+    [SerializeField] private BattlefieldManager playerBattlefieldManager;
+    [SerializeField] private DeckManager opponentDeckManager;
+    [SerializeField] private HandManager opponentHandManager;
+    [SerializeField] private CombatManager combatManager;
 
-    [SerializeField]
-    public BattlefieldManager opponentBattlefieldManager;
+
+    private List<RuntimeCard> opponentHand = new List<RuntimeCard>(); // Temp List for OpponentHand. 
+    [SerializeField] private BattlefieldManager opponentBattlefieldManager;
+    [SerializeField] private TurnManager turnManager;
 
     [Header("Game Setup")]
     [SerializeField] private int startingHandSize = 0;
 
     public DeckManager DeckManager => deckManager;
     public HandManager HandManager => handManager;
+    public TurnManager TurnManager => turnManager;
+    public CombatManager CombatManager => combatManager;
+
+    // Get; Return function because I keep forgetting 
     public BattlefieldManager PlayerBattlefieldManager =>
         playerBattlefieldManager;
 
     public BattlefieldManager OpponentBattlefieldManager =>
         opponentBattlefieldManager;
 
-        [SerializeField]
-        private DeckManager opponentDeck;
+    [SerializeField]
+    private DeckManager opponentDeck;
 
     private void Awake()
     {
@@ -47,61 +56,141 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Starting TCG Game...");
 
+    // Player
         deckManager.InitializeDeck();
+        RuntimeCard playerCommander = deckManager.GetCommander();
 
-        RuntimeCard commander =
-            deckManager.GetCommander();
-
-        if (commander != null)
+        if (playerCommander != null)
         {
-            handManager.AddCommander(commander);
+            playerCommander.SetOwner(PlayerSide.Player);
+            handManager.AddCommander(playerCommander);
         }
 
-        DrawStartingHand();
+            DrawStartingHand();
+    // Opponent (Testing)
+        opponentDeckManager.InitializeDeck();
+        RuntimeCard opponentCommander = opponentDeckManager.GetCommander();
+
+       if (opponentCommander != null)
+        {
+            opponentHandManager.AddCommander(opponentCommander);
+            opponentCommander.SetOwner(PlayerSide.Opponent);
+            // Add to list above
+        }
+        DrawCard(PlayerSide.Opponent);
     }
 
     private void DrawStartingHand()
     {
         for (int i = 0; i < startingHandSize; i++)
         {
-            DrawCard();
+            DrawCard(PlayerSide.Player);
         }
     }
 
-    public void DrawCard()
+        public void DrawCard(PlayerSide side)
+        {
+            DeckManager deck;
+            HandManager hand;
+
+            if (side == PlayerSide.Player)
+            {
+                deck = deckManager;
+                hand = handManager;
+            }
+            else
+            {
+                deck = opponentDeckManager;
+                hand = opponentHandManager;
+            }
+
+            RuntimeCard card = deck.DrawCard();
+
+            if (card == null)
+            {
+                Debug.Log(
+                    $"{side} cannot draw. Deck is empty."
+                );
+
+                return;
+            }
+
+            card.SetOwner(side);
+
+            bool added = hand.AddCard(card);
+
+            if (!added)
+            {
+                deck.Discard(card);
+            }
+        }
+
+
+
+
+/////////////
+/// Get Card/Battlefield
+/// ////////
+
+
+
+    public BattlefieldManager GetBattlefield(PlayerSide side)
+    {
+    switch (side)
+    {
+        case PlayerSide.Player:
+            return PlayerBattlefieldManager;
+
+        case PlayerSide.Opponent:
+            return OpponentBattlefieldManager;
+
+        default:
+            return null;
+    }
+    }
+
+    public DeckManager GetDeck(PlayerSide side)
+    {
+        if (side == PlayerSide.Player)
+            return deckManager;
+
+        return opponentDeckManager;
+    }
+
+////////////////////////////
+    // Test Area. 
+///////////////////////////
+    public void TestOpponentPlay()
     {
         RuntimeCard card =
-            deckManager.DrawCard();
+            opponentHandManager.GetFirstNormalCard();
+            if (card == null)
+            {
+                Debug.Log("Opponent has no normal cards to play.");
+                return;
+            }
 
-        if (card == null)
-            return;
+            Debug.Log(
+                $"Opponent attempting to play {card.Data.cardName}"
+            );
 
-        bool added =
-            handManager.AddCard(card);
+            bool played =
+                opponentHandManager.PlayCardFromHand(card);
 
-        if (!added)
-        {
-            deckManager.Discard(card);
+            if (!played)
+            {
+                Debug.Log(
+                    $"Opponent could not play {card.Data.cardName}"
+                );
+            }
         }
-    }
-
-    // Test
-    public void TestOpponentPlay()
-{
-    RuntimeCard card = opponentDeck.DrawCard();
-
-    if (card == null)
+    public void TestDraw()
     {
-        Debug.Log("Opponent has no cards to play.");
-        return;
+        DrawCard(PlayerSide.Player);
     }
-
-    bool success =
-        opponentBattlefieldManager.PlayCard(card);
-
-    if (!success)
+    public void EndTurn()
     {
-        Debug.Log("Opponent could not play the card.");
+        turnManager.EndTurn();
     }
-}
+
 }

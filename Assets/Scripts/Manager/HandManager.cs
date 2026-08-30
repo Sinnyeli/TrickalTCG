@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class HandManager : MonoBehaviour
 {
+    [Header("Game Manager")]
+    [SerializeField] private GameManager gameManager;
+
     [Header("Hand Settings")]
     [SerializeField] private int maxHandSize = 7;
 
@@ -13,11 +16,15 @@ public class HandManager : MonoBehaviour
     [SerializeField] private HandLayout handLayout;
     [SerializeField] private HandLayout commanderHandLayout;
 
+    [SerializeField]
+    private PlayerSide owner;
+
     public Transform HandContainer => handContainer;
     // Runtime card. Essentially represent card hand is holding.
     private RuntimeCard runtimeCard;
     public RuntimeCard RuntimeCard => runtimeCard;
     private List<RuntimeCard> hand = new List<RuntimeCard>();
+    // This holds the list of cards in hand.
 
     public IReadOnlyList<RuntimeCard> Hand => hand;
 
@@ -67,7 +74,7 @@ public class HandManager : MonoBehaviour
 }
 
     // =========================================================
-    // ADD COMMANDER
+    // Add Commander to hand 
     // =========================================================
     public void AddCommander(RuntimeCard commander)
 {
@@ -96,17 +103,16 @@ public class HandManager : MonoBehaviour
 
     private void CreateCardView(RuntimeCard card)
     {
-        GameObject cardObject = Instantiate(
-            cardPrefab,
-            handContainer
-        );
+         GameObject obj =
+        Instantiate(cardPrefab, handContainer);
 
-        CardView cardView =
-            cardObject.GetComponent<CardView>();
+        CardviewBase view =
+            obj.GetComponent<CardviewBase>();
 
-        if (cardView != null)
+
+        if (view != null)
         {
-            cardView.SetCard(card);
+            view.SetCard(card);
         }
         else
         {
@@ -126,12 +132,6 @@ public class HandManager : MonoBehaviour
         {
             runtimeCard = card;
 
-            // Display the card's data
-            // Keep whatever UI code you already have here.
-            //
-            // Example:
-            // nameText.text = card.Data.cardName;
-            // descriptionText.text = card.Data.description;
         }
     // =========================================================
     // CREATE COMMANDER UI
@@ -139,17 +139,17 @@ public class HandManager : MonoBehaviour
 
     private void CreateCommanderView(RuntimeCard commander)
     {
-        GameObject cardObject = Instantiate(
+        GameObject obj = Instantiate(
             cardPrefab,
             commanderContainer
         );
+        CardviewBase view =
+                    obj.GetComponent<CardviewBase>();
 
-        CardView cardView =
-            cardObject.GetComponent<CardView>();
 
-        if (cardView != null)
+        if (view != null)
         {
-            cardView.SetCard(commander);
+            view.SetCard(commander);
         }
         else
         {
@@ -181,7 +181,7 @@ public class HandManager : MonoBehaviour
 }
 
     // =========================================================
-    // HAND LAYOUT
+    // Hand Layout Refresh
     // =========================================================
 
     public void RefreshHandLayout()
@@ -198,7 +198,7 @@ public class HandManager : MonoBehaviour
     }
 
     // =========================================================
-    // HAND COUNT
+    // Hand count discounting commander
     // =========================================================
 
     private int NormalCardCount()
@@ -217,7 +217,7 @@ public class HandManager : MonoBehaviour
     }
 
     // =========================================================
-    // DRAW TEST
+    // DRAW TEST (used with button OnClick())
     // =========================================================
 
     public void DrawTestCard()
@@ -251,7 +251,7 @@ public class HandManager : MonoBehaviour
     }
 
     // =========================================================
-    // REMOVE CARD
+    // Remove Card Here
     // =========================================================
 
     public bool RemoveCard(RuntimeCard card)
@@ -270,18 +270,54 @@ public class HandManager : MonoBehaviour
     }
 
     // =========================================================
-    // PlayCardFromHand
+    // Play Card from Hand here. 
     // =========================================================
 
   
 public bool PlayCardFromHand(RuntimeCard card)
 {
-    
     if (card == null)
         return false;
 
-    BattlefieldManager battlefield =
-        GameManager.Instance.playerBattlefieldManager;
+    if (card.IsCommander)
+    {
+        PlayCommanderFromHand(card);
+        return false;
+    }
+
+    /// Turn Manager and Mana
+    TurnManager turnManager =
+        GameManager.Instance.TurnManager;
+
+    if (turnManager == null)
+        return false;
+
+    if (!turnManager.IsMyTurn(card.Owner))
+    {
+        Debug.Log(
+            $"{card.Data.cardName} cannot be played. " +
+            $"It is not {card.Owner}'s turn."
+        );
+
+        return false;
+    }
+
+    int cost = card.Data.manaCost;
+
+    if (!turnManager.CanSpendMana(card.Owner, cost))
+    {
+        Debug.Log(
+            $"{card.Data.cardName} cannot be played. " +
+            $"Not enough mana."
+        );
+
+        return false;
+    }
+
+
+
+    // Playing Card on Battlefield
+    BattlefieldManager battlefield = GameManager.Instance.GetBattlefield(card.Owner);
 
     if (battlefield == null)
         return false;
@@ -291,12 +327,81 @@ public bool PlayCardFromHand(RuntimeCard card)
 
     if (!success)
         return false;
+   // Only spend mana after the card successfully enters the field.
+    turnManager.SpendMana(card.Owner, cost);
 
-    // Remove from Hand.
     RemoveCardFromHand(card);
 
     return true;
 }
+
+    public bool PlayCommanderFromHand(RuntimeCard card)
+    {
+        if (card == null)
+            return false;
+
+        if (!card.IsCommander)
+        {
+            Debug.LogWarning(
+                $"{card.Data.cardName} is not a Commander."
+            );
+
+            return false;
+        }
+
+                /// Turn Manager and Mana
+        TurnManager turnManager =
+            GameManager.Instance.TurnManager;
+
+        if (turnManager == null)
+            return false;
+
+        if (!turnManager.IsMyTurn(card.Owner))
+        {
+        Debug.Log(
+            $"{card.Data.cardName} cannot be played. " +
+            $"It is not {card.Owner}'s turn."
+        );
+
+        return false;
+        }
+
+        int cost = card.Data.manaCost;
+
+        if (!turnManager.CanSpendMana(card.Owner, cost))
+        {
+            Debug.Log(
+                $"{card.Data.cardName} cannot be played. " +
+                $"Not enough mana."
+            );
+
+            return false;
+        }
+
+        BattlefieldManager battlefield = GameManager.Instance.GetBattlefield(card.Owner);
+
+        if (battlefield == null)
+        {
+            Debug.LogError(
+                $"No BattlefieldManager found for {card.Owner}."
+            );
+
+            return false;
+        }
+
+        bool success =
+            battlefield.PlayCard(card);
+
+        if (!success)
+            return false;
+    // Only spend mana after the card successfully enters the field.
+        turnManager.SpendMana(card.Owner, cost);
+
+        RemoveCardFromHand(card);
+
+        return true;
+    }
+
 
 
     // =========================================================
@@ -353,4 +458,23 @@ private void DestroyHandView(RuntimeCard card)
         Destroy(cardView.gameObject);
     }
 }
+
+// Test Area
+
+public RuntimeCard GetFirstNormalCard()
+{
+    foreach (RuntimeCard card in hand)
+    {
+        if (card == null)
+            continue;
+
+        if (!card.IsCommander)
+            return card;
+    }
+
+    return null;
+}
+
+
+
 }
