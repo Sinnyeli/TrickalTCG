@@ -1,6 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameState
+{
+    Loading,
+    Playing,
+    Paused,
+    GameOver
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -13,6 +21,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HandManager opponentHandManager;
     [SerializeField] private CombatManager combatManager;
 
+    [Header("Player Views")]
+    [SerializeField] private GameObject playerViewPrefab;
+    [SerializeField] private Transform playerPosition;
+    [SerializeField] private Transform opponentPosition;
+
+
+    [Header("Other UIs")]
+    [SerializeField] private GameOverUI gameOverUI;
 
     private List<RuntimeCard> opponentHand = new List<RuntimeCard>(); // Temp List for OpponentHand. 
     [SerializeField] private BattlefieldManager opponentBattlefieldManager;
@@ -20,11 +36,23 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Setup")]
     [SerializeField] private int startingHandSize = 0;
+    private GameState currentGameState = GameState.Playing;
 
+    public GameState CurrentGameState => currentGameState;
+
+    
     public DeckManager DeckManager => deckManager;
     public HandManager HandManager => handManager;
     public TurnManager TurnManager => turnManager;
     public CombatManager CombatManager => combatManager;
+
+    public bool IsGameOver =>
+        currentGameState == GameState.GameOver;
+    public bool IsPlayerTurn =>
+    turnManager.IsMyTurn(PlayerSide.Player);
+    public bool CanPlayerAct =>
+        currentGameState == GameState.Playing &&
+        IsPlayerTurn;
 
     // Get; Return function because I keep forgetting 
     public BattlefieldManager PlayerBattlefieldManager =>
@@ -36,16 +64,21 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private DeckManager opponentDeck;
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+private void Awake()
+{
+    Debug.Log(
+        $"GameManager Awake | ID: {GetInstanceID()} | " +
+        $"GameOverUI: {gameOverUI}"
+    );
 
-        Instance = this;
+    if (Instance != null && Instance != this)
+    {
+        Destroy(gameObject);
+        return;
     }
+
+    Instance = this;
+}
 
     private void Start()
     {
@@ -54,9 +87,10 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
-        Debug.Log("Starting TCG Game...");
-
+         gameOverUI.Hide();
     // Player
+        CreatePlayerViews();
+        
         deckManager.InitializeDeck();
         RuntimeCard playerCommander = deckManager.GetCommander();
 
@@ -68,6 +102,7 @@ public class GameManager : MonoBehaviour
 
             DrawStartingHand();
     // Opponent (Testing)
+
         opponentDeckManager.InitializeDeck();
         RuntimeCard opponentCommander = opponentDeckManager.GetCommander();
 
@@ -79,7 +114,16 @@ public class GameManager : MonoBehaviour
         }
         DrawCard(PlayerSide.Opponent);
     }
+        public void SetGameState(GameState newState)
+    {
+        currentGameState = newState;
 
+        Debug.Log(
+            $"Game State changed to: {currentGameState}"
+        );
+    }
+
+       
     private void DrawStartingHand()
     {
         for (int i = 0; i < startingHandSize; i++)
@@ -124,8 +168,64 @@ public class GameManager : MonoBehaviour
                 deck.Discard(card);
             }
         }
+//// //////////////////
+///  Create Player Views
+/// ///////////////////
+/// 
+private void CreatePlayerViews()
+{
+    CreatePlayerView(
+        PlayerSide.Player,
+        playerPosition
+    );
 
+    CreatePlayerView(
+        PlayerSide.Opponent,
+        opponentPosition
+    );
+}
 
+private void CreatePlayerView(PlayerSide side, Transform position)
+{
+
+    GameObject viewObject =
+        Instantiate(playerViewPrefab, position);
+
+    RectTransform viewRect =
+        viewObject.GetComponent<RectTransform>();
+
+    RectTransform positionRect =
+        position.GetComponent<RectTransform>();
+
+    if (viewRect == null || positionRect == null)
+    {
+         Destroy(viewObject);
+        return;
+    }
+
+    // Match the position marker.
+    viewRect.anchoredPosition = Vector2.zero;
+    viewRect.localRotation = Quaternion.identity;
+    viewRect.localScale = Vector3.one;
+    PlayerView playerView =
+        viewObject.GetComponent<PlayerView>();
+
+    if (playerView == null)
+    {
+        Debug.LogError(
+            "PlayerView prefab is missing PlayerView component."
+        );
+
+        Destroy(viewObject);
+        return;
+    }
+
+    playerView.SetSide(side);
+
+    Debug.Log(
+        $"Created {side} PlayerView."
+    );
+}
 
 
 /////////////
@@ -156,6 +256,53 @@ public class GameManager : MonoBehaviour
 
         return opponentDeckManager;
     }
+
+
+    //////////////////////////
+    /// Player Turn
+    /// /////////////////////
+
+
+
+       public bool EndPlayerTurn()
+    {
+        if (!CanPlayerAct)
+        {
+            Debug.Log("Player cannot end turn right now.");
+            return false;
+        }
+
+        GameManager.Instance.EndPlayerTurn();
+        return true;
+    }
+    //////////////////////////
+    /// Win/Lose
+    /// /////////////////////
+
+     public void PlayerDefeated(PlayerSide defeatedSide)
+        {
+            if (IsGameOver)
+                return;
+
+            PlayerSide winner =
+                defeatedSide == PlayerSide.Player
+                    ? PlayerSide.Opponent
+                    : PlayerSide.Player;
+
+            SetGameState(GameState.GameOver);
+
+            Debug.Log(
+                $"{defeatedSide} has been defeated!"
+            );
+
+            Debug.Log(
+                $"{winner} wins!"
+            );
+
+            gameOverUI.Show(winner);
+        }
+ 
+
 
 ////////////////////////////
     // Test Area. 
@@ -188,9 +335,6 @@ public class GameManager : MonoBehaviour
     {
         DrawCard(PlayerSide.Player);
     }
-    public void EndTurn()
-    {
-        turnManager.EndTurn();
-    }
+
 
 }

@@ -13,9 +13,15 @@ public abstract class MinionViewBase : MonoBehaviour
     public TMP_Text healthText;
     public Image raceImage;
 
-    private RuntimeCard runtimeCard;
-
+    protected RuntimeCard runtimeCard;
     public RuntimeCard RuntimeCard => runtimeCard;
+
+    private bool isSelected;
+    public bool IsSelected => isSelected;
+    public void SetSelected(bool selected)
+    {
+        isSelected = selected; 
+    }
 
     public void SetMinion(RuntimeCard card)
     {
@@ -48,8 +54,7 @@ public abstract class MinionViewBase : MonoBehaviour
             attackText.gameObject.SetActive(true);
             healthText.gameObject.SetActive(true);
 
-            attackText.text = monster.attack.ToString();
-            healthText.text = monster.health.ToString();
+            RefreshStats();
         }
 
         if (data is ApostleData apostle)
@@ -58,8 +63,7 @@ public abstract class MinionViewBase : MonoBehaviour
             healthText.gameObject.SetActive(true);
             raceImage.gameObject.SetActive(true);
 
-            attackText.text = apostle.attack.ToString();
-            healthText.text = apostle.health.ToString();
+            RefreshStats();
             raceImage.sprite = apostle.typeIcon;
         }
 
@@ -67,5 +71,19 @@ public abstract class MinionViewBase : MonoBehaviour
         Debug.Log(
             $"MinionView created for {data.cardName}"
         );
+        
     }
+    public void RefreshStats()
+{
+    if (runtimeCard == null)
+        return;
+
+    if (attackText != null)
+        attackText.text = runtimeCard.GetAttack().ToString();
+
+    if (healthText != null)
+        healthText.text = runtimeCard.CurrentHealth.ToString();
+}
+
+
 }

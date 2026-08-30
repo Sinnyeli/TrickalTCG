@@ -77,24 +77,42 @@ public class BattlefieldManager : MonoBehaviour
         return true;
     }
 
-    private void CreateMinionView(RuntimeCard card)
+private void CreateMinionView(RuntimeCard card)
+{
+    GameObject minionObject =
+        Instantiate(minionPrefab, minionContainer);
+
+    MinionView minionView =
+        minionObject.GetComponent<MinionView>();
+
+    if (minionView == null)
     {
-        GameObject minionObject = Instantiate(minionPrefab,minionContainer);
+        Debug.LogError(
+            "Minion prefab does not have a MinionView!"
+        );
 
-        MinionView minionView = minionObject.GetComponent<MinionView>();
-        minionViews[card] = minionView;
-
-        if (minionView != null)
-        {
-            minionView.SetMinion(card);
-        }
-        else
-        {
-            Debug.LogError(
-                "Minion Prefab is missing MinionView component!"
-            );
-        }
+        Destroy(minionObject);
+        return;
     }
+
+    minionView.SetMinion(card);
+
+    minionViews[card] = minionView;
+}
+    public void RefreshMinionView(RuntimeCard card)
+    {
+        if (card == null)
+            return;
+
+        if (!minionViews.TryGetValue(card, out MinionView view))
+            return;
+
+        if (view == null)
+            return;
+
+        view.RefreshStats();
+    }   
+
     private void RemoveMinionView(RuntimeCard card)
     {
         if (!minionViews.TryGetValue(card, out MinionView view))
@@ -133,5 +151,24 @@ public class BattlefieldManager : MonoBehaviour
 
         return true;
     }
+
+    public void SetMinionSelected(RuntimeCard card, bool selected)
+{
+    if (card == null)
+        return;
+
+    if (!minionViews.TryGetValue(
+        card,
+        out MinionView view))
+    {
+        return;
+    }
+
+    if (view == null)
+        return;
+
+    view.SetSelected(selected);
+    battlefieldLayout.RefreshLayout();
+}
 
 }

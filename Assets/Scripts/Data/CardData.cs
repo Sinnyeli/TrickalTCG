@@ -11,6 +11,8 @@ public enum CardType
 public abstract class CardData : ScriptableObject
 {
     [Header("Basic Information")]
+    [SerializeField]private string cardID;
+    public string CardID => cardID;
     public string cardName;
     [TextArea]
     public string description;

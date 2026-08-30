@@ -12,6 +12,11 @@ public class BattlefieldLayout : MonoBehaviour
     [SerializeField] private float minScale = 0.7f;
     [SerializeField] private float maxScale = 1f;
 
+    [Header("Selection")]
+    [SerializeField] private float selectedScaleMultiplier = 1.15f;
+    // Select makes card bigger.
+
+
     [Header("Rotation")]
     [SerializeField] private float maxRotation = 0f;
 
@@ -78,6 +83,7 @@ public class BattlefieldLayout : MonoBehaviour
                     -maxRotation,
                     normalizedPosition
                 );
+
 
             // -----------------------------------------
             // Apply

@@ -7,26 +7,51 @@ using TMPro;
 
 public class MinionView : MinionViewBase, IPointerClickHandler
 {
-     public RuntimeCard runtimeCard;
 
-    public void OnPointerClick(
-        PointerEventData eventData)
+    private Vector3 originalScale;
+        private void Awake()
     {
-        if (runtimeCard == null)
-            return;
-
-        CombatManager combat =
-            GameManager.Instance.CombatManager;
-
-        if (combat.SelectedAttacker == null)
-        {
-            combat.SelectAttacker(runtimeCard);
-        }
-        else
-        {
-            combat.Attack(runtimeCard);
-        }
+        originalScale = transform.localScale;
     }
 
-    
+
+    public void OnPointerClick(
+            PointerEventData eventData)
+        {
+            Debug.Log(
+                $"Clicked Minion: " +
+                $"{runtimeCard?.Data.cardName}"
+            );
+
+            if (runtimeCard == null)
+            {
+                Debug.LogError(
+                    "MinionView has no RuntimeCard!"
+                );
+
+                return;
+            }
+
+            CombatManager combat =
+                GameManager.Instance.CombatManager;
+
+            if (combat == null)
+            {
+                Debug.LogError(
+                    "CombatManager is missing!"
+                );
+
+                return;
+            }
+
+            if (combat.SelectedAttacker == null)
+            {
+                combat.SelectAttacker(RuntimeCard);
+            }
+            else
+            {
+                combat.Attack(RuntimeCard);
+            }
+        }
 }
+

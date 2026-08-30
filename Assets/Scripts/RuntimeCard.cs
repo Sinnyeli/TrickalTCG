@@ -33,14 +33,8 @@ public class RuntimeCard
     }
     public void InitializeCombatStats()
     {
-        if (Data is MonsterData monster)
-        {
-            currentHealth = monster.health;
-        }
-        else if (Data is ApostleData apostle)
-        {
-            currentHealth = apostle.health;
-        }
+        currentHealth = GetMaxHealth();
+        canAttack = false;
 
         canAttack = false;
     }
@@ -48,13 +42,20 @@ public class RuntimeCard
     {
         canAttack = true;
     }
-        public void TakeDamage(int amount)
+     public void DisableAttack()
+    {
+        canAttack = false;
+    }
+
+    public void TakeDamage(int amount)
     {
         currentHealth -= amount;
 
         if (currentHealth < 0)
             currentHealth = 0;
     }
+
+
     public int GetAttack()
     {
         if (Data is MonsterData monster)
@@ -65,6 +66,19 @@ public class RuntimeCard
 
         return 0;
     }
+    public int GetMaxHealth()
+    {
+        if (Data is MonsterData monster)
+        {
+            return monster.health;
+        }
+        else if (Data is ApostleData apostle)
+        {
+            return apostle.health;
+        }
+    return 0;
+    }
+
     public void ResetForTurn()
     {
         canAttack = true;

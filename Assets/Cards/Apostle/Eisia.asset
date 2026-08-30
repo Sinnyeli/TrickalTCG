@@ -17,6 +17,6 @@ MonoBehaviour:
   artwork: {fileID: 21300000, guid: 90df300fa7b1ce205be835511122f93b, type: 3}
   manaCost: 1
   typeIcon: {fileID: 21300000, guid: 0c84cabc6b56d30549e7888a4567eb04, type: 3}
-  attack: 3
+  attack: 1
   health: 3
   maxEquipment: 3

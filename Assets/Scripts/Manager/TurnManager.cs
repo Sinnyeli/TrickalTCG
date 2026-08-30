@@ -51,6 +51,8 @@ public class TurnManager : MonoBehaviour
 
 public void StartTurn()
 {
+     if (GameManager.Instance.IsGameOver)
+        return;
     if (currentSide == PlayerSide.Player)
     {
         playerMaxMana = Mathf.Min(
@@ -79,9 +81,12 @@ public void StartTurn()
 
     GameManager.Instance.DrawCard(currentSide);
 }
+// Alt to make EndTurn private
 
     public void EndTurn()
     {
+        if (GameManager.Instance.IsGameOver)
+        return;
         Debug.Log(
             $"{currentSide} ended their turn."
         );
