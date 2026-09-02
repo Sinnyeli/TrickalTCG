@@ -7,6 +7,8 @@ public class RuntimeCard
     private bool canAttack;
     public int CurrentHealth => currentHealth;
     public bool CanAttack => canAttack;
+    private bool cannotAttackHero;
+    public bool CannotAttackHero => cannotAttackHero;
     public CardData Data { get; private set; }
 
     public bool IsCommander { get; private set; }
@@ -34,9 +36,22 @@ public class RuntimeCard
     public void InitializeCombatStats()
     {
         currentHealth = GetMaxHealth();
-        canAttack = false;
+     if (HasKeyword(CardKeyword.Rush))
+    {
+        canAttack = HasKeyword(CardKeyword.Rush); // if true it can attack
+        cannotAttackHero = true;
+    }
+    else
+    {
+        canAttack = HasKeyword(CardKeyword.Rush); // if false, it has no rush and can't attack anyways. Rather have additional check.
+        cannotAttackHero = true;
+    }
+        
+    }
 
-        canAttack = false;
+    public bool HasKeyword(CardKeyword keyword)
+    {
+        return Data.HasKeyword(keyword); // Check keyword
     }
     public void EnableAttack()
     {
@@ -82,5 +97,6 @@ public class RuntimeCard
     public void ResetForTurn()
     {
         canAttack = true;
+        cannotAttackHero = false;
     }
 }

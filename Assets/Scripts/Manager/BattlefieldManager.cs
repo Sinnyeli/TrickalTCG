@@ -66,13 +66,13 @@ public class BattlefieldManager : MonoBehaviour
 
         // Change logical zone.
         card.ChangeZone(CardZone.Field);
-         card.InitializeCombatStats();
+        card.InitializeCombatStats();
         // Create visual representation.
         CreateMinionView(card);
 
-        Debug.Log(
-            $"{card.Data.cardName} entered the {side} battlefield."
-        );
+        //Debug.Log($"{card.Data.cardName} entered the {side} battlefield.");
+
+        GameManager.Instance.EffectManager.ResolveBattlecry(card);
 
         return true;
     }
@@ -142,7 +142,7 @@ private void CreateMinionView(RuntimeCard card)
 
         if (!minions.Contains(card))
             return false;
-
+        GameManager.Instance.EffectManager.ResolveDeathrattle(card);
         minions.Remove(card);
 
         card.ChangeZone(CardZone.Graveyard);

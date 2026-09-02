@@ -49,25 +49,29 @@ public class CombatManager : MonoBehaviour
     }
 public bool Attack(RuntimeCard defender)
 {
+
+
+    RuntimeCard attacker = selectedAttacker;
+
+
     if (selectedAttacker == null)
     {
-        Debug.Log("No attacker selected.");
-        return false;
+          return false;
     }
-
+    // DIdn't select anything. 
     if (defender == null)
     {
         Debug.Log("No defender selected.");
         return false;
     }
-
+    // Cannot attack own minion.
     if (selectedAttacker.Owner == defender.Owner)
     {
         Debug.Log("Cannot attack your own minion.");
         return false;
     }
 
-    RuntimeCard attacker = selectedAttacker;
+
 
     Debug.Log(
         $"{attacker.Data.cardName} attacks " +
@@ -115,6 +119,28 @@ public bool Attack(PlayerView defender)
     }
 
     RuntimeCard attacker = selectedAttacker;
+
+         // Rush restriction.
+    if (attacker.CannotAttackHero)
+    {
+        Debug.Log(
+            $"{attacker.Data.cardName} cannot attack the Hero this turn."
+        );
+
+        return false;
+    }
+
+    // Taunt restriction. Unless opponent has bypass.
+    if (HasTaunt(defender.Side) &&
+        !attacker.HasKeyword(CardKeyword.Bypass))
+    {
+        Debug.Log(
+            "Cannot attack the Hero while a Taunt minion remains."
+        );
+
+        return false;
+    }
+
     int attackerDamage = attacker.GetAttack();
     
     Debug.Log(
@@ -130,9 +156,26 @@ public bool Attack(PlayerView defender)
     return true;
 }
 
+///////////
+///  Check if opponent side has taunt while attacking. This is a boolean. True/False thing.
+/// ///////
+
+private bool HasTaunt(PlayerSide defendingSide)
+{
+    BattlefieldManager battlefield =
+        GameManager.Instance.GetBattlefield(defendingSide);
+
+    foreach (RuntimeCard card in battlefield.Minions)
+    {
+        if (card.HasKeyword(CardKeyword.Taunt))
+            return true;
+    }
+
+    return false;
+}
 
 
-private void CheckDeath(RuntimeCard card)
+public void CheckDeath(RuntimeCard card)
 {
     if (card == null)
         return;

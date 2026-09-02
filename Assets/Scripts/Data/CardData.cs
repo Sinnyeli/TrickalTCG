@@ -17,6 +17,24 @@ public abstract class CardData : ScriptableObject
     [TextArea]
     public string description;
 
+    [Header("Effects")]
+    [SerializeField] private CardEffect battlecry;
+    [SerializeField] private CardEffect deathrattle;
+
+    public CardEffect Battlecry => battlecry;
+    public CardEffect Deathrattle => deathrattle;
+
+
+    [Header("Keywords")]
+    [SerializeField] private List<CardKeyword> keywords;
+
+    public bool HasKeyword(CardKeyword keyword)
+    {
+        return keywords != null &&
+               keywords.Contains(keyword);
+    }
+
+
     [Header("Visuals")]
     public Sprite artwork;
 

@@ -18,6 +18,15 @@ public class MinionView : MinionViewBase, IPointerClickHandler
     public void OnPointerClick(
             PointerEventData eventData)
         {
+            // If we have effect manager + effect manager is selecting target.
+            if (EffectTargetManager.Instance != null &&
+                EffectTargetManager.Instance.IsSelectingTarget)
+            {
+                EffectTargetManager.Instance.SelectTarget(RuntimeCard);
+                return;
+            }
+
+            //Otherwise it's just click minion.
             Debug.Log(
                 $"Clicked Minion: " +
                 $"{runtimeCard?.Data.cardName}"
@@ -53,5 +62,11 @@ public class MinionView : MinionViewBase, IPointerClickHandler
                 combat.Attack(RuntimeCard);
             }
         }
+
+
+
+
+
+        
 }
 

@@ -10,13 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
-  m_Name: Makasha
+  m_Name: Prickle
   m_EditorClassIdentifier: 
-  cardName: "\uB9C8\uCE74\uC0E4"
+  cardID: 
+  cardName: Prickle
   description: 
-  artwork: {fileID: 21300000, guid: 5210466fe13375404b40a02d502ace54, type: 3}
-  manaCost: 3
+  battlecry: {fileID: 11400000, guid: a1812a58a81a51d59a1da24b5495c597, type: 2}
+  deathrattle: {fileID: 0}
+  keywords: 02000000
+  artwork: {fileID: 21300000, guid: 9766c50a99f38f1a1b5a96e76e37ff26, type: 3}
+  manaCost: 0
   typeIcon: {fileID: 21300000, guid: a73eee8afe3f7e6c288472188b8ebdc5, type: 3}
-  attack: 2
-  health: 2
+  attack: 3
+  health: 3
   maxEquipment: 3

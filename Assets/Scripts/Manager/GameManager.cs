@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DeckManager opponentDeckManager;
     [SerializeField] private HandManager opponentHandManager;
     [SerializeField] private CombatManager combatManager;
+    [SerializeField] private EffectManager effectManager;
+
+
 
     [Header("Player Views")]
     [SerializeField] private GameObject playerViewPrefab;
@@ -45,6 +48,7 @@ public class GameManager : MonoBehaviour
     public HandManager HandManager => handManager;
     public TurnManager TurnManager => turnManager;
     public CombatManager CombatManager => combatManager;
+    public EffectManager EffectManager => effectManager;
 
     public bool IsGameOver =>
         currentGameState == GameState.GameOver;
@@ -335,6 +339,5 @@ private void CreatePlayerView(PlayerSide side, Transform position)
     {
         DrawCard(PlayerSide.Player);
     }
-
 
 }
