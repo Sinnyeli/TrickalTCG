@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(
@@ -6,18 +7,48 @@ using UnityEngine;
 )]
 public class DamageEffect : CardEffect
 {
-    [SerializeField] private int damage = 1;
+    [SerializeField] private int amount = 1;
 
-    [SerializeField] private EffectTarget targetType =
-        EffectTarget.EnemyUnit;
-
-    public EffectTarget TargetType => targetType;
-
-    public override void Resolve(RuntimeCard source)
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
+         if (source == null || targets == null)
+            return;
+
+        foreach (RuntimeCard target in targets)
+        {
+            if (target == null)
+                continue;
+
+            target.TakeDamage(amount);
+
+            Debug.Log(
+                $"{source.Data.cardName} dealt {amount} damage to " +
+                $"{target.Data.cardName}."
+            );
+
+            GameManager.Instance
+                .GetBattlefield(target.Owner)
+                .RefreshMinionView(target);
+
+            GameManager.Instance
+                .CombatManager
+                .CheckDeath(target);
+        }
+    }  
+
+       // Hero targeting
+    public void ResolveHero(
+        RuntimeCard source,
+        PlayerView target)
+    {
+        if (source == null || target == null)
+            return;
+
+        target.TakeDamage(amount);
+
         Debug.Log(
-            $"{source.Data.cardName} wants to deal " +
-            $"{damage} damage to {targetType}."
+            $"{source.Data.cardName} dealt {amount} damage to " +
+            $"{target.Side} Hero."
         );
     }
 }

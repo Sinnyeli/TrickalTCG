@@ -1,6 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class CardEffect : ScriptableObject
 {
-    public abstract void Resolve(RuntimeCard card);
+    [SerializeField]
+    protected EffectTargetType targetType;
+
+    public EffectTargetType TargetType => targetType;
+
+    public abstract void Resolve(RuntimeCard source, List<RuntimeCard> targets);
 }

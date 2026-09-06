@@ -41,10 +41,10 @@ public class TurnManager : MonoBehaviour
     currentSide = PlayerSide.Player;
     StartTurn();
 
-        Debug.Log(
+/*        Debug.Log(
             $"Turn {turnNumber} started. " +
             $"Current Side: {currentSide}. " +
-            $"Mana: {playerMana}");
+            $"Mana: {playerMana}");*/
     }
 
 
@@ -74,10 +74,10 @@ public void StartTurn()
         GameManager.Instance.OpponentBattlefieldManager.RefreshAttackers(PlayerSide.Opponent);
     }
 
-    Debug.Log(
+/*    Debug.Log(
         $"Turn {turnNumber} - {currentSide} turn. " +
         $"Mana: {GetCurrentMana()}/{GetMaxMana(currentSide)}"
-    );
+    ); */
 
     GameManager.Instance.DrawCard(currentSide);
 }

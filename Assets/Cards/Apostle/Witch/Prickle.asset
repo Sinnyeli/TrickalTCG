@@ -15,7 +15,7 @@ MonoBehaviour:
   cardID: 
   cardName: Prickle
   description: 
-  battlecry: {fileID: 11400000, guid: a1812a58a81a51d59a1da24b5495c597, type: 2}
+  battlecry: {fileID: 11400000, guid: 779d586208e8e66458a805660d42b763, type: 2}
   deathrattle: {fileID: 0}
   keywords: 02000000
   artwork: {fileID: 21300000, guid: 9766c50a99f38f1a1b5a96e76e37ff26, type: 3}

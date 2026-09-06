@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(
@@ -8,15 +9,14 @@ public class DrawCardEffect : CardEffect
 {
     [SerializeField] private int amount = 1;
 
-    public override void Resolve(RuntimeCard source)
-{
-    if (source == null)
-        return;
-
-    for (int i = 0; i < amount; i++)
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
-        GameManager.Instance.DrawCard(source.Owner);
-        Debug.Log("Effect triggered to Draw 1.");
-}
-}
+        if (source == null)
+            return;
+
+        for (int i = 0; i < amount; i++)
+        {
+            GameManager.Instance.DrawCard(source.Owner);
+        }
+    }
 }

@@ -43,7 +43,8 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentGameState => currentGameState;
 
-    
+    private PlayerView playerView;
+    private PlayerView opponentView;
     public DeckManager DeckManager => deckManager;
     public HandManager HandManager => handManager;
     public TurnManager TurnManager => turnManager;
@@ -154,16 +155,9 @@ private void Awake()
 
             RuntimeCard card = deck.DrawCard();
 
-            if (card == null)
+            if (card != null)
             {
-                Debug.Log(
-                    $"{side} cannot draw. Deck is empty."
-                );
-
-                return;
-            }
-
-            card.SetOwner(side);
+                card.SetOwner(side);
 
             bool added = hand.AddCard(card);
 
@@ -171,6 +165,13 @@ private void Awake()
             {
                 deck.Discard(card);
             }
+
+                return;
+            }
+            Debug.Log(
+                    $"{side} cannot draw. Deck is empty."
+                );
+            
         }
 //// //////////////////
 ///  Create Player Views
@@ -182,55 +183,60 @@ private void CreatePlayerViews()
         PlayerSide.Player,
         playerPosition
     );
+    playerView.SetSide(PlayerSide.Player);
 
     CreatePlayerView(
         PlayerSide.Opponent,
         opponentPosition
     );
-}
-
-private void CreatePlayerView(PlayerSide side, Transform position)
-{
-
-    GameObject viewObject =
-        Instantiate(playerViewPrefab, position);
-
-    RectTransform viewRect =
-        viewObject.GetComponent<RectTransform>();
-
-    RectTransform positionRect =
-        position.GetComponent<RectTransform>();
-
-    if (viewRect == null || positionRect == null)
-    {
-         Destroy(viewObject);
-        return;
+    opponentView.SetSide(PlayerSide.Opponent);
     }
-
-    // Match the position marker.
-    viewRect.anchoredPosition = Vector2.zero;
-    viewRect.localRotation = Quaternion.identity;
-    viewRect.localScale = Vector3.one;
-    PlayerView playerView =
-        viewObject.GetComponent<PlayerView>();
-
-    if (playerView == null)
+    private void CreatePlayerView(PlayerSide side, Transform position)
     {
-        Debug.LogError(
-            "PlayerView prefab is missing PlayerView component."
-        );
+        GameObject viewObject =
+            Instantiate(playerViewPrefab, position);
 
-        Destroy(viewObject);
-        return;
+        RectTransform viewRect =
+            viewObject.GetComponent<RectTransform>();
+
+        RectTransform positionRect =
+            position.GetComponent<RectTransform>();
+
+        if (viewRect == null || positionRect == null)
+        {
+            Destroy(viewObject);
+            return;
+        }
+
+        // Match the position marker.
+        viewRect.anchoredPosition = Vector2.zero;
+        viewRect.localRotation = Quaternion.identity;
+        viewRect.localScale = Vector3.one;
+
+        PlayerView view =
+            viewObject.GetComponent<PlayerView>();
+
+        if (view == null)
+        {
+            Debug.LogError(
+                "PlayerView prefab is missing PlayerView component."
+            );
+
+            Destroy(viewObject);
+            return;
+        }
+
+        view.SetSide(side);
+
+        if (side == PlayerSide.Player)
+        {
+            playerView = view;
+        }
+        else
+        {
+            opponentView = view;
+        }
     }
-
-    playerView.SetSide(side);
-
-    Debug.Log(
-        $"Created {side} PlayerView."
-    );
-}
-
 
 /////////////
 /// Get Card/Battlefield
@@ -260,7 +266,13 @@ private void CreatePlayerView(PlayerSide side, Transform position)
 
         return opponentDeckManager;
     }
+        public PlayerView GetPlayerView(PlayerSide side)
+    {
+        if (side == PlayerSide.Player)
+            return playerView;
 
+        return opponentView;
+    }
 
     //////////////////////////
     /// Player Turn

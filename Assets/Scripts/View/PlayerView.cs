@@ -33,12 +33,12 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
         if (side == PlayerSide.Player)
         {
             // Player-specific visual setup
-            Debug.Log("PlayerView set to PLAYER");
+//            Debug.Log("PlayerView set to PLAYER");
         }
         else if (side == PlayerSide.Opponent)
         {
             // Opponent-specific visual setup
-            Debug.Log("PlayerView set to OPPONENT");
+//            Debug.Log("PlayerView set to OPPONENT");
         }
 }
     private void RefreshHealth()
@@ -63,13 +63,17 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void OnPointerClick(
-        PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log(
             $"PlayerView clicked: {side}"
         );
-
+        if (EffectTargetManager.Instance != null &&
+            EffectTargetManager.Instance.IsSelectingTarget)
+        {
+            EffectTargetManager.Instance.SelectHeroTarget(this);
+            return;
+        }
         CombatManager combat =
             GameManager.Instance.CombatManager;
 
