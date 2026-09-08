@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+
 
 public class CardView : CardviewBase,
     IPointerClickHandler,
@@ -14,7 +16,7 @@ public class CardView : CardviewBase,
     private bool isDragging = false;
     public bool IsDragging => isDragging;
     private BattlefieldDropZone battlefieldDropZone;
-
+    public RuntimeCard RuntimeCard => runtimeCard;
 
 
     private void Awake()
@@ -55,29 +57,57 @@ public class CardView : CardviewBase,
     }
 
     public void OnEndDrag(PointerEventData eventData)
+{
+    isDragging = false;
+
+    if (runtimeCard == null)
     {
-            isDragging = false;
+        ReturnToHand();
+        return;
+    }
 
-        bool droppedOnBattlefield =
-            battlefieldDropZone != null &&
-            battlefieldDropZone.IsPointerInside(eventData);
+    // =====================================================
+    // ARTIFACT → APOSTLE
+    // =====================================================
 
-        if (droppedOnBattlefield)
+    if (runtimeCard.Data is ArtifactData)
+    {
+        MinionView target =
+            GetMinionUnderPointer(eventData);
+
+        if (target != null)
         {
-            bool played =
-                GameManager.Instance.HandManager
-                    .PlayCardFromHand(runtimeCard);
+            bool equipped =
+                target.TryEquipArtifact(runtimeCard);
 
-            if (played)
+            if (equipped)
                 return;
         }
 
-        // Either:
-        // 1. Dropped outside battlefield
-        // 2. Battlefield was full
-        // 3. Card couldn't be played
         ReturnToHand();
+        return;
     }
+
+    // =====================================================
+    // NORMAL CARD → BATTLEFIELD
+    // =====================================================
+
+    bool droppedOnBattlefield =
+        battlefieldDropZone != null &&
+        battlefieldDropZone.IsPointerInside(eventData);
+
+    if (droppedOnBattlefield)
+    {
+        bool played =
+            GameManager.Instance.HandManager
+                .PlayCardFromHand(runtimeCard);
+
+        if (played)
+            return;
+    }
+
+    ReturnToHand();
+}
 
     private void ReturnToHand()
     {
@@ -93,4 +123,27 @@ public class CardView : CardviewBase,
             handManager.RefreshHandLayout();
         }
     }
+
+    private MinionView GetMinionUnderPointer(
+    PointerEventData eventData)
+{
+    List<RaycastResult> results =
+        new List<RaycastResult>();
+
+    EventSystem.current.RaycastAll(
+        eventData,
+        results
+    );
+
+    foreach (RaycastResult result in results)
+    {
+        MinionView minionView =
+            result.gameObject.GetComponentInParent<MinionView>();
+
+        if (minionView != null)
+            return minionView;
+    }
+
+    return null;
+}
     }

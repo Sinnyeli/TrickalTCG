@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
-  m_Name: Prickle
+  m_Name: Kyuri
   m_EditorClassIdentifier: 
   cardID: 
-  cardName: Prickle
+  cardName: 
   description: 
-  battlecry: {fileID: 11400000, guid: 7324d9b761f68aa3fafae5dbdb52657d, type: 2}
+  battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
-  keywords: 02000000
-  artwork: {fileID: 21300000, guid: 9766c50a99f38f1a1b5a96e76e37ff26, type: 3}
-  manaCost: 0
-  typeIcon: {fileID: 21300000, guid: a73eee8afe3f7e6c288472188b8ebdc5, type: 3}
-  attack: 3
-  health: 3
+  passive: {fileID: 0}
+  keywords: 
+  artwork: {fileID: 21300000, guid: d26edb4e67162743ca0ba6a9334e7c59, type: 3}
+  manaCost: 5
+  typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
+  attack: 5
+  health: 2
   maxEquipment: 3

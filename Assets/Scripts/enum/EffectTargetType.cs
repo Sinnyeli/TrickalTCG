@@ -6,6 +6,8 @@ public enum EffectTargetType
 {
     None,
 
+    Self,
+
     EnemyUnit,
     FriendlyUnit,
     AnyUnit,

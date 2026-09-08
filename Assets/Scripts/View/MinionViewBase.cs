@@ -12,6 +12,9 @@ public abstract class MinionViewBase : MonoBehaviour
     public TMP_Text attackText;
     public TMP_Text healthText;
     public Image raceImage;
+    public Image artifactOne;
+    public Image artifactTwo;
+    public Image artifactThree;
 
     protected RuntimeCard runtimeCard;
     public RuntimeCard RuntimeCard => runtimeCard;
@@ -66,11 +69,14 @@ public abstract class MinionViewBase : MonoBehaviour
             RefreshStats();
             raceImage.sprite = apostle.typeIcon;
         }
-
+        artifactOne.gameObject.SetActive(false);
+        artifactTwo.gameObject.SetActive(false);
+        artifactThree.gameObject.SetActive(false);
         
         Debug.Log(
             $"MinionView created for {data.cardName}"
         );
+        RefreshArtifacts();
         
     }
     public void RefreshStats()
@@ -83,6 +89,60 @@ public abstract class MinionViewBase : MonoBehaviour
 
     if (healthText != null)
         healthText.text = runtimeCard.CurrentHealth.ToString();
+}
+public void RefreshArtifacts()
+{
+    ClearArtifactSlot(artifactOne);
+    ClearArtifactSlot(artifactTwo);
+    ClearArtifactSlot(artifactThree);
+
+    if (runtimeCard == null)
+        return;
+
+    IReadOnlyList<RuntimeCard> artifacts =
+        runtimeCard.EquippedArtifacts;
+
+    for (int i = 0; i < artifacts.Count; i++)
+    {
+        RuntimeCard artifact = artifacts[i];
+
+        if (artifact == null)
+            continue;
+
+        Image slot = GetArtifactSlot(i);
+
+        if (slot == null)
+            continue;
+
+        slot.sprite = artifact.Data.artwork;
+        slot.gameObject.SetActive(true);
+    }
+}
+private void ClearArtifactSlot(Image slot)
+{
+    if (slot == null)
+        return;
+
+    slot.sprite = null;
+    slot.gameObject.SetActive(false);
+}
+
+private Image GetArtifactSlot(int index)
+{
+    switch (index)
+    {
+        case 0:
+            return artifactOne;
+
+        case 1:
+            return artifactTwo;
+
+        case 2:
+            return artifactThree;
+
+        default:
+            return null;
+    }
 }
 
 

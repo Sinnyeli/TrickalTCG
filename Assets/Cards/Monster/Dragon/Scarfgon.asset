@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b276b4f3674a1b9b4abf52ab29cb78, type: 3}
+  m_Name: Scarfgon
+  m_EditorClassIdentifier: 
+  cardID: 
+  cardName: Scarfgon
+  description: 'Battlecry: Deal 1 Damage'
+  battlecry: {fileID: 11400000, guid: 779d586208e8e66458a805660d42b763, type: 2}
+  deathrattle: {fileID: 0}
+  passive: {fileID: 0}
+  keywords: 
+  artwork: {fileID: 21300000, guid: 013ec1e91158bb715ab9f2c8f760f8c0, type: 3}
+  manaCost: 1
+  attack: 1
+  health: 1
+  raceID: 0

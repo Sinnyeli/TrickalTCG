@@ -28,9 +28,13 @@ public class EffectManager : MonoBehaviour
     {
         if (card == null || card.Data == null)
             return;
+        if (card.IsSilenced)
+                    return;
+
 
         CardEffect effect = card.Data.Deathrattle;
 
+       
         if (effect == null)
             return;
 
@@ -59,14 +63,17 @@ public class EffectManager : MonoBehaviour
             return;
 
         // Hero targets are automatic
+        case EffectTargetType.Self:
+            ResolveSelfTarget(source, effect);
+            return;
+
         case EffectTargetType.EnemyHero:
         case EffectTargetType.FriendlyHero:
             ResolveHeroTarget(source, effect);
             return;
 
         // Unit targets require player selection
-        case EffectTargetType.EnemyUnit:
-        case EffectTargetType.FriendlyUnit:
+  
         case EffectTargetType.AllEnemyUnits:
             ResolveAllEnemyUnits(source, effect);
             return;
@@ -88,6 +95,8 @@ public class EffectManager : MonoBehaviour
             return;
 
         // Any Target
+        case EffectTargetType.EnemyUnit:
+        case EffectTargetType.FriendlyUnit:
         case EffectTargetType.AnyUnit:
         case EffectTargetType.AnyTarget:
         
@@ -156,6 +165,10 @@ private void ResolveHeroTarget(
             source,
             target
         );
+    }
+    else if (effect is HealEffect healEffect)
+    {
+        healEffect.ResolveHero(source, target);
     }
 }
 //////////////////
@@ -355,5 +368,21 @@ private void ResolveRandomUnit(
 
     effect.Resolve(source, targets);
 }
+
+    private void ResolveSelfTarget(
+        RuntimeCard source,
+        CardEffect effect)
+    {
+        if (source == null || effect == null)
+            return;
+
+        List<RuntimeCard> targets =
+            new List<RuntimeCard>
+            {
+                source
+            };
+
+        effect.Resolve(source, targets);
+    }
 
 }

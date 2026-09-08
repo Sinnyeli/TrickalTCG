@@ -62,6 +62,18 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
             GameManager.Instance.PlayerDefeated(side);
         }
     }
+        public void Heal(int amount)
+    {
+        if (amount <= 0)
+            return;
+
+        currentHealth += amount;
+
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+
+        RefreshHealth();
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {

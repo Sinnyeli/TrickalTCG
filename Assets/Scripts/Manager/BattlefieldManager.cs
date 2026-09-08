@@ -70,6 +70,7 @@ public class BattlefieldManager : MonoBehaviour
         // Create visual representation.
         CreateMinionView(card);
 
+        RefreshPassives();
         //Debug.Log($"{card.Data.cardName} entered the {side} battlefield.");
 
         GameManager.Instance.EffectManager.ResolveBattlecry(card);
@@ -77,28 +78,19 @@ public class BattlefieldManager : MonoBehaviour
         return true;
     }
 
-private void CreateMinionView(RuntimeCard card)
-{
-    GameObject minionObject =
-        Instantiate(minionPrefab, minionContainer);
-
-    MinionView minionView =
-        minionObject.GetComponent<MinionView>();
-
-    if (minionView == null)
+    private void CreateMinionView(RuntimeCard card)
     {
-        Debug.LogError(
-            "Minion prefab does not have a MinionView!"
-        );
+        GameObject minionObject =
+            Instantiate(minionPrefab, minionContainer);
 
-        Destroy(minionObject);
-        return;
+        MinionView minionView =
+            minionObject.GetComponent<MinionView>();
+
+        minionView.SetMinion(card);
+
+        minionViews[card] = minionView;
     }
 
-    minionView.SetMinion(card);
-
-    minionViews[card] = minionView;
-}
     public void RefreshMinionView(RuntimeCard card)
     {
         if (card == null)
@@ -110,7 +102,8 @@ private void CreateMinionView(RuntimeCard card)
         if (view == null)
             return;
 
-        view.RefreshStats();
+         view.RefreshStats();
+         view.RefreshArtifacts();
     }   
 
     private void RemoveMinionView(RuntimeCard card)
@@ -148,7 +141,7 @@ private void CreateMinionView(RuntimeCard card)
         card.ChangeZone(CardZone.Graveyard);
 
         RemoveMinionView(card);
-
+        RefreshPassives();
         return true;
     }
 
@@ -170,5 +163,38 @@ private void CreateMinionView(RuntimeCard card)
     view.SetSelected(selected);
     battlefieldLayout.RefreshLayout();
 }
+    public void RefreshPassives()
+    {
+        // Remove all existing passive modifiers.
+        foreach (RuntimeCard minion in minions)
+        {
+            minion.RemovePassiveModifiers();
+        }
 
+        // Reapply all active passive effects.
+        foreach (RuntimeCard source in minions)
+        {
+            if (!(source.Data is ApostleData))
+                continue;
+
+            if (source.IsSilenced)
+                continue;
+
+            CardEffect effect = source.Data.Passive;
+
+            if (!(effect is PassiveEffect passiveEffect))
+                continue;
+
+            List<RuntimeCard> targets =
+                new List<RuntimeCard>(minions);
+
+            passiveEffect.Resolve(source, targets);
+        }
+
+        // Refresh every minion's UI after stats have changed.
+        foreach (RuntimeCard minion in minions)
+        {
+            RefreshMinionView(minion);
+        }
+    }
 }
