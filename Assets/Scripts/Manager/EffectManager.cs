@@ -171,6 +171,17 @@ private void ResolveHeroTarget(
         healEffect.ResolveHero(source, target);
     }
 }
+
+    public void ResolveArtifactEffect(
+        RuntimeCard artifact,
+        CardEffect effect)
+    {
+        if (artifact == null || effect == null)
+            return;
+
+        ResolveEffect(artifact, effect);
+    }
+
 //////////////////
 /// Resolve effect specifically on all enemy units
 /// //////////////
@@ -194,7 +205,15 @@ private void ResolveHeroTarget(
             return;
 
         List<RuntimeCard> targets =
-            new List<RuntimeCard>(battlefield.Minions);
+            new List<RuntimeCard>();
+
+        foreach (RuntimeCard minion in battlefield.Minions)
+        {
+            if (effect.MatchesTargetFilter(minion))
+            {
+                targets.Add(minion);
+            }
+        }
 
         if (targets.Count == 0)
             return;
@@ -204,6 +223,7 @@ private void ResolveHeroTarget(
 //////////////////
 /// Resolve effect specifically on all friendly units
 /// //////////////
+
 
     private void ResolveAllFriendlyUnits(
         RuntimeCard source,
@@ -219,7 +239,15 @@ private void ResolveHeroTarget(
             return;
 
         List<RuntimeCard> targets =
-            new List<RuntimeCard>(battlefield.Minions);
+            new List<RuntimeCard>();
+
+        foreach (RuntimeCard minion in battlefield.Minions)
+        {
+            if (effect.MatchesTargetFilter(minion))
+            {
+                targets.Add(minion);
+            }
+        }
 
         if (targets.Count == 0)
             return;
@@ -245,21 +273,31 @@ private void ResolveHeroTarget(
 
     if (playerBattlefield != null)
     {
-        targets.AddRange(playerBattlefield.Minions);
+        foreach (RuntimeCard minion in playerBattlefield.Minions)
+        {
+            if (effect.MatchesTargetFilter(minion))
+            {
+                targets.Add(minion);
+            }
+        }
     }
 
     if (opponentBattlefield != null)
     {
-        targets.AddRange(opponentBattlefield.Minions);
+        foreach (RuntimeCard minion in opponentBattlefield.Minions)
+        {
+            if (effect.MatchesTargetFilter(minion))
+            {
+                targets.Add(minion);
+            }
+        }
     }
 
     if (targets.Count == 0)
         return;
 
     effect.Resolve(source, targets);
-}
-
-private void ResolveRandomEnemyUnit(
+}private void ResolveRandomEnemyUnit(
     RuntimeCard source,
     CardEffect effect)
 {
@@ -277,14 +315,25 @@ private void ResolveRandomEnemyUnit(
     if (battlefield == null)
         return;
 
-    if (battlefield.Minions.Count == 0)
+    List<RuntimeCard> candidates =
+        new List<RuntimeCard>();
+
+    foreach (RuntimeCard minion in battlefield.Minions)
+    {
+        if (effect.MatchesTargetFilter(minion))
+        {
+            candidates.Add(minion);
+        }
+    }
+
+    if (candidates.Count == 0)
         return;
 
     int randomIndex =
-        Random.Range(0, battlefield.Minions.Count);
+        Random.Range(0, candidates.Count);
 
     RuntimeCard target =
-        battlefield.Minions[randomIndex];
+        candidates[randomIndex];
 
     List<RuntimeCard> targets =
         new List<RuntimeCard>
@@ -293,9 +342,7 @@ private void ResolveRandomEnemyUnit(
         };
 
     effect.Resolve(source, targets);
-}
-
-private void ResolveRandomFriendlyUnit(
+}private void ResolveRandomFriendlyUnit(
     RuntimeCard source,
     CardEffect effect)
 {
@@ -308,14 +355,25 @@ private void ResolveRandomFriendlyUnit(
     if (battlefield == null)
         return;
 
-    if (battlefield.Minions.Count == 0)
+    List<RuntimeCard> candidates =
+        new List<RuntimeCard>();
+
+    foreach (RuntimeCard minion in battlefield.Minions)
+    {
+        if (effect.MatchesTargetFilter(minion))
+        {
+            candidates.Add(minion);
+        }
+    }
+
+    if (candidates.Count == 0)
         return;
 
     int randomIndex =
-        Random.Range(0, battlefield.Minions.Count);
+        Random.Range(0, candidates.Count);
 
     RuntimeCard target =
-        battlefield.Minions[randomIndex];
+        candidates[randomIndex];
 
     List<RuntimeCard> targets =
         new List<RuntimeCard>
@@ -325,6 +383,7 @@ private void ResolveRandomFriendlyUnit(
 
     effect.Resolve(source, targets);
 }
+
 private void ResolveRandomUnit(
     RuntimeCard source,
     CardEffect effect)
@@ -343,12 +402,24 @@ private void ResolveRandomUnit(
 
     if (playerBattlefield != null)
     {
-        candidates.AddRange(playerBattlefield.Minions);
+        foreach (RuntimeCard minion in playerBattlefield.Minions)
+        {
+            if (effect.MatchesTargetFilter(minion))
+            {
+                candidates.Add(minion);
+            }
+        }
     }
 
     if (opponentBattlefield != null)
     {
-        candidates.AddRange(opponentBattlefield.Minions);
+        foreach (RuntimeCard minion in opponentBattlefield.Minions)
+        {
+            if (effect.MatchesTargetFilter(minion))
+            {
+                candidates.Add(minion);
+            }
+        }
     }
 
     if (candidates.Count == 0)

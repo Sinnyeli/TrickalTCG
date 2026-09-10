@@ -24,5 +24,8 @@ public enum EffectTargetType
     RandomUnit,
 
     AnyTarget,
-    RandomTarget
+    RandomTarget,
+
+
+    CardRace
 }

@@ -6,12 +6,19 @@ public class RuntimeCard
     private int currentHealth;
     private bool canAttack;
     public int CurrentHealth => currentHealth;
+    private int damageTaken;
+    public int DamageTaken => damageTaken;
     public bool CanAttack => canAttack;
     private bool cannotAttackHero;
     public bool CannotAttackHero => cannotAttackHero;
     private bool isSilenced;
     public bool IsSilenced => isSilenced;
     private const int MaxArtifacts = 3;
+    private int? baseAttackOverride;
+    private int? baseHealthOverride;
+
+    private RuntimeCard baseStatOverrideSource;
+    private bool baseStatOverrideIsPassive;
 
     private List<RuntimeCard> equippedArtifacts =
         new List<RuntimeCard>();
@@ -46,6 +53,8 @@ public class RuntimeCard
     public void InitializeCombatStats()
     {
         currentHealth = GetMaxHealth();
+        damageTaken = 0;
+
      if (HasKeyword(CardKeyword.Rush))
     {
         canAttack = HasKeyword(CardKeyword.Rush); // if true it can attack
@@ -89,6 +98,11 @@ public class RuntimeCard
 
     public void TakeDamage(int amount)
     {
+        if (amount <= 0)
+            return;
+
+        damageTaken += amount;
+
         currentHealth -= amount;
 
         if (currentHealth < 0)
@@ -107,27 +121,84 @@ public class RuntimeCard
             currentHealth = maxHealth;
     }
 
-            private int GetBaseAttack()
+    private int GetBaseAttack()
+    {
+        if (baseAttackOverride.HasValue)
+            return baseAttackOverride.Value;
+
+        if (Data is MonsterData monster)
+            return monster.attack;
+
+        if (Data is ApostleData apostle)
+            return apostle.attack;
+
+        return 0;
+    }
+
+    private int GetBaseHealth()
+    {
+        if (baseHealthOverride.HasValue)
+            return baseHealthOverride.Value;
+
+        if (Data is MonsterData monster)
+            return monster.health;
+
+        if (Data is ApostleData apostle)
+            return apostle.health;
+
+        return 0;
+    }
+
+        public void SetBaseStatOverride(
+            int attack,
+            int health,
+            RuntimeCard source,
+            bool isPassive)
         {
-            if (Data is MonsterData monster)
-                return monster.attack;
+            int oldMaxHealth = GetMaxHealth();
 
-            if (Data is ApostleData apostle)
-                return apostle.attack;
+            baseAttackOverride = attack;
+            baseHealthOverride = health;
 
-            return 0;
+            baseStatOverrideSource = source;
+            baseStatOverrideIsPassive = isPassive;
+
+            int newMaxHealth = GetMaxHealth();
+
+            // Increase current health by the amount max health increased.
+            if (newMaxHealth > oldMaxHealth)
+            {
+                currentHealth += newMaxHealth - oldMaxHealth;
+            }
+            else if (currentHealth > newMaxHealth)
+            {
+                currentHealth = newMaxHealth;
+            }
         }
+    public void ClearPassiveBaseStatOverride()
+    {
+        Debug.Log(
+            $"{Data.cardName}: Clearing passive base stat override."
+        );
+        if (!baseStatOverrideIsPassive)
+            return;
 
-        private int GetBaseHealth()
-        {
-            if (Data is MonsterData monster)
-                return monster.health;
+        baseAttackOverride = null;
+        baseHealthOverride = null;
+        baseStatOverrideSource = null;
+        baseStatOverrideIsPassive = false;
 
-            if (Data is ApostleData apostle)
-                return apostle.health;
+        int maxHealth = GetMaxHealth();
 
-            return 0;
-        }
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+
+            Debug.Log(
+                $"{Data.cardName}: After clearing passive = " +
+                $"{GetAttack()}/{CurrentHealth} " +
+                $"(Max HP: {GetMaxHealth()})"
+);
+    }
 
         public int GetAttack()
         {
@@ -270,10 +341,18 @@ public class RuntimeCard
         artifact.ChangeZone(CardZone.Field);
 
         if (artifact.Data is ArtifactData artifactData)
-            {
-                currentHealth += artifactData.healthBonus;
-            }
+        {
+            currentHealth += artifactData.healthBonus;
 
+            if (artifactData.ArtifactEffect != null)
+            {
+                GameManager.Instance.EffectManager.ResolveArtifactEffect(
+                    artifact,
+                    artifactData.ArtifactEffect
+                );
+            }
+        }
+        GameManager.Instance.GetBattlefield(Owner).RefreshArtifactEffects();
         Debug.Log(
             $"{Data.cardName} equipped " +
             $"{artifact.Data.cardName}. " +
@@ -281,7 +360,7 @@ public class RuntimeCard
         );
 
         return true;
-    }
+}
     public bool UnequipArtifact(RuntimeCard artifact)
 {
     if (artifact == null)

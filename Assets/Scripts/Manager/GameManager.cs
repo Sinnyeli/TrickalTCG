@@ -69,6 +69,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private DeckManager opponentDeck;
 
+
+
 private void Awake()
 {
     Debug.Log(
@@ -272,6 +274,11 @@ private void CreatePlayerViews()
             return playerView;
 
         return opponentView;
+    }
+
+        public HandManager GetOpponentHand()
+    {
+        return opponentHandManager;
     }
 
     //////////////////////////

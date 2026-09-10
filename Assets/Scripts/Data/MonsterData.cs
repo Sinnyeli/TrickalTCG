@@ -11,5 +11,5 @@ public class MonsterData : CardData
     public int health;
 
     [Header("Race")]
-    public int raceID;
+    public CardRace cardRace;
 }

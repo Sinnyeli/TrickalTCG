@@ -15,13 +15,14 @@ MonoBehaviour:
   cardID: 
   cardName: "\uC544\uC774\uC2DC\uC544"
   description: "\uB4F1\uC7A5: \uB0C9\uB3D9\uACE0 \uD558\uB098\uB97C \uC18C\uD658\uD55C\uB2E4."
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: b0c52eed1561c80cdbe3c8f13e3d5920, type: 2}
   deathrattle: {fileID: 0}
-  passive: {fileID: 11400000, guid: 023935914d7720cb1be4e64247ea7fc8, type: 2}
+  passive: {fileID: 0}
   keywords: 00000000
   artwork: {fileID: 21300000, guid: 90df300fa7b1ce205be835511122f93b, type: 3}
   manaCost: 1
   typeIcon: {fileID: 21300000, guid: 0c84cabc6b56d30549e7888a4567eb04, type: 3}
   attack: 1
   health: 3
+  cardRace: 4
   maxEquipment: 3

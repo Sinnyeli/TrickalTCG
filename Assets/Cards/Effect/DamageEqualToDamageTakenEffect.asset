@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6057201aa1a9105fa9aac6c16e16e54f, type: 3}
-  m_Name: DamageEffect
+  m_Script: {fileID: 11500000, guid: 9b2936f4f2e09d1308c37ba8cf13cec0, type: 3}
+  m_Name: DamageEqualToDamageTakenEffect
   m_EditorClassIdentifier: 
-  targetType: 2
-  amount: 1
+  targetType: 9

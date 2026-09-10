@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: Kyuri
   m_EditorClassIdentifier: 
   cardID: 
-  cardName: 
+  cardName: Kyuri
   description: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
-  passive: {fileID: 0}
+  passive: {fileID: 11400000, guid: 08cc7180a611725c0aeddd5a7bd20fbe, type: 2}
   keywords: 
   artwork: {fileID: 21300000, guid: d26edb4e67162743ca0ba6a9334e7c59, type: 3}
   manaCost: 5
   typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
   attack: 5
   health: 2
+  cardRace: 0
   maxEquipment: 3

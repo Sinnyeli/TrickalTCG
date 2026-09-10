@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Kyarot
   m_EditorClassIdentifier: 
   cardID: 
-  cardName: 
+  cardName: Kyarot
   description: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: 6783f0b0884de8630ba012441988422d, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
   keywords: 
   artwork: {fileID: 21300000, guid: cf195fa9d8a348578900ab76f7f53770, type: 3}
-  manaCost: 0
+  manaCost: 4
   typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
   attack: 3
   health: 4

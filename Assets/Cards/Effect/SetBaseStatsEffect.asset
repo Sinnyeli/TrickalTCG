@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6057201aa1a9105fa9aac6c16e16e54f, type: 3}
-  m_Name: DamageEffect
+  m_Script: {fileID: 11500000, guid: e236cd4f248d599caa7f95e29dae915d, type: 3}
+  m_Name: SetBaseStatsEffect
   m_EditorClassIdentifier: 
-  targetType: 2
-  amount: 1
+  targetType: 15
+  targetFilter: 2
+  cardRace: 0
+  specificCard: {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
+  attack: 5
+  health: 2
+  isPassive: 1

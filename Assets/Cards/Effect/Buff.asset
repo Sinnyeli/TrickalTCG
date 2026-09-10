@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd2997eb252c9be16baf8174d7653317, type: 3}
   m_Name: Buff
   m_EditorClassIdentifier: 
-  targetType: 1
+  targetType: 8
+  targetFilter: 1
+  cardRace: 8
+  specificCard: {fileID: 0}
   attackAmount: 1
   healthAmount: 1

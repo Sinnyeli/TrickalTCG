@@ -72,6 +72,23 @@ public class HandManager : MonoBehaviour
 
     return true;
 }
+    // =========================================================
+    // ADD GENERATED CARD
+    // =========================================================
+
+
+public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
+{
+    if (cardData == null)
+        return false;
+
+    RuntimeCard card = new RuntimeCard(cardData);
+
+    card.SetOwner(owner);
+    card.ChangeZone(CardZone.Hand);
+
+    return AddCard(card);
+}
 
     // =========================================================
     // Add Commander to hand 

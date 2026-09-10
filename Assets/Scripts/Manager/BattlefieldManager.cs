@@ -23,6 +23,24 @@ public class BattlefieldManager : MonoBehaviour
         new Dictionary<RuntimeCard, MinionView>();
     public IReadOnlyList<RuntimeCard> Minions => minions;
 
+
+    private List<RuntimeCard> GetAllEquippedArtifacts()
+    {
+        List<RuntimeCard> artifacts = new List<RuntimeCard>();
+
+        foreach (RuntimeCard minion in minions)
+        {
+            foreach (RuntimeCard artifact in minion.EquippedArtifacts)
+            {
+                if (artifact == null)
+                    continue;
+
+                artifacts.Add(artifact);
+            }
+        }
+
+        return artifacts;
+    }
     public bool PlayCard(RuntimeCard card)
     {
         if (card == null)
@@ -71,6 +89,7 @@ public class BattlefieldManager : MonoBehaviour
         CreateMinionView(card);
 
         RefreshPassives();
+        RefreshArtifactEffects();
         //Debug.Log($"{card.Data.cardName} entered the {side} battlefield.");
 
         GameManager.Instance.EffectManager.ResolveBattlecry(card);
@@ -104,6 +123,11 @@ public class BattlefieldManager : MonoBehaviour
 
          view.RefreshStats();
          view.RefreshArtifacts();
+
+         Debug.Log(
+                $"Refreshing UI for {card.Data.cardName}: " +
+                $"{card.GetAttack()}/{card.CurrentHealth}"
+            );
     }   
 
     private void RemoveMinionView(RuntimeCard card)
@@ -135,16 +159,33 @@ public class BattlefieldManager : MonoBehaviour
 
         if (!minions.Contains(card))
             return false;
-        GameManager.Instance.EffectManager.ResolveDeathrattle(card);
-        minions.Remove(card);
 
+        // Remove effects from artifacts equipped to this minion.
+        foreach (RuntimeCard artifact in card.EquippedArtifacts)
+        {
+            if (artifact == null)
+                continue;
+
+            foreach (RuntimeCard minion in minions)
+            {
+                minion.RemoveModifiersFromSource(artifact);
+            }
+        }
+
+        minions.Remove(card);
         card.ChangeZone(CardZone.Graveyard);
 
         RemoveMinionView(card);
+
         RefreshPassives();
+        RefreshArtifactEffects();
+
+        GameManager.Instance
+            .EffectManager
+            .ResolveDeathrattle(card);
+
         return true;
     }
-
     public void SetMinionSelected(RuntimeCard card, bool selected)
 {
     if (card == null)
@@ -163,38 +204,83 @@ public class BattlefieldManager : MonoBehaviour
     view.SetSelected(selected);
     battlefieldLayout.RefreshLayout();
 }
-    public void RefreshPassives()
+   public void RefreshPassives()
+{
+    // Remove all existing passive effects first.
+    foreach (RuntimeCard minion in minions)
     {
-        // Remove all existing passive modifiers.
-        foreach (RuntimeCard minion in minions)
+        minion.RemovePassiveModifiers();
+        minion.ClearPassiveBaseStatOverride();
+    }
+
+    // Recalculate all active passives.
+    foreach (RuntimeCard source in minions)
+    {
+        if (!(source.Data is ApostleData))
+            continue;
+
+        if (source.IsSilenced)
+            continue;
+
+        CardEffect effect = source.Data.Passive;
+
+        if (effect == null)
+            continue;
+
+        List<RuntimeCard> targets = new List<RuntimeCard>();
+
+        foreach (RuntimeCard target in minions)
         {
-            minion.RemovePassiveModifiers();
+            if (effect.MatchesTargetFilter(target))
+            {
+                targets.Add(target);
+            }
         }
 
-        // Reapply all active passive effects.
-        foreach (RuntimeCard source in minions)
-        {
-            if (!(source.Data is ApostleData))
-                continue;
-
-            if (source.IsSilenced)
-                continue;
-
-            CardEffect effect = source.Data.Passive;
-
-            if (!(effect is PassiveEffect passiveEffect))
-                continue;
-
-            List<RuntimeCard> targets =
-                new List<RuntimeCard>(minions);
-
-            passiveEffect.Resolve(source, targets);
-        }
-
-        // Refresh every minion's UI after stats have changed.
-        foreach (RuntimeCard minion in minions)
-        {
-            RefreshMinionView(minion);
-        }
+        effect.Resolve(source, targets);
     }
 }
+  public void RefreshArtifactEffects()
+{
+    // Remove existing artifact-effect modifiers.
+    foreach (RuntimeCard minion in minions)
+    {
+        foreach (RuntimeCard artifact in GetAllEquippedArtifacts())
+        {
+            if (artifact == null)
+                continue;
+
+            minion.RemoveModifiersFromSource(artifact);
+        }
+    }
+
+    // Reapply artifact effects.
+    foreach (RuntimeCard carrier in minions)
+    {
+        foreach (RuntimeCard artifact in carrier.EquippedArtifacts)
+        {
+            if (artifact == null)
+                continue;
+
+            if (!(artifact.Data is ArtifactData artifactData))
+                continue;
+
+            if (artifactData.ArtifactEffect == null)
+                continue;
+
+            GameManager.Instance.EffectManager.ResolveArtifactEffect(
+                artifact,
+                artifactData.ArtifactEffect
+            );
+        }
+    }
+
+    // Refresh UI.
+    foreach (RuntimeCard minion in minions)
+    {
+        RefreshMinionView(minion);
+    }
+}
+
+}
+
