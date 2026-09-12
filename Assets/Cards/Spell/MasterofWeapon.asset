@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 313982d1e242c6d278d8401d991eced2, type: 3}
   m_Name: MasterofWeapon
   m_EditorClassIdentifier: 
+  cardID: 
   cardName: Master of Weapon
   description: Master of Weapon
-  cardType: 2
+  battlecry: {fileID: 0}
+  deathrattle: {fileID: 0}
+  passive: {fileID: 0}
+  keywords: 
   artwork: {fileID: 21300000, guid: c6526623a925a8c81851f40b5488130b, type: 3}
   manaCost: 1
+  spellEffect: {fileID: 11400000, guid: b0c52eed1561c80cdbe3c8f13e3d5920, type: 2}

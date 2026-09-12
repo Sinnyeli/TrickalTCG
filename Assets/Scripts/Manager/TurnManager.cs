@@ -81,7 +81,7 @@ public void StartTurn()
 
     GameManager.Instance.DrawCard(currentSide);
 }
-// Alt to make EndTurn private
+
 
     public void EndTurn()
     {

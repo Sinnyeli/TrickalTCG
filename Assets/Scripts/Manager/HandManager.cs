@@ -331,6 +331,12 @@ public bool PlayCardFromHand(RuntimeCard card)
         return false;
     }
 
+    // Spell cards do not enter the Battlefield.
+    if (card.Data is SpellData)
+    {
+        return PlaySpellFromHand(card);
+    }
+
 
 
     // Playing Card on Battlefield
@@ -476,6 +482,55 @@ private void DestroyHandView(RuntimeCard card)
     }
 }
 
+private bool PlaySpellFromHand(RuntimeCard card)
+{
+    if (card == null)
+        return false;
+
+    if (!(card.Data is SpellData spellData))
+        return false;
+
+    CardEffect effect = spellData.SpellEffect;
+
+    if (effect == null)
+    {
+        Debug.Log(
+            $"{card.Data.cardName} cannot be cast. " +
+            "It has no Spell Effect."
+        );
+
+        return false;
+    }
+
+    TurnManager turnManager =
+        GameManager.Instance.TurnManager;
+
+    if (turnManager == null)
+        return false;
+
+    int cost = card.Data.manaCost;
+
+    switch (effect.TargetType)
+    {
+        case EffectTargetType.EnemyUnit:
+        case EffectTargetType.FriendlyUnit:
+        case EffectTargetType.AnyUnit:
+        case EffectTargetType.AnyTarget:
+            return false; // Targeted spells are handled elsewhere.
+           
+    }
+
+    Debug.Log(
+        $"{card.Owner} casts {card.Data.cardName}!"
+    );
+
+    GameManager.Instance.EffectManager.ResolveSpell(card);
+
+    CompleteSpellCast(card, cost);
+
+    return true;
+}
+
 // Test Area
 
 public RuntimeCard GetFirstNormalCard()
@@ -492,6 +547,118 @@ public RuntimeCard GetFirstNormalCard()
     return null;
 }
 
+private void CompleteSpellCast(
+    RuntimeCard card,
+    int cost)
+{
+    if (card == null)
+        return;
+
+    TurnManager turnManager =
+        GameManager.Instance.TurnManager;
+
+    if (turnManager == null)
+        return;
+
+    Debug.Log(
+        $"{card.Data.cardName} finished casting."
+    );
+
+    turnManager.SpendMana(
+        card.Owner,
+        cost
+    );
+
+    RemoveCardFromHand(card);
+
+    DeckManager deck =
+        GameManager.Instance.GetDeck(card.Owner);
+
+    if (deck != null)
+    {
+        deck.Discard(card);
+    }
+}
+
+public bool PlayTargetedSpellFromHand(
+    RuntimeCard card,
+    RuntimeCard unitTarget)
+{
+    if (card == null || unitTarget == null)
+        return false;
+
+    if (!(card.Data is SpellData spellData))
+        return false;
+
+    CardEffect effect = spellData.SpellEffect;
+
+    if (effect == null)
+        return false;
+
+    TurnManager turnManager =
+        GameManager.Instance.TurnManager;
+
+    if (turnManager == null)
+        return false;
+
+    if (!turnManager.IsMyTurn(card.Owner))
+        return false;
+
+    int cost = card.Data.manaCost;
+
+    if (!turnManager.CanSpendMana(card.Owner, cost))
+        return false;
+
+    // Validate target ownership.
+    switch (effect.TargetType)
+    {
+        case EffectTargetType.EnemyUnit:
+            if (unitTarget.Owner == card.Owner)
+                return false;
+            break;
+
+        case EffectTargetType.FriendlyUnit:
+            if (unitTarget.Owner != card.Owner)
+                return false;
+            break;
+
+        case EffectTargetType.AnyUnit:
+        case EffectTargetType.AnyTarget:
+            break;
+
+        default:
+            return false;
+    }
+
+    if (unitTarget.IsStealthed)
+        return false;
+
+    if (!effect.MatchesTargetFilter(unitTarget))
+        return false;
+
+    List<RuntimeCard> targets =
+        new List<RuntimeCard>
+        {
+            unitTarget
+        };
+
+    Debug.Log(
+        $"{card.Owner} casts {card.Data.cardName} " +
+        $"on {unitTarget.Data.cardName}."
+    );
+
+    effect.Resolve(
+        card,
+        targets
+    );
+
+    CompleteSpellCast(
+        card,
+        cost
+    );
+
+    return true;
+}
 
 
 }

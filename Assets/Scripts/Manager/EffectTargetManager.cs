@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class EffectTargetManager : MonoBehaviour
 
     private RuntimeCard sourceCard;
     private CardEffect currentEffect;
+    
 
     public bool IsSelectingTarget =>
         currentEffect != null;
@@ -28,19 +30,19 @@ public class EffectTargetManager : MonoBehaviour
 
     public void StartTargetSelection(
         RuntimeCard source,
-        CardEffect effect)
+        CardEffect effect,
+        Action onResolved = null)
     {
         if (source == null || effect == null)
             return;
 
         sourceCard = source;
         currentEffect = effect;
-
+        
         Debug.Log(
             $"{source.Data.cardName} is selecting a target."
         );
     }
-
 //////////////////
 /// Select Target
 /// //////////////
@@ -72,7 +74,6 @@ public class EffectTargetManager : MonoBehaviour
             sourceCard,
             targets
         );
-
         ClearTargetSelection();
     }
 
@@ -143,6 +144,9 @@ public void SelectHeroTarget(PlayerView target)
 
             if (!validOwner)
                 return false;
+            if (target.IsStealthed)
+                return false;
+
 
             return currentEffect.MatchesTargetFilter(target);
         }
@@ -176,13 +180,13 @@ public void SelectHeroTarget(PlayerView target)
     {
         sourceCard = null;
         currentEffect = null;
+  
     }
-
-//////////////////
+    //////////////////
 /// Check if there is any valid target to begin with.
 /// //////////////
 
-    public bool HasValidTarget(
+public bool HasValidTarget(
     RuntimeCard source,
     CardEffect effect)
 {
@@ -207,7 +211,6 @@ public void SelectHeroTarget(PlayerView target)
             return true;
     }
 }
-
 //////////////////
 /// Return true if there are enemy units on field
 /// //////////////
@@ -227,8 +230,13 @@ private bool HasEnemyUnit(
 
     foreach (RuntimeCard minion in battlefield.Minions)
     {
+        if (minion.IsStealthed)
+            continue;
+
         if (effect.MatchesTargetFilter(minion))
+        {
             return true;
+        }
     }
 
     return false;
@@ -251,8 +259,13 @@ private bool HasFriendlyUnit(
 
     foreach (RuntimeCard minion in battlefield.Minions)
     {
+        if (minion.IsStealthed)
+            continue;
+
         if (effect.MatchesTargetFilter(minion))
+        {
             return true;
+        }
     }
 
     return false;
@@ -262,33 +275,44 @@ private bool HasFriendlyUnit(
 /// Return if there is any unit on field.
 /// //////////////
 
-private bool HasAnyUnit(CardEffect effect)
+private bool HasAnyUnit(
+    CardEffect effect)
 {
     BattlefieldManager playerBattlefield =
         GameManager.Instance.GetBattlefield(
             PlayerSide.Player
         );
 
-    if (playerBattlefield != null)
-    {
-        foreach (RuntimeCard minion in playerBattlefield.Minions)
-        {
-            if (effect.MatchesTargetFilter(minion))
-                return true;
-        }
-    }
-
     BattlefieldManager opponentBattlefield =
         GameManager.Instance.GetBattlefield(
             PlayerSide.Opponent
         );
 
+    if (playerBattlefield != null)
+    {
+        foreach (RuntimeCard minion in playerBattlefield.Minions)
+        {
+            if (minion.IsStealthed)
+                continue;
+
+            if (effect.MatchesTargetFilter(minion))
+            {
+                return true;
+            }
+        }
+    }
+
     if (opponentBattlefield != null)
     {
         foreach (RuntimeCard minion in opponentBattlefield.Minions)
         {
+            if (minion.IsStealthed)
+                continue;
+
             if (effect.MatchesTargetFilter(minion))
+            {
                 return true;
+            }
         }
     }
 
@@ -308,59 +332,70 @@ private PlayerSide GetOpposingSide(PlayerSide side)
 }
 
 //////////////////
-/// Check if there are any targets without entering cards source or etc. 
+/// Check if there are any targets including heroes and stuff. 
 /// //////////////
 
-private bool HasAnyTarget(CardEffect effect)
+private bool HasAnyTarget(
+    CardEffect effect)
 {
     BattlefieldManager playerBattlefield =
         GameManager.Instance.GetBattlefield(
             PlayerSide.Player
         );
 
-    if (playerBattlefield != null)
-    {
-        foreach (RuntimeCard minion in playerBattlefield.Minions)
-        {
-            if (effect.MatchesTargetFilter(minion))
-                return true;
-        }
-    }
-
     BattlefieldManager opponentBattlefield =
         GameManager.Instance.GetBattlefield(
             PlayerSide.Opponent
         );
 
-    if (opponentBattlefield != null)
+    if (effect.TargetFilter != EffectTargetFilter.None)
     {
-        foreach (RuntimeCard minion in opponentBattlefield.Minions)
+        if (playerBattlefield != null)
         {
-            if (effect.MatchesTargetFilter(minion))
-                return true;
+            foreach (RuntimeCard minion in playerBattlefield.Minions)
+            {
+                if (effect.MatchesTargetFilter(minion))
+                {
+                    return true;
+                }
+            }
         }
+
+        if (opponentBattlefield != null)
+        {
+            foreach (RuntimeCard minion in opponentBattlefield.Minions)
+            {
+                if (effect.MatchesTargetFilter(minion))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    // Hero targets cannot currently be checked against
-    // CardRace or SpecificCard filters because Heroes
-    // are not RuntimeCards.
-    if (effect.TargetFilter == EffectTargetFilter.None)
-    {
-        bool playerHeroExists =
-            GameManager.Instance.GetPlayerView(
-                PlayerSide.Player
-            ) != null;
+    bool playerHasUnits =
+        playerBattlefield != null &&
+        playerBattlefield.Minions.Count > 0;
 
-        bool opponentHeroExists =
-            GameManager.Instance.GetPlayerView(
-                PlayerSide.Opponent
-            ) != null;
+    bool opponentHasUnits =
+        opponentBattlefield != null &&
+        opponentBattlefield.Minions.Count > 0;
 
-        if (playerHeroExists || opponentHeroExists)
-            return true;
-    }
+    bool playerHeroExists =
+        GameManager.Instance.GetPlayerView(
+            PlayerSide.Player
+        ) != null;
 
-    return false;
+    bool opponentHeroExists =
+        GameManager.Instance.GetPlayerView(
+            PlayerSide.Opponent
+        ) != null;
+
+    return playerHasUnits ||
+           opponentHasUnits ||
+           playerHeroExists ||
+           opponentHeroExists;
 }
-
 }

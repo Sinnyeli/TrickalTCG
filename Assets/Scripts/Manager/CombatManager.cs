@@ -77,13 +77,56 @@ public bool Attack(RuntimeCard defender)
         $"{attacker.Data.cardName} attacks " +
         $"{defender.Data.cardName}"
     );
-
+    attacker.RemoveStealth();
     int attackerDamage = attacker.GetAttack();
+    
     int defenderDamage = defender.GetAttack();
 
-    // Both minions deal damage.
-    defender.TakeDamage(attackerDamage);
-    attacker.TakeDamage(defenderDamage);
+  
+    bool attackerHasFirstStrike =
+        attacker.HasKeyword(CardKeyword.FirstStrike);
+
+    if (attackerHasFirstStrike)
+    {
+        // Attacker strikes first.
+        defender.TakeDamage(attackerDamage);
+
+        // Shock from the attacker.
+        if (attacker.HasKeyword(CardKeyword.Shock))
+        {
+            defender.Kill();
+        }
+
+        // Only retaliate if the defender survived.
+        if (defender.CurrentHealth > 0)
+        {
+            attacker.TakeDamage(defenderDamage);
+
+            // Shock from the defender.
+            if (defender.HasKeyword(CardKeyword.Shock))
+            {
+                attacker.Kill();
+            }
+        }
+    }
+    else
+    {
+        // Normal simultaneous combat.
+        defender.TakeDamage(attackerDamage);
+        attacker.TakeDamage(defenderDamage);
+
+        // Shock from the attacker.
+        if (attacker.HasKeyword(CardKeyword.Shock))
+        {
+            defender.Kill();
+        }
+
+        // Shock from the defender.
+        if (defender.HasKeyword(CardKeyword.Shock))
+        {
+            attacker.Kill();
+        }
+}
 
     GameManager.Instance.GetBattlefield(attacker.Owner).RefreshMinionView(attacker);
 
@@ -140,7 +183,7 @@ public bool Attack(PlayerView defender)
 
         return false;
     }
-
+    attacker.RemoveStealth();
     int attackerDamage = attacker.GetAttack();
     
     Debug.Log(

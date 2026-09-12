@@ -226,36 +226,36 @@ private void ResolveHeroTarget(
 
 
     private void ResolveAllFriendlyUnits(
-        RuntimeCard source,
-        CardEffect effect)
+    RuntimeCard source,
+    CardEffect effect)
+{
+    if (source == null || effect == null)
+        return;
+
+    BattlefieldManager battlefield =
+        GameManager.Instance.GetBattlefield(source.Owner);
+
+    if (battlefield == null)
+        return;
+
+    List<RuntimeCard> targets =
+        new List<RuntimeCard>();
+
+    foreach (RuntimeCard minion in battlefield.Minions)
     {
-        if (source == null || effect == null)
-            return;
-
-        BattlefieldManager battlefield =
-            GameManager.Instance.GetBattlefield(source.Owner);
-
-        if (battlefield == null)
-            return;
-
-        List<RuntimeCard> targets =
-            new List<RuntimeCard>();
-
-        foreach (RuntimeCard minion in battlefield.Minions)
+        if (effect.MatchesTargetFilter(minion))
         {
-            if (effect.MatchesTargetFilter(minion))
-            {
-                targets.Add(minion);
-            }
+            targets.Add(minion);
         }
-
-        if (targets.Count == 0)
-            return;
-
-        effect.Resolve(source, targets);
     }
 
-    private void ResolveAllUnits(
+    if (targets.Count == 0)
+        return;
+
+    effect.Resolve(source, targets);
+}
+
+ private void ResolveAllUnits(
     RuntimeCard source,
     CardEffect effect)
 {
@@ -297,17 +297,25 @@ private void ResolveHeroTarget(
         return;
 
     effect.Resolve(source, targets);
-}private void ResolveRandomEnemyUnit(
+}
+
+private void ResolveRandomEnemyUnit(
     RuntimeCard source,
     CardEffect effect)
 {
     if (source == null || effect == null)
         return;
 
-    PlayerSide enemySide =
-        source.Owner == PlayerSide.Player
-            ? PlayerSide.Opponent
-            : PlayerSide.Player;
+    PlayerSide enemySide;
+
+    if (source.Owner == PlayerSide.Player)
+    {
+        enemySide = PlayerSide.Opponent;
+    }
+    else
+    {
+        enemySide = PlayerSide.Player;
+    }
 
     BattlefieldManager battlefield =
         GameManager.Instance.GetBattlefield(enemySide);
@@ -315,34 +323,35 @@ private void ResolveHeroTarget(
     if (battlefield == null)
         return;
 
-    List<RuntimeCard> candidates =
+    List<RuntimeCard> validTargets =
         new List<RuntimeCard>();
 
     foreach (RuntimeCard minion in battlefield.Minions)
     {
         if (effect.MatchesTargetFilter(minion))
         {
-            candidates.Add(minion);
+            validTargets.Add(minion);
         }
     }
 
-    if (candidates.Count == 0)
+    if (validTargets.Count == 0)
         return;
 
     int randomIndex =
-        Random.Range(0, candidates.Count);
+        Random.Range(0, validTargets.Count);
 
     RuntimeCard target =
-        candidates[randomIndex];
+        validTargets[randomIndex];
 
     List<RuntimeCard> targets =
-        new List<RuntimeCard>
-        {
-            target
-        };
+        new List<RuntimeCard>();
+
+    targets.Add(target);
 
     effect.Resolve(source, targets);
-}private void ResolveRandomFriendlyUnit(
+}
+
+private void ResolveRandomFriendlyUnit(
     RuntimeCard source,
     CardEffect effect)
 {
@@ -355,31 +364,30 @@ private void ResolveHeroTarget(
     if (battlefield == null)
         return;
 
-    List<RuntimeCard> candidates =
+    List<RuntimeCard> validTargets =
         new List<RuntimeCard>();
 
     foreach (RuntimeCard minion in battlefield.Minions)
     {
         if (effect.MatchesTargetFilter(minion))
         {
-            candidates.Add(minion);
+            validTargets.Add(minion);
         }
     }
 
-    if (candidates.Count == 0)
+    if (validTargets.Count == 0)
         return;
 
     int randomIndex =
-        Random.Range(0, candidates.Count);
+        Random.Range(0, validTargets.Count);
 
     RuntimeCard target =
-        candidates[randomIndex];
+        validTargets[randomIndex];
 
     List<RuntimeCard> targets =
-        new List<RuntimeCard>
-        {
-            target
-        };
+        new List<RuntimeCard>();
+
+    targets.Add(target);
 
     effect.Resolve(source, targets);
 }
@@ -392,12 +400,16 @@ private void ResolveRandomUnit(
         return;
 
     BattlefieldManager playerBattlefield =
-        GameManager.Instance.GetBattlefield(PlayerSide.Player);
+        GameManager.Instance.GetBattlefield(
+            PlayerSide.Player
+        );
 
     BattlefieldManager opponentBattlefield =
-        GameManager.Instance.GetBattlefield(PlayerSide.Opponent);
+        GameManager.Instance.GetBattlefield(
+            PlayerSide.Opponent
+        );
 
-    List<RuntimeCard> candidates =
+    List<RuntimeCard> validTargets =
         new List<RuntimeCard>();
 
     if (playerBattlefield != null)
@@ -406,7 +418,7 @@ private void ResolveRandomUnit(
         {
             if (effect.MatchesTargetFilter(minion))
             {
-                candidates.Add(minion);
+                validTargets.Add(minion);
             }
         }
     }
@@ -417,25 +429,24 @@ private void ResolveRandomUnit(
         {
             if (effect.MatchesTargetFilter(minion))
             {
-                candidates.Add(minion);
+                validTargets.Add(minion);
             }
         }
     }
 
-    if (candidates.Count == 0)
+    if (validTargets.Count == 0)
         return;
 
     int randomIndex =
-        Random.Range(0, candidates.Count);
+        Random.Range(0, validTargets.Count);
 
     RuntimeCard target =
-        candidates[randomIndex];
+        validTargets[randomIndex];
 
     List<RuntimeCard> targets =
-        new List<RuntimeCard>
-        {
-            target
-        };
+        new List<RuntimeCard>();
+
+    targets.Add(target);
 
     effect.Resolve(source, targets);
 }
@@ -455,5 +466,33 @@ private void ResolveRandomUnit(
 
         effect.Resolve(source, targets);
     }
+
+
+    //////////////////
+    /// Spell
+    //////////////////
+
+    public void ResolveSpell(RuntimeCard card)
+    {
+        if (card == null || card.Data == null)
+            return;
+
+        if (!(card.Data is SpellData spellData))
+            return;
+
+        CardEffect effect = spellData.SpellEffect;
+
+        if (effect == null)
+        {
+            Debug.Log(
+                $"{card.Data.cardName} has no Spell Effect."
+            );
+
+            return;
+        }
+
+        ResolveEffect(card, effect);
+    }
+
 
 }

@@ -6,4 +6,8 @@ using UnityEngine;
 )]
 public class SpellData : CardData
 {
+    [Header("Spell Effect")]
+    [SerializeField] private CardEffect spellEffect;
+
+    public CardEffect SpellEffect => spellEffect;
 }

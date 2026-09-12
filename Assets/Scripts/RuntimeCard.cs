@@ -13,6 +13,10 @@ public class RuntimeCard
     public bool CannotAttackHero => cannotAttackHero;
     private bool isSilenced;
     public bool IsSilenced => isSilenced;
+    private bool isStealthed;
+    public bool IsStealthed => isStealthed;
+
+
     private const int MaxArtifacts = 3;
     private int? baseAttackOverride;
     private int? baseHealthOverride;
@@ -46,10 +50,14 @@ public class RuntimeCard
     {
         Zone = newZone;
     }
+
+
     public void SetOwner(PlayerSide owner)
     {
         Owner = owner;
     }
+
+
     public void InitializeCombatStats()
     {
         currentHealth = GetMaxHealth();
@@ -60,6 +68,10 @@ public class RuntimeCard
         canAttack = HasKeyword(CardKeyword.Rush); // if true it can attack
         cannotAttackHero = true;
     }
+    if (HasKeyword(CardKeyword.Stealth))
+        {
+            ActivateStealth();
+        }
     else
     {
         canAttack = HasKeyword(CardKeyword.Rush); // if false, it has no rush and can't attack anyways. Rather have additional check.
@@ -101,12 +113,26 @@ public class RuntimeCard
         if (amount <= 0)
             return;
 
+        int actualDamage = amount;
+
+        if (HasKeyword(CardKeyword.Endure))
+        {
+            actualDamage -= 1;
+
+            if (actualDamage < 0)
+            {
+                actualDamage = 0;
+            }
+        }
+
         damageTaken += amount;
 
-        currentHealth -= amount;
+        currentHealth -= actualDamage;
 
         if (currentHealth < 0)
+        {
             currentHealth = 0;
+        }
     }
     public void Heal(int amount)
     {
@@ -177,9 +203,7 @@ public class RuntimeCard
         }
     public void ClearPassiveBaseStatOverride()
     {
-        Debug.Log(
-            $"{Data.cardName}: Clearing passive base stat override."
-        );
+        
         if (!baseStatOverrideIsPassive)
             return;
 
@@ -306,6 +330,19 @@ public class RuntimeCard
     {
         isSilenced = true;
     }
+    public void ActivateStealth()
+        {
+            isStealthed = true;
+        }
+
+    public void RemoveStealth()
+        {
+            isStealthed = false;
+        }
+
+
+
+
     public bool EquipArtifact(RuntimeCard artifact)
     {
         if (artifact == null)
@@ -382,7 +419,10 @@ public class RuntimeCard
     return true;
 }
 
-
+public void Kill()
+{
+    currentHealth = 0;
+}
 
 
 }

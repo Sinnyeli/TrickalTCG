@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e1f18e08635675859b16479f4e4e91a, type: 3}
   m_Name: SilenceEffect
   m_EditorClassIdentifier: 
-  targetType: 3
+  targetType: 4
+  targetFilter: 0
+  cardRace: 0
+  specificCard: {fileID: 0}

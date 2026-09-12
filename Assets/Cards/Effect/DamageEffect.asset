@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6057201aa1a9105fa9aac6c16e16e54f, type: 3}
   m_Name: DamageEffect
   m_EditorClassIdentifier: 
-  targetType: 2
+  targetType: 3
+  targetFilter: 0
+  cardRace: 8
+  specificCard: {fileID: 0}
   amount: 1

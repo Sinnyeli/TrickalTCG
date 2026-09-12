@@ -8,5 +8,7 @@ public enum CardKeyword
     Taunt,
     Bypass,
     Stealth,
-    Endure
+    Endure,
+    Shock,
+    FirstStrike
 }

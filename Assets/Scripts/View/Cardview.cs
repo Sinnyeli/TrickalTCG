@@ -89,6 +89,49 @@ public class CardView : CardviewBase,
     }
 
     // =====================================================
+    // MANUAL TARGET SPELL → UNIT
+    // =====================================================
+
+    if (runtimeCard.Data is SpellData spellData)
+    {
+        CardEffect effect =
+            spellData.SpellEffect;
+
+        if (effect != null)
+        {
+            switch (effect.TargetType)
+            {
+                case EffectTargetType.EnemyUnit:
+                case EffectTargetType.FriendlyUnit:
+                case EffectTargetType.AnyUnit:
+                case EffectTargetType.AnyTarget:
+
+                    MinionView targetView =
+                        GetMinionUnderPointer(eventData);
+
+                    if (targetView != null)
+                    {
+                        RuntimeCard targetCard =
+                            targetView.RuntimeCard;
+
+                        bool cast =
+                            GameManager.Instance.HandManager
+                                .PlayTargetedSpellFromHand(
+                                    runtimeCard,
+                                    targetCard
+                                );
+
+                        if (cast)
+                            return;
+                    }
+
+                    ReturnToHand();
+                    return;
+            }
+        }
+    }
+
+    // =====================================================
     // NORMAL CARD → BATTLEFIELD
     // =====================================================
 

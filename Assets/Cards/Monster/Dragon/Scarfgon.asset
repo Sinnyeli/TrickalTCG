@@ -18,9 +18,9 @@ MonoBehaviour:
   battlecry: {fileID: 11400000, guid: 779d586208e8e66458a805660d42b763, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
-  keywords: 
+  keywords: 03000000
   artwork: {fileID: 21300000, guid: 013ec1e91158bb715ab9f2c8f760f8c0, type: 3}
   manaCost: 1
   attack: 1
   health: 1
-  monsterType: 7
+  cardRace: 0
