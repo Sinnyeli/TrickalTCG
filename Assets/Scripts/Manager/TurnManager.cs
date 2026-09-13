@@ -74,10 +74,12 @@ public void StartTurn()
         GameManager.Instance.OpponentBattlefieldManager.RefreshAttackers(PlayerSide.Opponent);
     }
 
-/*    Debug.Log(
-        $"Turn {turnNumber} - {currentSide} turn. " +
-        $"Mana: {GetCurrentMana()}/{GetMaxMana(currentSide)}"
-    ); */
+   GameManager.Instance
+        .EffectManager
+        .TriggerTurnStart(currentSide);
+    
+    if (GameManager.Instance.IsGameOver)
+        return;
 
     GameManager.Instance.DrawCard(currentSide);
 }
@@ -90,6 +92,11 @@ public void StartTurn()
         Debug.Log(
             $"{currentSide} ended their turn."
         );
+
+        GameManager.Instance.EffectManager.TriggerTurnEnd(currentSide);
+
+        if (GameManager.Instance.IsGameOver)
+            return;
 
         if (currentSide == PlayerSide.Player)
         {

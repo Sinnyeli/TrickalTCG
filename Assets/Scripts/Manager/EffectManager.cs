@@ -494,5 +494,144 @@ private void ResolveRandomUnit(
         ResolveEffect(card, effect);
     }
 
+        public void ResolveResonance(RuntimeCard source)
+    {
+        if (source == null || source.Data == null)
+            return;
 
+        if (source.IsSilenced)
+            return;
+
+        CardEffect effect =
+            source.Data.Resonance;
+
+        if (effect == null)
+            return;
+
+        Debug.Log(
+            $"{source.Data.cardName} activates Resonance."
+        );
+
+        ResolveEffect(
+            source,
+            effect
+        );
+    }
+    public void TriggerResonance(PlayerSide side)
+    {
+        BattlefieldManager battlefield =
+            GameManager.Instance.GetBattlefield(side);
+
+        if (battlefield == null)
+            return;
+
+        List<RuntimeCard> minions =
+            new List<RuntimeCard>(battlefield.Minions);
+
+        foreach (RuntimeCard minion in minions)
+        {
+            if (minion == null)
+                continue;
+
+            if (minion.Data.Resonance == null)
+                continue;
+
+            ResolveResonance(minion);
+        }
+    }
+
+    public void ResolveTurnStart(RuntimeCard source)
+    {
+        if (source == null || source.Data == null)
+            return;
+
+        if (source.IsSilenced)
+            return;
+
+        CardEffect effect =
+            source.Data.TurnStart;
+
+        if (effect == null)
+            return;
+
+        Debug.Log(
+            $"{source.Data.cardName} activates Turn Start."
+        );
+
+        ResolveEffect(
+            source,
+            effect
+        );
+    }
+    public void ResolveTurnEnd(RuntimeCard source)
+    {
+        if (source == null || source.Data == null)
+            return;
+
+        if (source.IsSilenced)
+            return;
+
+        CardEffect effect =
+            source.Data.TurnEnd;
+
+        if (effect == null)
+            return;
+
+        Debug.Log(
+            $"{source.Data.cardName} activates Turn End."
+        );
+
+        ResolveEffect(
+            source,
+            effect
+        );
+    }
+public void TriggerTurnStart(PlayerSide side)
+{
+    BattlefieldManager battlefield =
+        GameManager.Instance.GetBattlefield(side);
+
+    if (battlefield == null)
+        return;
+
+    List<RuntimeCard> minions =
+        new List<RuntimeCard>(
+            battlefield.Minions
+        );
+
+    foreach (RuntimeCard minion in minions)
+    {
+        if (minion == null)
+            continue;
+
+        if (minion.Zone != CardZone.Field)
+            continue;
+
+        ResolveTurnStart(minion);
+    }
+}
+public void TriggerTurnEnd(PlayerSide side)
+{
+    BattlefieldManager battlefield =
+        GameManager.Instance.GetBattlefield(side);
+
+    if (battlefield == null)
+        return;
+
+    List<RuntimeCard> minions =
+        new List<RuntimeCard>(
+            battlefield.Minions
+        );
+
+    foreach (RuntimeCard minion in minions)
+    {
+        if (minion == null)
+            continue;
+
+        if (minion.Zone != CardZone.Field)
+            continue;
+
+        ResolveTurnEnd(minion);
+    }
+}
 }

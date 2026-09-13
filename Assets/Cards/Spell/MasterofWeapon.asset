@@ -18,7 +18,8 @@ MonoBehaviour:
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  resonance: {fileID: 0}
   keywords: 
   artwork: {fileID: 21300000, guid: c6526623a925a8c81851f40b5488130b, type: 3}
   manaCost: 1
-  spellEffect: {fileID: 11400000, guid: b0c52eed1561c80cdbe3c8f13e3d5920, type: 2}
+  spellEffect: {fileID: 11400000, guid: 779d586208e8e66458a805660d42b763, type: 2}

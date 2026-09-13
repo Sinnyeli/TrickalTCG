@@ -563,6 +563,10 @@ private void CompleteSpellCast(
     Debug.Log(
         $"{card.Data.cardName} finished casting."
     );
+    
+    GameManager.Instance
+        .EffectManager
+        .TriggerResonance(card.Owner);
 
     turnManager.SpendMana(
         card.Owner,
@@ -651,6 +655,90 @@ public bool PlayTargetedSpellFromHand(
         card,
         targets
     );
+
+    CompleteSpellCast(
+        card,
+        cost
+    );
+
+    return true;
+}
+
+public bool PlayTargetedSpellFromHand(
+    RuntimeCard card,
+    PlayerView heroTarget)
+{
+    if (card == null || heroTarget == null)
+        return false;
+
+    if (!(card.Data is SpellData spellData))
+        return false;
+
+    CardEffect effect = spellData.SpellEffect;
+
+    if (effect == null)
+        return false;
+
+    TurnManager turnManager =
+        GameManager.Instance.TurnManager;
+
+    if (turnManager == null)
+        return false;
+
+    if (!turnManager.IsMyTurn(card.Owner))
+        return false;
+
+    int cost = card.Data.manaCost;
+
+    if (!turnManager.CanSpendMana(card.Owner, cost))
+        return false;
+
+    switch (effect.TargetType)
+    {
+        case EffectTargetType.EnemyHero:
+            if (heroTarget.Side == card.Owner)
+                return false;
+            break;
+
+        case EffectTargetType.FriendlyHero:
+            if (heroTarget.Side != card.Owner)
+                return false;
+            break;
+
+        case EffectTargetType.AnyTarget:
+            break;
+
+        default:
+            return false;
+    }
+
+    Debug.Log(
+        $"{card.Owner} casts {card.Data.cardName} " +
+        $"on {heroTarget.Side} Hero."
+    );
+
+    if (effect is DamageEffect damageEffect)
+    {
+        damageEffect.ResolveHero(
+            card,
+            heroTarget
+        );
+    }
+    else if (effect is HealEffect healEffect)
+    {
+        healEffect.ResolveHero(
+            card,
+            heroTarget
+        );
+    }
+    else
+    {
+        Debug.LogWarning(
+            $"{effect.name} does not support Hero targeting."
+        );
+
+        return false;
+    }
 
     CompleteSpellCast(
         card,

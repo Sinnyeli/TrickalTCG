@@ -18,7 +18,8 @@ MonoBehaviour:
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
-  keywords: 00000000060000000400000005000000
+  resonance: {fileID: 11400000, guid: b0c52eed1561c80cdbe3c8f13e3d5920, type: 2}
+  keywords: 
   artwork: {fileID: 21300000, guid: 90df300fa7b1ce205be835511122f93b, type: 3}
   manaCost: 1
   typeIcon: {fileID: 21300000, guid: 0c84cabc6b56d30549e7888a4567eb04, type: 3}

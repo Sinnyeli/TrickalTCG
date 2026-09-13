@@ -21,10 +21,16 @@ public abstract class CardData : ScriptableObject
     [SerializeField] private CardEffect battlecry;
     [SerializeField] private CardEffect deathrattle;
     [SerializeField] private CardEffect passive;
+    [SerializeField] private CardEffect resonance;
 
+    [SerializeField] private CardEffect turnStart;
+    [SerializeField] private CardEffect turnEnd;
     public CardEffect Battlecry => battlecry;
     public CardEffect Deathrattle => deathrattle;
     public CardEffect Passive => passive;
+    public CardEffect Resonance => resonance;
+    public CardEffect TurnStart => turnStart;
+    public CardEffect TurnEnd => turnEnd;
 
 
     [Header("Keywords")]

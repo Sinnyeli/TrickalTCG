@@ -88,68 +88,104 @@ public class CardView : CardviewBase,
         return;
     }
 
-    // =====================================================
-    // MANUAL TARGET SPELL → UNIT
-    // =====================================================
+// =====================================================
+// MANUAL TARGET SPELL → UNIT
+// =====================================================
 
-    if (runtimeCard.Data is SpellData spellData)
+if (runtimeCard.Data is SpellData spellData)
+{
+    CardEffect effect =
+        spellData.SpellEffect;
+
+    if (effect != null)
     {
-        CardEffect effect =
-            spellData.SpellEffect;
-
-        if (effect != null)
+        switch (effect.TargetType)
         {
-            switch (effect.TargetType)
+            case EffectTargetType.EnemyUnit:
+            case EffectTargetType.FriendlyUnit:
+            case EffectTargetType.AnyUnit:
             {
-                case EffectTargetType.EnemyUnit:
-                case EffectTargetType.FriendlyUnit:
-                case EffectTargetType.AnyUnit:
-                case EffectTargetType.AnyTarget:
+                MinionView targetView =
+                    GetMinionUnderPointer(eventData);
 
-                    MinionView targetView =
-                        GetMinionUnderPointer(eventData);
+                if (targetView != null)
+                {
+                    bool cast =
+                        GameManager.Instance.HandManager
+                            .PlayTargetedSpellFromHand(
+                                runtimeCard,
+                                targetView.RuntimeCard
+                            );
 
-                    if (targetView != null)
-                    {
-                        RuntimeCard targetCard =
-                            targetView.RuntimeCard;
+                    if (cast)
+                        return;
+                }
 
-                        bool cast =
-                            GameManager.Instance.HandManager
-                                .PlayTargetedSpellFromHand(
-                                    runtimeCard,
-                                    targetCard
-                                );
+                ReturnToHand();
+                return;
+            }
 
-                        if (cast)
-                            return;
-                    }
+            case EffectTargetType.AnyTarget:
+            {
+                MinionView targetView =
+                    GetMinionUnderPointer(eventData);
 
-                    ReturnToHand();
-                    return;
+                if (targetView != null)
+                {
+                    bool cast =
+                        GameManager.Instance.HandManager
+                            .PlayTargetedSpellFromHand(
+                                runtimeCard,
+                                targetView.RuntimeCard
+                            );
+
+                    if (cast)
+                        return;
+                }
+
+                PlayerView heroTarget =
+                    GetPlayerUnderPointer(eventData);
+
+                if (heroTarget != null)
+                {
+                    bool cast =
+                        GameManager.Instance.HandManager
+                            .PlayTargetedSpellFromHand(
+                                runtimeCard,
+                                heroTarget
+                            );
+
+                    if (cast)
+                        return;
+                }
+
+                ReturnToHand();
+                return;
             }
         }
     }
+} // <-- THIS was missing / misplaced
 
-    // =====================================================
-    // NORMAL CARD → BATTLEFIELD
-    // =====================================================
 
-    bool droppedOnBattlefield =
-        battlefieldDropZone != null &&
-        battlefieldDropZone.IsPointerInside(eventData);
+// =====================================================
+// NORMAL CARD → BATTLEFIELD
+// =====================================================
 
-    if (droppedOnBattlefield)
-    {
-        bool played =
-            GameManager.Instance.HandManager
-                .PlayCardFromHand(runtimeCard);
+bool droppedOnBattlefield =
+    battlefieldDropZone != null &&
+    battlefieldDropZone.IsPointerInside(eventData);
 
-        if (played)
-            return;
-    }
+if (droppedOnBattlefield)
+{
+    bool played =
+        GameManager.Instance.HandManager
+            .PlayCardFromHand(runtimeCard);
 
-    ReturnToHand();
+    if (played)
+        return;
+}
+
+ReturnToHand();
 }
 
     private void ReturnToHand()
@@ -169,24 +205,49 @@ public class CardView : CardviewBase,
 
     private MinionView GetMinionUnderPointer(
     PointerEventData eventData)
-{
-    List<RaycastResult> results =
-        new List<RaycastResult>();
-
-    EventSystem.current.RaycastAll(
-        eventData,
-        results
-    );
-
-    foreach (RaycastResult result in results)
     {
-        MinionView minionView =
-            result.gameObject.GetComponentInParent<MinionView>();
+        List<RaycastResult> results =
+            new List<RaycastResult>();
 
-        if (minionView != null)
-            return minionView;
+        EventSystem.current.RaycastAll(
+            eventData,
+            results
+        );
+
+        foreach (RaycastResult result in results)
+        {
+            MinionView minionView =
+                result.gameObject.GetComponentInParent<MinionView>();
+
+            if (minionView != null)
+                return minionView;
+        }
+
+        return null;
     }
 
-    return null;
+    private PlayerView GetPlayerUnderPointer(
+        PointerEventData eventData)
+    {
+        List<RaycastResult> results =
+            new List<RaycastResult>();
+
+        EventSystem.current.RaycastAll(
+            eventData,
+            results
+        );
+
+        foreach (RaycastResult result in results)
+        {
+            PlayerView playerView =
+                result.gameObject.GetComponentInParent<PlayerView>();
+
+            if (playerView != null)
+                return playerView;
+        }
+
+        return null;
+    }
+
+
 }
-    }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd2997eb252c9be16baf8174d7653317, type: 3}
   m_Name: Buff
   m_EditorClassIdentifier: 
-  targetType: 11
+  targetType: 1
   targetFilter: 0
   cardRace: 8
   specificCard: {fileID: 0}

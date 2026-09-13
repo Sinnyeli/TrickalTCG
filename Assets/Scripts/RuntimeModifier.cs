@@ -10,6 +10,9 @@ public class RuntimeModifier
     public RuntimeCard Source { get; private set; }
     public bool IsPassive { get; private set; }
 
+    public ModifierDuration Duration { get; private set; }
+    public int RemainingTurns { get; private set; }
+
 public RuntimeModifier(int attackBonus, int healthBonus, bool canBeSilenced, RuntimeCard source = null, bool isPassive = false)
 {
     AttackBonus = attackBonus;
