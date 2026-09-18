@@ -61,5 +61,18 @@ public abstract class CardviewBase : MonoBehaviour
         }
 
     }
+    public void RefreshCardView()
+    {
+        if (runtimeCard == null)
+            return;
+
+        if (costText != null)
+        {
+            costText.text =
+                runtimeCard.GetManaCost().ToString();
+        }
+
+        // Keep any other runtime-updating fields here later.
+    }
 
 }

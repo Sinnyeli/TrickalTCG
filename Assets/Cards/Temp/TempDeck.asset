@@ -12,19 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f619ac805d04c0d3af2887e58680946, type: 3}
   m_Name: TempDeck
   m_EditorClassIdentifier: 
-  commander: {fileID: 11400000, guid: c9aeceeb8c29d6e53863d41c713f55bf, type: 2}
+  commander: {fileID: 11400000, guid: 2f4cc5e7affa134cfa7bf67e1e18f02d, type: 2}
   cards:
   - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
   - {fileID: 11400000, guid: a61d99c26c9679b90b89191d9d14d0bd, type: 2}
-  - {fileID: 11400000, guid: a61d99c26c9679b90b89191d9d14d0bd, type: 2}
   - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
   - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
   - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
   - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
-  - {fileID: 11400000, guid: 0ef8a87833a78aaa2a89ceb81f220d68, type: 2}
-  - {fileID: 11400000, guid: 0ef8a87833a78aaa2a89ceb81f220d68, type: 2}
-  - {fileID: 11400000, guid: 0ef8a87833a78aaa2a89ceb81f220d68, type: 2}
-  - {fileID: 11400000, guid: 0ef8a87833a78aaa2a89ceb81f220d68, type: 2}
-  - {fileID: 11400000, guid: 0ef8a87833a78aaa2a89ceb81f220d68, type: 2}
-  - {fileID: 11400000, guid: 0ef8a87833a78aaa2a89ceb81f220d68, type: 2}
-  - {fileID: 11400000, guid: 0ef8a87833a78aaa2a89ceb81f220d68, type: 2}
+  - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
+  - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
+  - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
+  - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
+  - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
+  - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}

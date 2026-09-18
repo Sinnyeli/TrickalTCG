@@ -634,4 +634,106 @@ public void TriggerTurnEnd(PlayerSide side)
         ResolveTurnEnd(minion);
     }
 }
+
+public void ResolveOnDamageTaken(RuntimeCard source)
+{
+    if (source == null || source.Data == null)
+        return;
+
+    Debug.Log(
+        $"OnDamageTaken check: {source.Data.cardName}"
+    );
+
+    if (source.IsSilenced)
+    {
+        Debug.Log("Blocked because silenced.");
+        return;
+    }
+
+    CardEffect effect =
+        source.Data.OnDamageTaken;
+
+    if (effect == null)
+    {
+        Debug.Log(
+            $"{source.Data.cardName} has no OnDamageTaken effect assigned."
+        );
+
+        return;
+    }
+
+    if (source.Zone != CardZone.Field)
+    {
+        Debug.Log(
+            $"{source.Data.cardName} is not on the field."
+        );
+
+        return;
+    }
+
+    Debug.Log(
+        $"{source.Data.cardName} activates OnDamageTaken."
+    );
+
+    ResolveEffect(
+        source,
+        effect
+    );
+}
+public void ResolveOnAttack(RuntimeCard source)
+{
+    if (source == null || source.Data == null)
+        return;
+
+    if (source.IsSilenced)
+        return;
+
+    if (source.Zone != CardZone.Field)
+        return;
+
+    CardEffect effect =
+        source.Data.OnAttack;
+
+    if (effect == null)
+        return;
+
+    Debug.Log(
+        $"{source.Data.cardName} activates On Attack."
+    );
+
+    ResolveEffect(
+        source,
+        effect
+    );
+}
+public void ResolveOnDraw(RuntimeCard source)
+{
+    if (source == null || source.Data == null)
+        return;
+
+    var effects =
+        source.Data.OnDrawEffects;
+
+    if (effects == null ||
+        effects.Count == 0)
+        return;
+
+    Debug.Log(
+        $"{source.Data.cardName} activates On Draw " +
+        $"with {effects.Count} effect(s)."
+    );
+
+    foreach (CardEffect effect in effects)
+    {
+        if (effect == null)
+            continue;
+
+        ResolveEffect(
+            source,
+            effect
+        );
+    }
+}
+
+
 }

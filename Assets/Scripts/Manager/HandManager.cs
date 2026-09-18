@@ -68,6 +68,8 @@ public class HandManager : MonoBehaviour
 
     hand.Add(card);
 
+    card.ModifyManaCost(-2);
+    RefreshHandLayout();
     CreateCardView(card);
 
     return true;
@@ -319,7 +321,7 @@ public bool PlayCardFromHand(RuntimeCard card)
         return false;
     }
 
-    int cost = card.Data.manaCost;
+    int cost = card.GetManaCost();
 
     if (!turnManager.CanSpendMana(card.Owner, cost))
     {
@@ -389,7 +391,7 @@ public bool PlayCardFromHand(RuntimeCard card)
         return false;
         }
 
-        int cost = card.Data.manaCost;
+        int cost = card.GetManaCost();
 
         if (!turnManager.CanSpendMana(card.Owner, cost))
         {
@@ -508,7 +510,7 @@ private bool PlaySpellFromHand(RuntimeCard card)
     if (turnManager == null)
         return false;
 
-    int cost = card.Data.manaCost;
+    int cost = card.GetManaCost();
 
     switch (effect.TargetType)
     {
@@ -608,7 +610,7 @@ public bool PlayTargetedSpellFromHand(
     if (!turnManager.IsMyTurn(card.Owner))
         return false;
 
-    int cost = card.Data.manaCost;
+    int cost = card.GetManaCost();
 
     if (!turnManager.CanSpendMana(card.Owner, cost))
         return false;
@@ -688,7 +690,7 @@ public bool PlayTargetedSpellFromHand(
     if (!turnManager.IsMyTurn(card.Owner))
         return false;
 
-    int cost = card.Data.manaCost;
+    int cost = card.GetManaCost();
 
     if (!turnManager.CanSpendMana(card.Owner, cost))
         return false;
@@ -746,6 +748,55 @@ public bool PlayTargetedSpellFromHand(
     );
 
     return true;
+}
+
+public void RefreshCardView(RuntimeCard card)
+{
+    if (card == null)
+        return;
+
+    CardView view =
+        FindCardView(card);
+
+    if (view == null)
+        return;
+
+    view.RefreshCardView();
+}
+
+public void RefreshAllCardViews()
+{
+    foreach (Transform child in handContainer)
+    {
+        CardView view =
+            child.GetComponent<CardView>();
+
+        if (view == null)
+            continue;
+
+        view.RefreshCardView();
+    }
+}
+
+public void TestReduceFirstCardCost()
+{
+    RuntimeCard card =
+        GetFirstNormalCard();
+
+    if (card == null)
+        return;
+
+    Debug.Log(
+        $"Before: {card.GetManaCost()}"
+    );
+
+    card.ModifyManaCost(-2);
+
+    Debug.Log(
+        $"After: {card.GetManaCost()}"
+    );
+
+    RefreshCardView(card);
 }
 
 

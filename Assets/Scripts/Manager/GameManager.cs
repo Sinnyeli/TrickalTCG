@@ -156,12 +156,14 @@ private void Awake()
             }
 
             RuntimeCard card = deck.DrawCard();
+            
 
             if (card != null)
             {
                 card.SetOwner(side);
 
             bool added = hand.AddCard(card);
+            GameManager.Instance.EffectManager.ResolveOnDraw(card);
 
             if (!added)
             {
@@ -325,7 +327,14 @@ private void CreatePlayerViews()
             gameOverUI.Show(winner);
         }
  
+public HandManager GetHandManager(
+    PlayerSide side)
+{
+    if (side == PlayerSide.Player)
+        return handManager;
 
+    return opponentHandManager;
+}
 
 ////////////////////////////
     // Test Area. 

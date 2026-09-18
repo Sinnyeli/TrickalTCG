@@ -49,21 +49,20 @@ public class CombatManager : MonoBehaviour
     }
 public bool Attack(RuntimeCard defender)
 {
-
-
     RuntimeCard attacker = selectedAttacker;
-
 
     if (selectedAttacker == null)
     {
-          return false;
+        return false;
     }
-    // DIdn't select anything. 
+
+    // Didn't select anything.
     if (defender == null)
     {
         Debug.Log("No defender selected.");
         return false;
     }
+
     // Cannot attack own minion.
     if (selectedAttacker.Owner == defender.Owner)
     {
@@ -71,38 +70,50 @@ public bool Attack(RuntimeCard defender)
         return false;
     }
 
-
-
     Debug.Log(
         $"{attacker.Data.cardName} attacks " +
         $"{defender.Data.cardName}"
     );
+
     attacker.RemoveStealth();
+
+    GameManager.Instance.EffectManager.ResolveOnAttack(attacker);
+
     int attackerDamage = attacker.GetAttack();
-    
     int defenderDamage = defender.GetAttack();
 
-  
     bool attackerHasFirstStrike =
         attacker.HasKeyword(CardKeyword.FirstStrike);
 
     if (attackerHasFirstStrike)
     {
         // Attacker strikes first.
-        defender.TakeDamage(attackerDamage);
+        bool defenderTookDamage =
+            defender.TakeDamage(attackerDamage);
 
-        // Shock from the attacker.
+        TriggerOnDamageTaken(
+            defender,
+            defenderTookDamage
+        );
+
+        // Shock from attacker.
         if (attacker.HasKeyword(CardKeyword.Shock))
         {
             defender.Kill();
         }
 
-        // Only retaliate if the defender survived.
+        // Defender only retaliates if still alive.
         if (defender.CurrentHealth > 0)
         {
-            attacker.TakeDamage(defenderDamage);
+            bool attackerTookDamage =
+                attacker.TakeDamage(defenderDamage);
 
-            // Shock from the defender.
+            TriggerOnDamageTaken(
+                attacker,
+                attackerTookDamage
+            );
+
+            // Shock from defender.
             if (defender.HasKeyword(CardKeyword.Shock))
             {
                 attacker.Kill();
@@ -112,25 +123,43 @@ public bool Attack(RuntimeCard defender)
     else
     {
         // Normal simultaneous combat.
-        defender.TakeDamage(attackerDamage);
-        attacker.TakeDamage(defenderDamage);
+        bool defenderTookDamage =
+            defender.TakeDamage(attackerDamage);
 
-        // Shock from the attacker.
+        bool attackerTookDamage =
+            attacker.TakeDamage(defenderDamage);
+
+        TriggerOnDamageTaken(
+            defender,
+            defenderTookDamage
+        );
+
+        TriggerOnDamageTaken(
+            attacker,
+            attackerTookDamage
+        );
+
+        // Shock from attacker.
         if (attacker.HasKeyword(CardKeyword.Shock))
         {
             defender.Kill();
         }
 
-        // Shock from the defender.
+        // Shock from defender.
         if (defender.HasKeyword(CardKeyword.Shock))
         {
             attacker.Kill();
         }
-}
+    }
 
-    GameManager.Instance.GetBattlefield(attacker.Owner).RefreshMinionView(attacker);
+    GameManager.Instance
+        .GetBattlefield(attacker.Owner)
+        .RefreshMinionView(attacker);
 
-    GameManager.Instance.GetBattlefield(defender.Owner).RefreshMinionView(defender);
+    GameManager.Instance
+        .GetBattlefield(defender.Owner)
+        .RefreshMinionView(defender);
+
     attacker.DisableAttack();
 
     CheckDeath(attacker);
@@ -140,6 +169,7 @@ public bool Attack(RuntimeCard defender)
 
     return true;
 }
+
 
 public bool Attack(PlayerView defender)
 {
@@ -184,6 +214,11 @@ public bool Attack(PlayerView defender)
         return false;
     }
     attacker.RemoveStealth();
+
+
+
+    GameManager.Instance.EffectManager.ResolveOnAttack(attacker);
+
     int attackerDamage = attacker.GetAttack();
     
     Debug.Log(
@@ -217,6 +252,24 @@ private bool HasTaunt(PlayerSide defendingSide)
     return false;
 }
 
+private void TriggerOnDamageTaken(
+    RuntimeCard card,
+    bool tookDamage)
+{
+    if (!tookDamage)
+        return;
+
+    if (card == null)
+        return;
+
+    if (card.CurrentHealth <= 0)
+        return;
+
+    GameManager.Instance
+        .EffectManager
+        .ResolveOnDamageTaken(card);
+}
+
 
 public void CheckDeath(RuntimeCard card)
 {
@@ -238,6 +291,9 @@ public void CheckDeath(RuntimeCard card)
 
     battlefield.RemoveCard(card);
 }
+
+
+
 
     public void ClearSelection()
     {

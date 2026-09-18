@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Mathematics;
 
 public class RuntimeCard
 {
@@ -16,6 +17,18 @@ public class RuntimeCard
     private bool isStealthed;
     public bool IsStealthed => isStealthed;
 
+    private int manaCostModifier = 0;
+
+    public int GetManaCost()
+{
+    if (Data == null)
+        return 0;
+
+    return Mathf.Max(
+        0,
+        Data.manaCost + manaCostModifier
+    );
+}
 
     private const int MaxArtifacts = 3;
     private int? baseAttackOverride;
@@ -108,10 +121,10 @@ public class RuntimeCard
         canAttack = false;
     }
 
-    public void TakeDamage(int amount)
+    public bool TakeDamage(int amount)
     {
         if (amount <= 0)
-            return;
+            return false;
 
         int actualDamage = amount;
 
@@ -133,6 +146,7 @@ public class RuntimeCard
         {
             currentHealth = 0;
         }
+        return true;
     }
     public void Heal(int amount)
     {
@@ -275,6 +289,22 @@ public class RuntimeCard
             {
                 currentHealth += modifier.HealthBonus;
             }
+        }
+
+
+        public void ModifyManaCost(int amount)
+        {
+            manaCostModifier += amount;
+        }
+
+        public void SetManaCostModifier(int amount)
+        {
+            manaCostModifier = amount;
+        }
+
+        public void ResetManaCostModifier()
+        {
+            manaCostModifier = 0;
         }
     public void RemoveSilenceableModifiers()
     {

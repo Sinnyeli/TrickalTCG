@@ -9,14 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e236cd4f248d599caa7f95e29dae915d, type: 3}
-  m_Name: SetBaseStatsEffect
+  m_Script: {fileID: 11500000, guid: 6057201aa1a9105fa9aac6c16e16e54f, type: 3}
+  m_Name: BombEffect
   m_EditorClassIdentifier: 
-  targetType: 15
-  targetFilter: 3
-  cardRace: 8
+  targetType: 6
+  targetFilter: 0
+  cardRace: 0
   cardType: 0
-  specificCard: {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
-  attack: 5
-  health: 2
-  isPassive: 1
+  specificCard: {fileID: 0}
+  amount: 3
