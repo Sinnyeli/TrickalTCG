@@ -139,44 +139,73 @@ private void Awake()
         }
     }
 
-        public void DrawCard(PlayerSide side)
-        {
-            DeckManager deck;
-            HandManager hand;
+       public void DrawCard(PlayerSide side)
+{
+    DeckManager deck;
+    HandManager hand;
 
-            if (side == PlayerSide.Player)
-            {
-                deck = deckManager;
-                hand = handManager;
-            }
-            else
-            {
-                deck = opponentDeckManager;
-                hand = opponentHandManager;
-            }
+    if (side == PlayerSide.Player)
+    {
+        deck = deckManager;
+        hand = handManager;
+    }
+    else
+    {
+        deck = opponentDeckManager;
+        hand = opponentHandManager;
+    }
 
-            RuntimeCard card = deck.DrawCard();
-            
+    RuntimeCard card =
+        deck.DrawCard();
 
-            if (card != null)
-            {
-                card.SetOwner(side);
+    if (card == null)
+    {
+        Debug.Log(
+            $"{side} cannot draw. Deck is empty."
+        );
 
-            bool added = hand.AddCard(card);
-            GameManager.Instance.EffectManager.ResolveOnDraw(card);
+        return;
+    }
 
-            if (!added)
-            {
-                deck.Discard(card);
-            }
+    HandleDrawnCard(
+        card,
+        side
+    );
+}
 
-                return;
-            }
-            Debug.Log(
-                    $"{side} cannot draw. Deck is empty."
-                );
-            
-        }
+public void HandleDrawnCard(
+    RuntimeCard card,
+    PlayerSide side)
+{
+    if (card == null)
+        return;
+
+    DeckManager deck;
+    HandManager hand;
+
+    if (side == PlayerSide.Player)
+    {
+        deck = deckManager;
+        hand = handManager;
+    }
+    else
+    {
+        deck = opponentDeckManager;
+        hand = opponentHandManager;
+    }
+
+    card.SetOwner(side);
+
+    bool added =
+        hand.AddCard(card);
+
+    EffectManager.ResolveOnDraw(card);
+
+    if (!added)
+    {
+        deck.Discard(card);
+    }
+}
 //// //////////////////
 ///  Create Player Views
 /// ///////////////////

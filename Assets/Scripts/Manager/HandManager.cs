@@ -68,7 +68,6 @@ public class HandManager : MonoBehaviour
 
     hand.Add(card);
 
-    card.ModifyManaCost(-2);
     RefreshHandLayout();
     CreateCardView(card);
 
@@ -353,9 +352,10 @@ public bool PlayCardFromHand(RuntimeCard card)
     if (!success)
         return false;
    // Only spend mana after the card successfully enters the field.
-    turnManager.SpendMana(card.Owner, cost);
-
-    RemoveCardFromHand(card);
+        turnManager.SpendMana(
+            card.Owner,
+            cost
+        );
 
     return true;
 }

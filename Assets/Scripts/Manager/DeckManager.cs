@@ -114,6 +114,54 @@ public class DeckManager : MonoBehaviour
         return card;
     }
 
+    public RuntimeCard DrawSpecificCard(CardData cardData)
+    {
+        if (cardData == null)
+            return null;
+
+        RuntimeCard card = drawPile.Find(
+            c => c != null &&
+                c.Data == cardData
+        );
+
+        if (card == null)
+        {
+            Debug.Log(
+                $"{cardData.cardName} was not found in deck."
+            );
+
+            return null;
+        }
+
+        drawPile.Remove(card);
+
+        card.ChangeZone(CardZone.Hand);
+
+        return card;
+    }
+
+    public RuntimeCard DrawRandomMatchingCard(
+    System.Predicate<RuntimeCard> predicate)
+{
+    if (predicate == null)
+        return null;
+
+    List<RuntimeCard> matches =
+        drawPile.FindAll(predicate);
+
+    if (matches.Count == 0)
+        return null;
+
+    RuntimeCard card =
+        matches[Random.Range(0, matches.Count)];
+
+    drawPile.Remove(card);
+
+    card.ChangeZone(CardZone.Hand);
+
+    return card;
+}
+
     // =========================================
     // ADD CARD TO DECK
     // =========================================
@@ -187,4 +235,6 @@ public class DeckManager : MonoBehaviour
                 temp;
         }
     }
+
+    
 }

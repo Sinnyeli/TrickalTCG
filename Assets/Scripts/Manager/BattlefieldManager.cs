@@ -41,61 +41,90 @@ public class BattlefieldManager : MonoBehaviour
 
         return artifacts;
     }
-    public bool PlayCard(RuntimeCard card)
+  public bool PlayCard(RuntimeCard card)
+{
+    if (card == null)
     {
-        if (card == null)
-        {
-            Debug.LogWarning("Tried to play a null card.");
-            return false;
-        }
+        Debug.LogWarning(
+            "Tried to play a null card."
+        );
 
-        // Card must currently be in Hand.
-        if (card.Zone != CardZone.Hand)
-        {
-            Debug.LogWarning(
-                $"{card.Data.cardName} cannot be played. " +
-                $"Current zone: {card.Zone}"
-            );
-
-            return false;
-        }
-
-        // Check field capacity.
-        if (minions.Count >= maxMinions)
-        {
-            Debug.Log("Battlefield is full!");
-            return false;
-        }
-
-        // Only Monsters and Apostles can become minions.
-        if (!(card.Data is MonsterData) &&
-            !(card.Data is ApostleData))
-        {
-            Debug.LogWarning(
-                $"{card.Data.cardName} cannot be placed on the battlefield."
-            );
-
-            return false;
-        }
-
-
-        // Add to battlefield list.
-        minions.Add(card);
-
-        // Change logical zone.
-        card.ChangeZone(CardZone.Field);
-        card.InitializeCombatStats();
-        // Create visual representation.
-        CreateMinionView(card);
-
-        RefreshPassives();
-        RefreshArtifactEffects();
-        //Debug.Log($"{card.Data.cardName} entered the {side} battlefield.");
-
-        GameManager.Instance.EffectManager.ResolveBattlecry(card);
-
-        return true;
+        return false;
     }
+
+    // Card must currently be in Hand.
+    if (card.Zone != CardZone.Hand)
+    {
+        Debug.LogWarning(
+            $"{card.Data.cardName} cannot be played. " +
+            $"Current zone: {card.Zone}"
+        );
+
+        return false;
+    }
+
+    // Check field capacity.
+    if (minions.Count >= maxMinions)
+    {
+        Debug.Log(
+            "Battlefield is full!"
+        );
+
+        return false;
+    }
+
+    // Only Monsters and Apostles can become minions.
+    if (!(card.Data is MonsterData) &&
+        !(card.Data is ApostleData))
+    {
+        Debug.LogWarning(
+            $"{card.Data.cardName} cannot be placed " +
+            $"on the battlefield."
+        );
+
+        return false;
+    }
+
+    // =====================================================
+    // COMMIT PLAY
+    // =====================================================
+
+    // Validation succeeded.
+    // The card is now being played, so it leaves the hand
+    // BEFORE any Battlecry can resolve.
+    HandManager hand =
+        GameManager.Instance.GetHandManager(
+            card.Owner
+        );
+
+    if (hand != null)
+    {
+        hand.RemoveCardFromHand(card);
+    }
+
+    // Add to battlefield.
+    minions.Add(card);
+
+    // Change logical zone.
+    card.ChangeZone(
+        CardZone.Field
+    );
+
+    card.InitializeCombatStats();
+
+    // Create visual representation.
+    CreateMinionView(card);
+
+    RefreshPassives();
+    RefreshArtifactEffects();
+
+    // Battlecry happens AFTER the card has left the hand.
+    GameManager.Instance
+        .EffectManager
+        .ResolveBattlecry(card);
+
+    return true;
+}
 
     private void CreateMinionView(RuntimeCard card)
     {
