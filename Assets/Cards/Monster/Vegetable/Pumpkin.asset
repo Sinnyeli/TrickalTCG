@@ -9,19 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
-  m_Name: Sherum
+  m_Script: {fileID: 11500000, guid: 03b276b4f3674a1b9b4abf52ab29cb78, type: 3}
+  m_Name: Pumpkin
   m_EditorClassIdentifier: 
   cardID: 
-  cardName: Sherum
+  cardName: Pumpkin
   description: 
-  manaCost: 3
-  artwork: {fileID: 21300000, guid: 4bee7539300f52e27987e8ca90b125c8, type: 3}
+  manaCost: 1
+  artwork: {fileID: -1028352994, guid: 002680c724a9718aeb265dfa296f6593, type: 3}
   onDrawEffects: []
-  attack: 2
-  health: 2
-  cardRace: 1
-  keywords: 
+  attack: 1
+  health: 1
+  cardRace: 0
+  keywords: 02000000
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
@@ -30,5 +30,3 @@ MonoBehaviour:
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
-  typeIcon: {fileID: 21300000, guid: a73eee8afe3f7e6c288472188b8ebdc5, type: 3}
-  maxEquipment: 3

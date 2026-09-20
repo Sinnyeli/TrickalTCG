@@ -15,15 +15,20 @@ MonoBehaviour:
   cardID: 
   cardName: Prickle
   description: 
+  manaCost: 0
+  artwork: {fileID: 21300000, guid: 9766c50a99f38f1a1b5a96e76e37ff26, type: 3}
+  onDrawEffects: []
+  attack: 3
+  health: 3
+  cardRace: 1
+  keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
   resonance: {fileID: 11400000, guid: 779d586208e8e66458a805660d42b763, type: 2}
-  keywords: 
-  artwork: {fileID: 21300000, guid: 9766c50a99f38f1a1b5a96e76e37ff26, type: 3}
-  manaCost: 0
+  turnStart: {fileID: 0}
+  turnEnd: {fileID: 0}
+  onDamageTaken: {fileID: 0}
+  onAttack: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: a73eee8afe3f7e6c288472188b8ebdc5, type: 3}
-  attack: 3
-  health: 3
-  cardRace: 0
   maxEquipment: 3

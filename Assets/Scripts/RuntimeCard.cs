@@ -518,7 +518,37 @@ public void ResetAfterBounce()
         GetMaxHealth();
 }
 
+public bool TransformInto(CardData newData)
+{
+    if (newData == null)
+        return false;
 
+    if (!(newData is MinionData))
+    {
+        Debug.LogWarning(
+            "RuntimeCard can only transform into MinionData."
+        );
+
+        return false;
+    }
+
+    Data = newData;
+
+    // Clear temporary battlefield modifications.
+    modifiers.Clear();
+
+    ClearPassiveBaseStatOverride();
+
+    isSilenced = false;
+    isStealthed = false;
+
+    cannotAttackHero = false;
+
+    // Initialize using the NEW card's stats.
+    InitializeCombatStats();
+
+    return true;
+}
 
 
 }

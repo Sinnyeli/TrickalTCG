@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f619ac805d04c0d3af2887e58680946, type: 3}
   m_Name: ShupangTest
   m_EditorClassIdentifier: 
-  commander: {fileID: 11400000, guid: e5546e7ff53c4282eacff852d0dd6d99, type: 2}
+  commander: {fileID: 11400000, guid: e0ecc3832d4a7c05fba33b1a432257e6, type: 2}
   cards:
   - {fileID: 11400000, guid: b8516e7ba67b964fb919c433abd94af6, type: 2}
   - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
   - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
   - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
-  - {fileID: 11400000, guid: e5546e7ff53c4282eacff852d0dd6d99, type: 2}
-  - {fileID: 11400000, guid: e5546e7ff53c4282eacff852d0dd6d99, type: 2}
-  - {fileID: 11400000, guid: e5546e7ff53c4282eacff852d0dd6d99, type: 2}
+  - {fileID: 11400000, guid: 5ef305631e999d3e792c0564adf4bc66, type: 2}
+  - {fileID: 11400000, guid: 5ef305631e999d3e792c0564adf4bc66, type: 2}
+  - {fileID: 11400000, guid: 5ef305631e999d3e792c0564adf4bc66, type: 2}
+  - {fileID: 11400000, guid: 5ef305631e999d3e792c0564adf4bc66, type: 2}

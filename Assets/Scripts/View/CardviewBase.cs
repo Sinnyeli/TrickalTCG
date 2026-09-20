@@ -30,9 +30,10 @@ public abstract class CardviewBase : MonoBehaviour
         descriptionText.text = data.description;
         costText.text = data.manaCost.ToString();
 
-        if (data.artwork != null)
+      if (artworkImage != null)
+        {
             artworkImage.sprite = data.artwork;
-        
+        }
 
         attackText.gameObject.SetActive(false);
         healthText.gameObject.SetActive(false);

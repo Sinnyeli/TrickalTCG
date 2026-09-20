@@ -528,7 +528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1688b8186be321ded9ee128b9e098479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deckData: {fileID: 11400000, guid: 54088d31768fe23ca9f3de603d11f06a, type: 2}
+  deckData: {fileID: 11400000, guid: 1da15522d8fb52b199f8110110d52553, type: 2}
   owner: 0
 --- !u!4 &193539282
 Transform:
@@ -3901,7 +3901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1688b8186be321ded9ee128b9e098479, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deckData: {fileID: 11400000, guid: f06473405009e3bde8ccc88b04307212, type: 2}
+  deckData: {fileID: 11400000, guid: 54088d31768fe23ca9f3de603d11f06a, type: 2}
   owner: 1
 --- !u!4 &2143123145
 Transform:

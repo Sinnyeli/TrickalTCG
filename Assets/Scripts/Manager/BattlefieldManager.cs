@@ -436,6 +436,114 @@ public bool BounceCard(RuntimeCard card)
     }
 }
 
+public bool TransformCard(
+    RuntimeCard target,
+    CardData newData)
+{
+    if (target == null ||
+        newData == null)
+        return false;
+
+    if (!minions.Contains(target))
+        return false;
+
+    if (!(newData is MinionData))
+    {
+        Debug.LogWarning(
+            $"{newData.cardName} cannot be used " +
+            $"as a Transform target result."
+        );
+
+        return false;
+    }
+
+    if (target.IsCommander)
+    {
+        Debug.LogWarning(
+            "Commanders cannot currently be transformed."
+        );
+
+        return false;
+    }
+
+    string oldName =
+        target.Data.cardName;
+
+    // =====================================================
+    // REMOVE ARTIFACT EFFECTS
+    // =====================================================
+
+    foreach (RuntimeCard artifact
+             in target.EquippedArtifacts)
+    {
+        if (artifact == null)
+            continue;
+
+        foreach (RuntimeCard minion in minions)
+        {
+            minion.RemoveModifiersFromSource(
+                artifact
+            );
+        }
+    }
+
+    // =====================================================
+    // REMOVE EQUIPMENT
+    // =====================================================
+
+    // Transform is not death.
+    // Artifact Deathrattles do NOT activate.
+    target.RemoveAllArtifacts();
+
+    // =====================================================
+    // TRANSFORM
+    // =====================================================
+
+    bool success =
+        target.TransformInto(newData);
+
+    if (!success)
+        return false;
+
+    Debug.Log(
+        $"{oldName} transformed into " +
+        $"{newData.cardName}."
+    );
+
+    // =====================================================
+    // RECALCULATE FIELD
+    // =====================================================
+
+    RefreshPassives();
+    RefreshArtifactEffects();
+
+    RefreshTransformedMinionView(target);
+
+    return true;
+}
+private void RefreshTransformedMinionView(
+    RuntimeCard card)
+{
+    if (card == null)
+        return;
+
+    if (!minionViews.TryGetValue(
+            card,
+            out MinionView view))
+        return;
+
+    if (view == null)
+        return;
+
+    view.SetMinion(card);
+
+    Debug.Log(
+        $"Transform UI refreshed: " +
+        $"{card.Data.cardName}, " +
+        $"Artwork: " +
+        $"{(card.Data.artwork != null ? card.Data.artwork.name : "NULL")}"
+    );
+}
 
 
 }
