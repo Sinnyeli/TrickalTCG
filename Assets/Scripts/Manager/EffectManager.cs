@@ -8,43 +8,114 @@ public class EffectManager : MonoBehaviour
 /// //////////////
 
 
-    public void ResolveBattlecry(RuntimeCard card)
+    public void ResolveBattlecry(RuntimeCard source)
     {
-        if (card == null || card.Data == null)
+        if (source == null || source.Data == null)
             return;
 
-        CardEffect effect = card.Data.Battlecry;
+        if (!(source.Data is MinionData minionData))
+    return;
+
+    CardEffect effect = minionData.Battlecry;
 
         if (effect == null)
             return;
 
-        ResolveEffect(card, effect);
+        ResolveEffect(source, effect);
     }
 
 //////////////////
 /// Deathrattle
 /// //////////////
-    public void ResolveDeathrattle(RuntimeCard card)
+public void ResolveDeathrattle(RuntimeCard source)
+{
+    if (source == null ||
+        source.Data == null)
+        return;
+
+    // =========================================
+    // MINION DEATHRATTLE
+    // =========================================
+
+    if (source.Data is MinionData minionData)
     {
-        if (card == null || card.Data == null)
-            return;
-        if (card.IsSilenced)
-                    return;
+        if (!source.IsSilenced)
+        {
+            CardEffect deathrattle =
+                minionData.Deathrattle;
 
+            if (deathrattle != null)
+            {
+                ResolveEffect(
+                    source,
+                    deathrattle
+                );
+            }
+        }
 
-        CardEffect effect = card.Data.Deathrattle;
+        // =====================================
+        // EQUIPPED ARTIFACT DEATHRATTLES
+        // =====================================
 
-       
-        if (effect == null)
-            return;
+        foreach (RuntimeCard artifact
+                 in source.EquippedArtifacts)
+        {
+            if (artifact == null)
+                continue;
 
-        ResolveEffect(card, effect);
+            if (!(artifact.Data is ArtifactData artifactData))
+                continue;
+
+            CardEffect artifactDeathrattle =
+                artifactData.Deathrattle;
+
+            if (artifactDeathrattle == null)
+                continue;
+
+            ResolveEffect(
+                source,
+                artifactDeathrattle
+            );
+        }
+
+        return;
     }
 
+    // =========================================
+    // ARTIFACT ITSELF
+    // =========================================
+
+    if (source.Data is ArtifactData standaloneArtifact)
+    {
+        CardEffect deathrattle =
+            standaloneArtifact.Deathrattle;
+
+        if (deathrattle != null)
+        {
+            ResolveEffect(
+                source,
+                deathrattle
+            );
+        }
+    }
+}
 
 //////////////////
 /// Resolve effect (for cards only)
 /// //////////////
+/// 
+    public void ResolveCardEffect(
+        RuntimeCard source,
+        CardEffect effect)
+    {
+        if (source == null || effect == null)
+            return;
+
+        ResolveEffect(
+            source,
+            effect
+        );
+    }
    private void ResolveEffect(
     RuntimeCard source,
     CardEffect effect)
@@ -480,112 +551,136 @@ private void ResolveRandomUnit(
         if (!(card.Data is SpellData spellData))
             return;
 
-        CardEffect effect = spellData.SpellEffect;
-
-        if (effect == null)
+        foreach (CardEffect effect in spellData.SpellEffects)
         {
-            Debug.Log(
-                $"{card.Data.cardName} has no Spell Effect."
-            );
+            if (effect == null)
+                continue;
 
-            return;
-        }
+            ResolveCardEffect(card, effect);
+        
+
+            if (effect == null)
+            {
+                Debug.Log(
+                    $"{card.Data.cardName} has no Spell Effect."
+                );
+
+                return;
+            }
 
         ResolveEffect(card, effect);
-    }
-
-        public void ResolveResonance(RuntimeCard source)
-    {
-        if (source == null || source.Data == null)
-            return;
-
-        if (source.IsSilenced)
-            return;
-
-        CardEffect effect =
-            source.Data.Resonance;
-
-        if (effect == null)
-            return;
-
-        Debug.Log(
-            $"{source.Data.cardName} activates Resonance."
-        );
-
-        ResolveEffect(
-            source,
-            effect
-        );
-    }
-    public void TriggerResonance(PlayerSide side)
-    {
-        BattlefieldManager battlefield =
-            GameManager.Instance.GetBattlefield(side);
-
-        if (battlefield == null)
-            return;
-
-        List<RuntimeCard> minions =
-            new List<RuntimeCard>(battlefield.Minions);
-
-        foreach (RuntimeCard minion in minions)
-        {
-            if (minion == null)
-                continue;
-
-            if (minion.Data.Resonance == null)
-                continue;
-
-            ResolveResonance(minion);
         }
     }
 
-    public void ResolveTurnStart(RuntimeCard source)
+public void ResolveResonance(RuntimeCard source)
+{
+    if (source == null || source.Data == null)
+        return;
+
+    if (source.IsSilenced)
+        return;
+
+    if (!(source.Data is MinionData minionData))
+        return;
+
+    CardEffect effect =
+        minionData.Resonance;
+
+    if (effect == null)
+        return;
+
+    Debug.Log(
+        $"{source.Data.cardName} activates Resonance."
+    );
+
+    ResolveEffect(
+        source,
+        effect
+    );
+}
+public void TriggerResonance(PlayerSide side)
+{
+    BattlefieldManager battlefield =
+        GameManager.Instance.GetBattlefield(side);
+
+    if (battlefield == null)
+        return;
+
+    List<RuntimeCard> minions =
+        new List<RuntimeCard>(
+            battlefield.Minions
+        );
+
+    foreach (RuntimeCard minion in minions)
     {
-        if (source == null || source.Data == null)
-            return;
+        if (minion == null)
+            continue;
 
-        if (source.IsSilenced)
-            return;
+        if (minion.Zone != CardZone.Field)
+            continue;
 
-        CardEffect effect =
-            source.Data.TurnStart;
-
-        if (effect == null)
-            return;
-
-        Debug.Log(
-            $"{source.Data.cardName} activates Turn Start."
-        );
-
-        ResolveEffect(
-            source,
-            effect
-        );
+        ResolveResonance(minion);
     }
-    public void ResolveTurnEnd(RuntimeCard source)
-    {
-        if (source == null || source.Data == null)
-            return;
+}
 
-        if (source.IsSilenced)
-            return;
+public void ResolveTurnStart(RuntimeCard source)
+{
+    if (source == null || source.Data == null)
+        return;
 
-        CardEffect effect =
-            source.Data.TurnEnd;
+    if (source.IsSilenced)
+        return;
 
-        if (effect == null)
-            return;
+    if (!(source.Data is MinionData minionData))
+        return;
 
-        Debug.Log(
-            $"{source.Data.cardName} activates Turn End."
-        );
+    if (source.Zone != CardZone.Field)
+        return;
 
-        ResolveEffect(
-            source,
-            effect
-        );
-    }
+    CardEffect effect =
+        minionData.TurnStart;
+
+    if (effect == null)
+        return;
+
+    Debug.Log(
+        $"{source.Data.cardName} activates Turn Start."
+    );
+
+    ResolveEffect(
+        source,
+        effect
+    );
+}
+  public void ResolveTurnEnd(RuntimeCard source)
+{
+    if (source == null || source.Data == null)
+        return;
+
+    if (source.IsSilenced)
+        return;
+
+    if (!(source.Data is MinionData minionData))
+        return;
+
+    if (source.Zone != CardZone.Field)
+        return;
+
+    CardEffect effect =
+        minionData.TurnEnd;
+
+    if (effect == null)
+        return;
+
+    Debug.Log(
+        $"{source.Data.cardName} activates Turn End."
+    );
+
+    ResolveEffect(
+        source,
+        effect
+    );
+}
 public void TriggerTurnStart(PlayerSide side)
 {
     BattlefieldManager battlefield =
@@ -637,74 +732,47 @@ public void TriggerTurnEnd(PlayerSide side)
 
 public void ResolveOnDamageTaken(RuntimeCard source)
 {
-    if (source == null || source.Data == null)
+    if (source == null)
         return;
-
-    Debug.Log(
-        $"OnDamageTaken check: {source.Data.cardName}"
-    );
 
     if (source.IsSilenced)
-    {
-        Debug.Log("Blocked because silenced.");
         return;
-    }
 
-    CardEffect effect =
-        source.Data.OnDamageTaken;
-
-    if (effect == null)
-    {
-        Debug.Log(
-            $"{source.Data.cardName} has no OnDamageTaken effect assigned."
-        );
-
+    if (!(source.Data is MinionData minionData))
         return;
-    }
 
     if (source.Zone != CardZone.Field)
-    {
-        Debug.Log(
-            $"{source.Data.cardName} is not on the field."
-        );
-
         return;
-    }
 
-    Debug.Log(
-        $"{source.Data.cardName} activates OnDamageTaken."
-    );
+    CardEffect effect =
+        minionData.OnDamageTaken;
 
-    ResolveEffect(
-        source,
-        effect
-    );
+    if (effect == null)
+        return;
+
+    ResolveEffect(source, effect);
 }
 public void ResolveOnAttack(RuntimeCard source)
 {
-    if (source == null || source.Data == null)
+    if (source == null)
         return;
 
     if (source.IsSilenced)
+        return;
+
+    if (!(source.Data is MinionData minionData))
         return;
 
     if (source.Zone != CardZone.Field)
         return;
 
     CardEffect effect =
-        source.Data.OnAttack;
+        minionData.OnAttack;
 
     if (effect == null)
         return;
 
-    Debug.Log(
-        $"{source.Data.cardName} activates On Attack."
-    );
-
-    ResolveEffect(
-        source,
-        effect
-    );
+    ResolveEffect(source, effect);
 }
 public void ResolveOnDraw(RuntimeCard source)
 {

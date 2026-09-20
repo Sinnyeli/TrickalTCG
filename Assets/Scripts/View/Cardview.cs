@@ -89,83 +89,93 @@ public class CardView : CardviewBase,
     }
 
 // =====================================================
-// MANUAL TARGET SPELL → UNIT
+// MANUAL TARGET SPELL
 // =====================================================
 
 if (runtimeCard.Data is SpellData spellData)
 {
-    CardEffect effect =
-        spellData.SpellEffect;
+    bool canTargetUnit = false;
+    bool canTargetHero = false;
 
-    if (effect != null)
+    foreach (CardEffect effect in spellData.SpellEffects)
     {
+        if (effect == null)
+            continue;
+
         switch (effect.TargetType)
         {
             case EffectTargetType.EnemyUnit:
             case EffectTargetType.FriendlyUnit:
             case EffectTargetType.AnyUnit:
-            {
-                MinionView targetView =
-                    GetMinionUnderPointer(eventData);
+                canTargetUnit = true;
+                break;
 
-                if (targetView != null)
-                {
-                    bool cast =
-                        GameManager.Instance.HandManager
-                            .PlayTargetedSpellFromHand(
-                                runtimeCard,
-                                targetView.RuntimeCard
-                            );
-
-                    if (cast)
-                        return;
-                }
-
-                ReturnToHand();
-                return;
-            }
+            case EffectTargetType.EnemyHero:
+            case EffectTargetType.FriendlyHero:
+                canTargetHero = true;
+                break;
 
             case EffectTargetType.AnyTarget:
-            {
-                MinionView targetView =
-                    GetMinionUnderPointer(eventData);
-
-                if (targetView != null)
-                {
-                    bool cast =
-                        GameManager.Instance.HandManager
-                            .PlayTargetedSpellFromHand(
-                                runtimeCard,
-                                targetView.RuntimeCard
-                            );
-
-                    if (cast)
-                        return;
-                }
-
-                PlayerView heroTarget =
-                    GetPlayerUnderPointer(eventData);
-
-                if (heroTarget != null)
-                {
-                    bool cast =
-                        GameManager.Instance.HandManager
-                            .PlayTargetedSpellFromHand(
-                                runtimeCard,
-                                heroTarget
-                            );
-
-                    if (cast)
-                        return;
-                }
-
-                ReturnToHand();
-                return;
-            }
+                canTargetUnit = true;
+                canTargetHero = true;
+                break;
         }
     }
-} // <-- THIS was missing / misplaced
 
+    // =================================================
+    // TRY UNIT TARGET
+    // =================================================
+
+    if (canTargetUnit)
+    {
+        MinionView targetView =
+            GetMinionUnderPointer(eventData);
+
+        if (targetView != null)
+        {
+            bool cast =
+                GameManager.Instance.HandManager
+                    .PlayTargetedSpellFromHand(
+                        runtimeCard,
+                        targetView.RuntimeCard
+                    );
+
+            if (cast)
+                return;
+        }
+    }
+
+    // =================================================
+    // TRY HERO TARGET
+    // =================================================
+
+    if (canTargetHero)
+    {
+        PlayerView heroTarget =
+            GetPlayerUnderPointer(eventData);
+
+        if (heroTarget != null)
+        {
+            bool cast =
+                GameManager.Instance.HandManager
+                    .PlayTargetedSpellFromHand(
+                        runtimeCard,
+                        heroTarget
+                    );
+
+            if (cast)
+                return;
+        }
+    }
+
+    // If this spell requires manual targeting,
+    // but no valid target was found, return it to hand.
+    if (canTargetUnit || canTargetHero)
+    {
+        ReturnToHand();
+        return;
+    }
+}
 
 // =====================================================
 // NORMAL CARD → BATTLEFIELD

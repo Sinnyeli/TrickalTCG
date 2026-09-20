@@ -245,13 +245,13 @@ public class BattlefieldManager : MonoBehaviour
     // Recalculate all active passives.
     foreach (RuntimeCard source in minions)
     {
-        if (!(source.Data is ApostleData))
+        if (!(source.Data is MinionData minionData))
             continue;
 
         if (source.IsSilenced)
             continue;
 
-        CardEffect effect = source.Data.Passive;
+        CardEffect effect = minionData.Passive;
 
         if (effect == null)
             continue;

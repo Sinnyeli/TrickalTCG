@@ -57,7 +57,7 @@ public abstract class CardviewBase : MonoBehaviour
 
             attackText.text = apostle.attack.ToString();
             healthText.text = apostle.health.ToString();
-            raceImage.sprite = apostle.typeIcon;
+            raceImage.sprite = apostle.TypeIcon;
         }
 
     }

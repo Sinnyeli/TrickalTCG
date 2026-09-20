@@ -67,7 +67,7 @@ public abstract class MinionViewBase : MonoBehaviour
             raceImage.gameObject.SetActive(true);
 
             RefreshStats();
-            raceImage.sprite = apostle.typeIcon;
+            raceImage.sprite = apostle.TypeIcon;
         }
         artifactOne.gameObject.SetActive(false);
         artifactTwo.gameObject.SetActive(false);

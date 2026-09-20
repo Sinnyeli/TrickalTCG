@@ -7,12 +7,39 @@ using UnityEngine;
 )]
 public class ArtifactData : CardData
 {
-    [Header("Artifact")]
-    public int attackBonus;
-    public int healthBonus;
+    [Header("Stats")]
+    [SerializeField]private int attackBonus;
+    [SerializeField]private int healthBonus;
 
-    [Header("Artifact Effect")]
-    [SerializeField] private CardEffect artifactEffect;
+    [Header("Granted Keywords")]
+    [SerializeField]
+    private List<CardKeyword> grantedKeywords =
+        new List<CardKeyword>();
 
-    public CardEffect ArtifactEffect => artifactEffect;
+    [Header("Artifact Effects")]
+    [SerializeField]
+    private CardEffect artifactEffect;
+
+    [SerializeField]
+    private CardEffect deathrattle;
+    public int AttackBonus =>
+        attackBonus;
+
+    public int HealthBonus =>
+        healthBonus;
+
+
+
+    public CardEffect ArtifactEffect =>
+        artifactEffect;
+
+    public CardEffect Deathrattle =>
+        deathrattle;
+
+    public bool GrantsKeyword(
+        CardKeyword keyword)
+    {
+        return grantedKeywords != null &&
+               grantedKeywords.Contains(keyword);
+    }
 }

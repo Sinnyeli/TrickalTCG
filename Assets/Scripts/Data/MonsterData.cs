@@ -4,12 +4,7 @@ using UnityEngine;
     fileName = "NewMonster",
     menuName = "TCG/Cards/Monster"
 )]
-public class MonsterData : CardData
+public class MonsterData : MinionData
 {
-    [Header("Monster Stats")]
-    public int attack;
-    public int health;
 
-    [Header("Race")]
-    public CardRace cardRace;
 }

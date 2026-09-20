@@ -422,8 +422,6 @@ public bool PlayCardFromHand(RuntimeCard card)
     // Only spend mana after the card successfully enters the field.
         turnManager.SpendMana(card.Owner, cost);
 
-        RemoveCardFromHand(card);
-
         return true;
     }
 
@@ -492,13 +490,12 @@ private bool PlaySpellFromHand(RuntimeCard card)
     if (!(card.Data is SpellData spellData))
         return false;
 
-    CardEffect effect = spellData.SpellEffect;
-
-    if (effect == null)
+    if (spellData.SpellEffects == null ||
+        spellData.SpellEffects.Count == 0)
     {
         Debug.Log(
             $"{card.Data.cardName} cannot be cast. " +
-            "It has no Spell Effect."
+            "It has no Spell Effects."
         );
 
         return false;
@@ -512,27 +509,45 @@ private bool PlaySpellFromHand(RuntimeCard card)
 
     int cost = card.GetManaCost();
 
-    switch (effect.TargetType)
+    // Check whether any effect requires
+    // manual target selection.
+    foreach (CardEffect effect in spellData.SpellEffects)
     {
-        case EffectTargetType.EnemyUnit:
-        case EffectTargetType.FriendlyUnit:
-        case EffectTargetType.AnyUnit:
-        case EffectTargetType.AnyTarget:
-            return false; // Targeted spells are handled elsewhere.
-           
+        if (effect == null)
+            continue;
+
+        switch (effect.TargetType)
+        {
+            case EffectTargetType.EnemyUnit:
+            case EffectTargetType.FriendlyUnit:
+            case EffectTargetType.AnyUnit:
+            case EffectTargetType.AnyTarget:
+
+                // Targeted spells are handled
+                // by PlayTargetedSpellFromHand.
+                return false;
+        }
     }
 
     Debug.Log(
         $"{card.Owner} casts {card.Data.cardName}!"
     );
 
-    GameManager.Instance.EffectManager.ResolveSpell(card);
+    // The spell leaves the hand BEFORE
+    // its effects resolve.
+    RemoveCardFromHand(card);
 
-    CompleteSpellCast(card, cost);
+    GameManager.Instance
+        .EffectManager
+        .ResolveSpell(card);
+
+    CompleteSpellCast(
+        card,
+        cost
+    );
 
     return true;
 }
-
 // Test Area
 
 public RuntimeCard GetFirstNormalCard()
@@ -575,8 +590,6 @@ private void CompleteSpellCast(
         cost
     );
 
-    RemoveCardFromHand(card);
-
     DeckManager deck =
         GameManager.Instance.GetDeck(card.Owner);
 
@@ -596,9 +609,8 @@ public bool PlayTargetedSpellFromHand(
     if (!(card.Data is SpellData spellData))
         return false;
 
-    CardEffect effect = spellData.SpellEffect;
-
-    if (effect == null)
+    if (spellData.SpellEffects == null ||
+        spellData.SpellEffects.Count == 0)
         return false;
 
     TurnManager turnManager =
@@ -612,35 +624,95 @@ public bool PlayTargetedSpellFromHand(
 
     int cost = card.GetManaCost();
 
-    if (!turnManager.CanSpendMana(card.Owner, cost))
+    if (!turnManager.CanSpendMana(
+            card.Owner,
+            cost))
         return false;
 
-    // Validate target ownership.
-    switch (effect.TargetType)
+    // =========================================
+    // VALIDATE TARGETED EFFECTS FIRST
+    // =========================================
+
+    bool hasUnitTargetEffect = false;
+
+    foreach (CardEffect effect
+             in spellData.SpellEffects)
     {
-        case EffectTargetType.EnemyUnit:
-            if (unitTarget.Owner == card.Owner)
-                return false;
-            break;
+        if (effect == null)
+            continue;
 
-        case EffectTargetType.FriendlyUnit:
-            if (unitTarget.Owner != card.Owner)
-                return false;
-            break;
+        switch (effect.TargetType)
+        {
+            case EffectTargetType.EnemyUnit:
 
-        case EffectTargetType.AnyUnit:
-        case EffectTargetType.AnyTarget:
-            break;
+                hasUnitTargetEffect = true;
 
-        default:
-            return false;
+                if (unitTarget.Owner == card.Owner)
+                    return false;
+
+                if (unitTarget.IsStealthed)
+                    return false;
+
+                if (!effect.MatchesTargetFilter(unitTarget))
+                    return false;
+
+                break;
+
+            case EffectTargetType.FriendlyUnit:
+
+                hasUnitTargetEffect = true;
+
+                if (unitTarget.Owner != card.Owner)
+                    return false;
+
+                if (unitTarget.IsStealthed)
+                    return false;
+
+                if (!effect.MatchesTargetFilter(unitTarget))
+                    return false;
+
+                break;
+
+            case EffectTargetType.AnyUnit:
+
+                hasUnitTargetEffect = true;
+
+                if (unitTarget.IsStealthed)
+                    return false;
+
+                if (!effect.MatchesTargetFilter(unitTarget))
+                    return false;
+
+                break;
+
+            case EffectTargetType.AnyTarget:
+
+                hasUnitTargetEffect = true;
+
+                if (unitTarget.IsStealthed)
+                    return false;
+
+                if (!effect.MatchesTargetFilter(unitTarget))
+                    return false;
+
+                break;
+        }
     }
 
-    if (unitTarget.IsStealthed)
+    // This spell doesn't actually have an effect
+    // that can target a unit.
+    if (!hasUnitTargetEffect)
         return false;
 
-    if (!effect.MatchesTargetFilter(unitTarget))
-        return false;
+    Debug.Log(
+        $"{card.Owner} casts " +
+        $"{card.Data.cardName} on " +
+        $"{unitTarget.Data.cardName}."
+    );
+
+    // All validation succeeded.
+    // The spell leaves the hand before resolving.
+    RemoveCardFromHand(card);
 
     List<RuntimeCard> targets =
         new List<RuntimeCard>
@@ -648,15 +720,45 @@ public bool PlayTargetedSpellFromHand(
             unitTarget
         };
 
-    Debug.Log(
-        $"{card.Owner} casts {card.Data.cardName} " +
-        $"on {unitTarget.Data.cardName}."
-    );
+    // =========================================
+    // RESOLVE EVERY SPELL EFFECT
+    // =========================================
 
-    effect.Resolve(
-        card,
-        targets
-    );
+    foreach (CardEffect effect
+             in spellData.SpellEffects)
+    {
+        if (effect == null)
+            continue;
+
+        switch (effect.TargetType)
+        {
+            // These use the manually selected unit.
+            case EffectTargetType.EnemyUnit:
+            case EffectTargetType.FriendlyUnit:
+            case EffectTargetType.AnyUnit:
+            case EffectTargetType.AnyTarget:
+
+                effect.Resolve(
+                    card,
+                    targets
+                );
+
+                break;
+
+            // Everything else uses the normal
+            // EffectManager targeting pipeline.
+            default:
+
+                GameManager.Instance
+                    .EffectManager
+                    .ResolveCardEffect(
+                        card,
+                        effect
+                    );
+
+                break;
+        }
+    }
 
     CompleteSpellCast(
         card,
@@ -665,7 +767,6 @@ public bool PlayTargetedSpellFromHand(
 
     return true;
 }
-
 public bool PlayTargetedSpellFromHand(
     RuntimeCard card,
     PlayerView heroTarget)
@@ -676,9 +777,8 @@ public bool PlayTargetedSpellFromHand(
     if (!(card.Data is SpellData spellData))
         return false;
 
-    CardEffect effect = spellData.SpellEffect;
-
-    if (effect == null)
+    if (spellData.SpellEffects == null ||
+        spellData.SpellEffects.Count == 0)
         return false;
 
     TurnManager turnManager =
@@ -692,54 +792,97 @@ public bool PlayTargetedSpellFromHand(
 
     int cost = card.GetManaCost();
 
-    if (!turnManager.CanSpendMana(card.Owner, cost))
+    if (!turnManager.CanSpendMana(
+            card.Owner,
+            cost))
         return false;
 
-    switch (effect.TargetType)
+    // =========================================
+    // VALIDATE HERO-TARGETED EFFECTS
+    // =========================================
+
+    bool hasHeroTargetEffect = false;
+
+    foreach (CardEffect effect
+             in spellData.SpellEffects)
     {
-        case EffectTargetType.EnemyHero:
-            if (heroTarget.Side == card.Owner)
-                return false;
-            break;
+        if (effect == null)
+            continue;
 
-        case EffectTargetType.FriendlyHero:
-            if (heroTarget.Side != card.Owner)
-                return false;
-            break;
+        switch (effect.TargetType)
+        {
+            case EffectTargetType.EnemyHero:
 
-        case EffectTargetType.AnyTarget:
-            break;
+                hasHeroTargetEffect = true;
 
-        default:
-            return false;
+                if (heroTarget.Side == card.Owner)
+                    return false;
+
+                break;
+
+            case EffectTargetType.FriendlyHero:
+
+                hasHeroTargetEffect = true;
+
+                if (heroTarget.Side != card.Owner)
+                    return false;
+
+                break;
+
+            case EffectTargetType.AnyTarget:
+
+                hasHeroTargetEffect = true;
+                break;
+        }
     }
+
+    if (!hasHeroTargetEffect)
+        return false;
 
     Debug.Log(
-        $"{card.Owner} casts {card.Data.cardName} " +
-        $"on {heroTarget.Side} Hero."
+        $"{card.Owner} casts " +
+        $"{card.Data.cardName} on " +
+        $"{heroTarget.Side} Hero."
     );
 
-    if (effect is DamageEffect damageEffect)
-    {
-        damageEffect.ResolveHero(
-            card,
-            heroTarget
-        );
-    }
-    else if (effect is HealEffect healEffect)
-    {
-        healEffect.ResolveHero(
-            card,
-            heroTarget
-        );
-    }
-    else
-    {
-        Debug.LogWarning(
-            $"{effect.name} does not support Hero targeting."
-        );
+    // Spell is now committed.
+    RemoveCardFromHand(card);
 
-        return false;
+    // =========================================
+    // RESOLVE EVERY SPELL EFFECT
+    // =========================================
+
+    foreach (CardEffect effect
+             in spellData.SpellEffects)
+    {
+        if (effect == null)
+            continue;
+
+        switch (effect.TargetType)
+        {
+            case EffectTargetType.EnemyHero:
+            case EffectTargetType.FriendlyHero:
+            case EffectTargetType.AnyTarget:
+
+                ResolveSpellEffectOnHero(
+                    card,
+                    effect,
+                    heroTarget
+                );
+
+                break;
+
+            default:
+
+                GameManager.Instance
+                    .EffectManager
+                    .ResolveCardEffect(
+                        card,
+                        effect
+                    );
+
+                break;
+        }
     }
 
     CompleteSpellCast(
@@ -798,6 +941,34 @@ public void TestReduceFirstCardCost()
 
     RefreshCardView(card);
 }
+private void ResolveSpellEffectOnHero(
+    RuntimeCard card,
+    CardEffect effect,
+    PlayerView heroTarget)
+{
+    if (effect is DamageEffect damageEffect)
+    {
+        damageEffect.ResolveHero(
+            card,
+            heroTarget
+        );
 
+        return;
+    }
+
+    if (effect is HealEffect healEffect)
+    {
+        healEffect.ResolveHero(
+            card,
+            heroTarget
+        );
+
+        return;
+    }
+
+    Debug.LogWarning(
+        $"{effect.name} does not support Hero targeting."
+    );
+}
 
 }

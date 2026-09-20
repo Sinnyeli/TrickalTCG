@@ -4,21 +4,17 @@ using UnityEngine;
     fileName = "NewApostle",
     menuName = "TCG/Cards/Apostle"
 )]
-public class ApostleData : CardData
+public class ApostleData : MinionData
 {
 
      [Header("Apostle Visual")]
-    public Sprite typeIcon;
-
-    [Header("Apostle Stats")]
-    public int attack;
-    public int health;
-
-    [Header("Race")]
-    public CardRace cardRace;
+    [SerializeField]private Sprite typeIcon;
+    public Sprite TypeIcon => typeIcon;
 
     [Header("Equipment")]
-    public int maxEquipment = 3;
+    [Min(0)]
+    [SerializeField]private int maxEquipment = 3;
+    public int MaxEquipment => maxEquipment;
 
  
 }

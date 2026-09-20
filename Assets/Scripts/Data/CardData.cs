@@ -1,66 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-public enum CardType
-{
-    Monster,
-    Apostle,
-    Spell,
-    Artifact
-}
+using System.Collections.Generic;
+
 public abstract class CardData : ScriptableObject
 {
     [Header("Basic Information")]
-    [SerializeField]private string cardID;
+    [SerializeField]
+    private string cardID;
     public string CardID => cardID;
     public string cardName;
+
     [TextArea]
     public string description;
 
-    [Header("Effects")]
-    [SerializeField] private CardEffect battlecry;
-    [SerializeField] private CardEffect deathrattle;
-    [SerializeField] private CardEffect passive;
-    [SerializeField] private CardEffect resonance;
-
-    [SerializeField] private CardEffect turnStart;
-    [SerializeField] private CardEffect turnEnd;
-    
-    [SerializeField] private CardEffect onDamageTaken;
-    [SerializeField] private CardEffect onAttack;
-
-   [SerializeField]
-    private List<CardEffect> onDrawEffects =
-        new List<CardEffect>();
-
-
-
-
-    public CardEffect Battlecry => battlecry;
-    public CardEffect Deathrattle => deathrattle;
-    public CardEffect Passive => passive;
-    public CardEffect Resonance => resonance;
-    public CardEffect TurnStart => turnStart;
-    public CardEffect TurnEnd => turnEnd;
-    public CardEffect OnDamageTaken => onDamageTaken;    
-    public CardEffect OnAttack => onAttack;
-
-        public IReadOnlyList<CardEffect> OnDrawEffects =>
-            onDrawEffects;
-
-    [Header("Keywords")]
-    [SerializeField] private List<CardKeyword> keywords;
-
-    public bool HasKeyword(CardKeyword keyword)
-    {
-        return keywords != null &&
-               keywords.Contains(keyword);
-    }
-
+    [Header("Cost")]
+    public int manaCost;
 
     [Header("Visuals")]
     public Sprite artwork;
 
-    [Header("Cost")]
-    public int manaCost;
+  [Header("On Draw")]
+    [SerializeField]
+    private List<CardEffect> onDrawEffects =
+        new List<CardEffect>();
+
+    public IReadOnlyList<CardEffect> OnDrawEffects =>
+        onDrawEffects;
+
+    
 }

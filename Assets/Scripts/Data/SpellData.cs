@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(
@@ -6,8 +7,11 @@ using UnityEngine;
 )]
 public class SpellData : CardData
 {
-    [Header("Spell Effect")]
-    [SerializeField] private CardEffect spellEffect;
+    [Header("Spell Effects")]
+    [SerializeField]
+    private List<CardEffect> spellEffects =
+        new List<CardEffect>();
 
-    public CardEffect SpellEffect => spellEffect;
+    public IReadOnlyList<CardEffect> SpellEffects =>
+        spellEffects;
 }

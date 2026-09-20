@@ -30,7 +30,7 @@ public class RuntimeCard
     );
 }
 
-    private const int MaxArtifacts = 3;
+
     private int? baseAttackOverride;
     private int? baseHealthOverride;
 
@@ -51,6 +51,16 @@ public class RuntimeCard
     public PlayerSide Owner { get; private set; }
     private List<RuntimeModifier> modifiers = new List<RuntimeModifier>();
     
+
+    public int GetMaxEquipment()
+    {
+        if (Data is ApostleData apostleData)
+        {
+            return apostleData.MaxEquipment;
+        }
+
+        return 0;
+    }
 
     public RuntimeCard(CardData data, bool isCommander = false)
     {
@@ -93,18 +103,24 @@ public class RuntimeCard
         
     }
 
-    public bool HasKeyword(CardKeyword keyword)
+    public bool HasKeyword(
+        CardKeyword keyword)
     {
-        if (Data.HasKeyword(keyword))
+        // Intrinsic minion keyword
+        if (Data is MinionData minionData &&
+            minionData.HasKeyword(keyword))
+        {
             return true;
+        }
 
+        // Artifact-granted keyword
         foreach (RuntimeCard artifact in equippedArtifacts)
         {
             if (artifact == null)
                 continue;
 
             if (artifact.Data is ArtifactData artifactData &&
-                artifactData.HasKeyword(keyword))
+                artifactData.GrantsKeyword(keyword))
             {
                 return true;
             }
@@ -161,33 +177,27 @@ public class RuntimeCard
             currentHealth = maxHealth;
     }
 
-    private int GetBaseAttack()
-    {
-        if (baseAttackOverride.HasValue)
-            return baseAttackOverride.Value;
+   private int GetBaseAttack()
+{
+    if (baseAttackOverride.HasValue)
+        return baseAttackOverride.Value;
 
-        if (Data is MonsterData monster)
-            return monster.attack;
+    if (Data is MinionData minion)
+        return minion.attack;
 
-        if (Data is ApostleData apostle)
-            return apostle.attack;
+    return 0;
+}
 
-        return 0;
-    }
+private int GetBaseHealth()
+{
+    if (baseHealthOverride.HasValue)
+        return baseHealthOverride.Value;
 
-    private int GetBaseHealth()
-    {
-        if (baseHealthOverride.HasValue)
-            return baseHealthOverride.Value;
+    if (Data is MinionData minion)
+        return minion.health;
 
-        if (Data is MonsterData monster)
-            return monster.health;
-
-        if (Data is ApostleData apostle)
-            return apostle.health;
-
-        return 0;
-    }
+    return 0;
+}
 
         public void SetBaseStatOverride(
             int attack,
@@ -251,7 +261,7 @@ public class RuntimeCard
                     continue;
 
                 if (artifact.Data is ArtifactData artifactData)
-                    attack += artifactData.attackBonus;
+                    attack += artifactData.AttackBonus;
             }
 
             return attack;
@@ -270,7 +280,7 @@ public class RuntimeCard
                     continue;
 
                 if (artifact.Data is ArtifactData artifactData)
-                    health += artifactData.healthBonus;
+                    health += artifactData.HealthBonus;
             }
 
             return health;
@@ -373,7 +383,7 @@ public class RuntimeCard
 
 
 
-    public bool EquipArtifact(RuntimeCard artifact)
+  public bool EquipArtifact(RuntimeCard artifact)
     {
         if (artifact == null)
             return false;
@@ -394,60 +404,77 @@ public class RuntimeCard
             return false;
         }
 
-        if (equippedArtifacts.Count >= MaxArtifacts)
+        int maxEquipment = GetMaxEquipment();
+
+        if (equippedArtifacts.Count >= maxEquipment)
         {
             Debug.Log(
                 $"{Data.cardName} already has the maximum " +
                 $"number of artifacts."
             );
+
             return false;
         }
 
         equippedArtifacts.Add(artifact);
 
+        artifact.SetOwner(Owner);
         artifact.ChangeZone(CardZone.Field);
 
         if (artifact.Data is ArtifactData artifactData)
         {
-            currentHealth += artifactData.healthBonus;
+            currentHealth += artifactData.HealthBonus;
 
             if (artifactData.ArtifactEffect != null)
             {
-                GameManager.Instance.EffectManager.ResolveArtifactEffect(
-                    artifact,
-                    artifactData.ArtifactEffect
-                );
+                GameManager.Instance
+                    .EffectManager
+                    .ResolveArtifactEffect(
+                        artifact,
+                        artifactData.ArtifactEffect
+                    );
             }
         }
-        GameManager.Instance.GetBattlefield(Owner).RefreshArtifactEffects();
+
+        GameManager.Instance
+            .GetBattlefield(Owner)
+            .RefreshArtifactEffects();
+
         Debug.Log(
             $"{Data.cardName} equipped " +
             $"{artifact.Data.cardName}. " +
-            $"Artifacts: {equippedArtifacts.Count}/{MaxArtifacts}"
+            $"Artifacts: {equippedArtifacts.Count}/{maxEquipment}"
         );
 
         return true;
-}
-    public bool UnequipArtifact(RuntimeCard artifact)
-{
-    if (artifact == null)
-        return false;
+    }    
+public bool UnequipArtifact(RuntimeCard artifact)
+    {
+        if (artifact == null)
+            return false;
 
-    if (!equippedArtifacts.Contains(artifact))
-        return false;
+        if (!equippedArtifacts.Contains(artifact))
+            return false;
 
-    equippedArtifacts.Remove(artifact);
+        equippedArtifacts.Remove(artifact);
 
-    artifact.ChangeZone(CardZone.Graveyard);
+        artifact.ChangeZone(CardZone.Graveyard);
 
-    Debug.Log(
-        $"{Data.cardName} unequipped " +
-        $"{artifact.Data.cardName}. " +
-        $"Artifacts: {equippedArtifacts.Count}/{MaxArtifacts}"
-    );
+        int maxHealth = GetMaxHealth();
 
-    return true;
-}
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        Debug.Log(
+            $"{Data.cardName} unequipped " +
+            $"{artifact.Data.cardName}. " +
+            $"Artifacts: {equippedArtifacts.Count}/{GetMaxEquipment()}"
+        );
+
+        return true;
+    }
 
 public void Kill()
 {
