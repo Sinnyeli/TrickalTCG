@@ -7,3 +7,10 @@ public enum SummonSelectionType
     Selected,
     Random
 }
+
+public enum SummonSideMode
+{
+    SourceOwner,
+    Player,
+    Opponent
+}

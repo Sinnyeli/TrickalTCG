@@ -10,25 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
-  m_Name: Eisia
+  m_Name: Shupang
   m_EditorClassIdentifier: 
   cardID: 
-  cardName: "\uC544\uC774\uC2DC\uC544"
-  description: "\uB4F1\uC7A5: \uB0C9\uB3D9\uACE0 \uD558\uB098\uB97C \uC18C\uD658\uD55C\uB2E4."
-  manaCost: 1
-  artwork: {fileID: 21300000, guid: 90df300fa7b1ce205be835511122f93b, type: 3}
+  cardName: Shupang
+  description: 'Battlecry: Draw 1 Card
+
+    At the end of turn, return to hand. '
+  manaCost: 3
+  artwork: {fileID: 21300000, guid: 4a472666df2c58ce7bb144952f5e5600, type: 3}
   onDrawEffects: []
-  attack: 1
-  health: 3
-  cardRace: 4
-  keywords: 
-  battlecry: {fileID: 0}
+  attack: 2
+  health: 4
+  cardRace: 0
+  keywords: 00000000
+  battlecry: {fileID: 11400000, guid: 82d6a5426695186fe88008247698e8de, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
-  turnEnd: {fileID: 0}
+  turnEnd: {fileID: 11400000, guid: d26a3bc0ca857855eaa4033da904ca3e, type: 2}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
-  typeIcon: {fileID: 21300000, guid: 0c84cabc6b56d30549e7888a4567eb04, type: 3}
+  typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
   maxEquipment: 3

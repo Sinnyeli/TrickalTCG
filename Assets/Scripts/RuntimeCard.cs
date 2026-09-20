@@ -29,7 +29,15 @@ public class RuntimeCard
         Data.manaCost + manaCostModifier
     );
 }
+    private bool resolvingPassive = false;
 
+    public bool IsResolvingPassive =>
+        resolvingPassive;
+
+    public void SetResolvingPassive(bool value)
+    {
+        resolvingPassive = value;
+    }
 
     private int? baseAttackOverride;
     private int? baseHealthOverride;
@@ -353,19 +361,20 @@ private int GetBaseHealth()
         }
     }
 
-    public void RemovePassiveModifiers()
-    {
-        modifiers.RemoveAll(
-            modifier => modifier.IsPassive
+public void RemovePassiveModifiers()
+{
+    modifiers.RemoveAll(
+        modifier => modifier.IsPassive
+    );
+}
+public void RecalculateCurrentHealth()
+{
+    currentHealth =
+        Mathf.Max(
+            0,
+            GetMaxHealth() - damageTaken
         );
-
-        int maxHealth = GetMaxHealth();
-
-        if (currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
-    }
+}
     public void Silence()
     {
         isSilenced = true;
@@ -476,10 +485,40 @@ public bool UnequipArtifact(RuntimeCard artifact)
         return true;
     }
 
+    public void RemoveAllArtifacts()
+{
+    List<RuntimeCard> artifacts =
+        new List<RuntimeCard>(equippedArtifacts);
+
+    foreach (RuntimeCard artifact in artifacts)
+    {
+        UnequipArtifact(artifact);
+    }
+}
+
 public void Kill()
 {
     currentHealth = 0;
 }
+public void ResetAfterBounce()
+{
+    modifiers.Clear();
+
+    ClearPassiveBaseStatOverride();
+
+    isSilenced = false;
+    isStealthed = false;
+
+    canAttack = false;
+    cannotAttackHero = false;
+
+    damageTaken = 0;
+
+    currentHealth =
+        GetMaxHealth();
+}
+
+
 
 
 }

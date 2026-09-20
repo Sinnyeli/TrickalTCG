@@ -175,4 +175,69 @@ public void StartTurn()
 
         return opponentMana;
     }
+
+public void IncreaseMaxMana(
+    PlayerSide side,
+    int amount,
+    bool refillAddedMana = true)
+{
+    Debug.Log(
+        $"IncreaseMaxMana CALLED: {side}, " +
+        $"Amount={amount}, " +
+        $"Before={GetMaxMana(side)}"
+    );
+
+    if (amount <= 0)
+        return;
+
+    if (side == PlayerSide.Player)
+    {
+        int oldMaxMana = playerMaxMana;
+
+        playerMaxMana =
+            Mathf.Min(
+                playerMaxMana + amount,
+                maxMana
+            );
+
+        if (refillAddedMana)
+        {
+            int actualIncrease =
+                playerMaxMana - oldMaxMana;
+
+            playerMana =
+                Mathf.Min(
+                    playerMana + actualIncrease,
+                    playerMaxMana
+                );
+        }
+    }
+    else
+    {
+        int oldMaxMana = opponentMaxMana;
+
+        opponentMaxMana =
+            Mathf.Min(
+                opponentMaxMana + amount,
+                maxMana
+            );
+
+        if (refillAddedMana)
+        {
+            int actualIncrease =
+                opponentMaxMana - oldMaxMana;
+
+            opponentMana =
+                Mathf.Min(
+                    opponentMana + actualIncrease,
+                    opponentMaxMana
+                );
+        }
+    }
+
+    Debug.Log(
+        $"IncreaseMaxMana FINISHED: {side}, " +
+        $"After={GetMaxMana(side)}"
+    );
+}
 }

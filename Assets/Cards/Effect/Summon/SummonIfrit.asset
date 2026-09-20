@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2729accc2439ad8998e6cc1a9d46cde, type: 3}
+  m_Name: SummonIfrit
+  m_EditorClassIdentifier: 
+  targetType: 0
+  targetFilter: 0
+  cardRace: 0
+  cardType: 0
+  specificCard: {fileID: 0}
+  summonSideMode: 0
+  summonPool:
+  - {fileID: 11400000, guid: 66978848d8aafbf248a41f9a8bd78338, type: 2}
+  amount: 1
+  selectionType: 0

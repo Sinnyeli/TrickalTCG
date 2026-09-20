@@ -543,35 +543,31 @@ private void ResolveRandomUnit(
     /// Spell
     //////////////////
 
-    public void ResolveSpell(RuntimeCard card)
+public void ResolveSpell(RuntimeCard card)
+{
+    if (card == null ||
+        card.Data == null)
+        return;
+
+    if (!(card.Data is SpellData spellData))
+        return;
+
+    if (spellData.SpellEffects == null ||
+        spellData.SpellEffects.Count == 0)
+        return;
+
+    foreach (CardEffect effect
+             in spellData.SpellEffects)
     {
-        if (card == null || card.Data == null)
-            return;
+        if (effect == null)
+            continue;
 
-        if (!(card.Data is SpellData spellData))
-            return;
-
-        foreach (CardEffect effect in spellData.SpellEffects)
-        {
-            if (effect == null)
-                continue;
-
-            ResolveCardEffect(card, effect);
-        
-
-            if (effect == null)
-            {
-                Debug.Log(
-                    $"{card.Data.cardName} has no Spell Effect."
-                );
-
-                return;
-            }
-
-        ResolveEffect(card, effect);
-        }
+        ResolveEffect(
+            card,
+            effect
+        );
     }
-
+}
 public void ResolveResonance(RuntimeCard source)
 {
     if (source == null || source.Data == null)

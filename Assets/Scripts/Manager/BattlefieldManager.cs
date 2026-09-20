@@ -233,7 +233,7 @@ public class BattlefieldManager : MonoBehaviour
     view.SetSelected(selected);
     battlefieldLayout.RefreshLayout();
 }
-   public void RefreshPassives()
+  public void RefreshPassives()
 {
     // Remove all existing passive effects first.
     foreach (RuntimeCard minion in minions)
@@ -251,12 +251,14 @@ public class BattlefieldManager : MonoBehaviour
         if (source.IsSilenced)
             continue;
 
-        CardEffect effect = minionData.Passive;
+        CardEffect effect =
+            minionData.Passive;
 
         if (effect == null)
             continue;
 
-        List<RuntimeCard> targets = new List<RuntimeCard>();
+        List<RuntimeCard> targets =
+            new List<RuntimeCard>();
 
         foreach (RuntimeCard target in minions)
         {
@@ -266,8 +268,131 @@ public class BattlefieldManager : MonoBehaviour
             }
         }
 
-        effect.Resolve(source, targets);
+        source.SetResolvingPassive(true);
+
+        try
+        {
+            effect.Resolve(
+                source,
+                targets
+            );
+        }
+        finally
+        {
+            source.SetResolvingPassive(false);
+        }
     }
+
+    // Refresh visuals after all passive
+    // calculations are finished.
+    foreach (RuntimeCard minion in minions)
+    {
+        minion.RecalculateCurrentHealth();
+        RefreshMinionView(minion);
+    }
+}
+public bool BounceCard(RuntimeCard card)
+{
+    if (card == null)
+        return false;
+
+    if (!minions.Contains(card))
+        return false;
+
+    PlayerSide owner =
+        card.Owner;
+
+    HandManager hand =
+        GameManager.Instance.GetHandManager(
+            owner
+        );
+
+    if (hand == null)
+        return false;
+
+
+    // =====================================================
+    // REMOVE ARTIFACT EFFECTS
+    // =====================================================
+
+    foreach (RuntimeCard artifact in card.EquippedArtifacts)
+    {
+        if (artifact == null)
+            continue;
+
+        foreach (RuntimeCard minion in minions)
+        {
+            minion.RemoveModifiersFromSource(
+                artifact
+            );
+        }
+    }
+
+
+    // =====================================================
+    // REMOVE ARTIFACTS
+    // =====================================================
+
+    card.RemoveAllArtifacts();
+
+
+    // =====================================================
+    // REMOVE FROM FIELD
+    // =====================================================
+
+    minions.Remove(card);
+
+    RemoveMinionView(card);
+
+
+    // =====================================================
+    // RESET FIELD STATE
+    // =====================================================
+
+    card.ResetAfterBounce();
+
+
+    // =====================================================
+    // TRY TO RETURN TO HAND
+    // =====================================================
+
+    card.ChangeZone(
+        CardZone.Hand
+    );
+
+    bool returned =
+        hand.AddCard(card);
+
+    if (!returned)
+    {
+        // Hand is full.
+        // The bounced card is discarded instead.
+        card.ChangeZone(
+            CardZone.Graveyard
+        );
+
+        Debug.Log(
+            $"{card.Data.cardName} could not return " +
+            $"to hand because the hand was full."
+        );
+    }
+    else
+    {
+        Debug.Log(
+            $"{card.Data.cardName} returned to " +
+            $"{owner}'s hand."
+        );
+    }
+
+
+    // =====================================================
+    // RECALCULATE FIELD
+    // =====================================================
+
+    RefreshPassives();
+    RefreshArtifactEffects();
+
+    return true;
 }
   public void RefreshArtifactEffects()
 {
@@ -310,6 +435,8 @@ public class BattlefieldManager : MonoBehaviour
         RefreshMinionView(minion);
     }
 }
+
+
 
 }
 

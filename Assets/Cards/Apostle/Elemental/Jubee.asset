@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
-  m_Name: Eisia
+  m_Name: Jubee
   m_EditorClassIdentifier: 
   cardID: 
-  cardName: "\uC544\uC774\uC2DC\uC544"
-  description: "\uB4F1\uC7A5: \uB0C9\uB3D9\uACE0 \uD558\uB098\uB97C \uC18C\uD658\uD55C\uB2E4."
-  manaCost: 1
-  artwork: {fileID: 21300000, guid: 90df300fa7b1ce205be835511122f93b, type: 3}
+  cardName: Jubee
+  description: Gain +1/+1 per Jubee on Field
+  manaCost: 2
+  artwork: {fileID: 21300000, guid: 729396b54d15652a580076eb6e9a13b8, type: 3}
   onDrawEffects: []
   attack: 1
-  health: 3
-  cardRace: 4
+  health: 1
+  cardRace: 5
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
-  passive: {fileID: 0}
+  passive: {fileID: 11400000, guid: ecbed334e14bd29058db28047d56e236, type: 2}
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
-  typeIcon: {fileID: 21300000, guid: 0c84cabc6b56d30549e7888a4567eb04, type: 3}
+  typeIcon: {fileID: 21300000, guid: 13360f28d36dbb549b49cec9253544ac, type: 3}
   maxEquipment: 3

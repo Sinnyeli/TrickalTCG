@@ -26,7 +26,9 @@ public class BuffEffect : CardEffect
                 new RuntimeModifier(
                     attackAmount,
                     healthAmount,
-                    true
+                    true,
+                    source,
+                    source.IsResolvingPassive
                 );
 
             target.AddModifier(modifier);

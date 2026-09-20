@@ -7,11 +7,26 @@ using UnityEngine;
 )]
 public class SummonEffect : CardEffect
 {
+    // =========================================================
+    // SETTINGS
+    // =========================================================
+
+    [Header("Summon Location")]
+    [Tooltip(
+        "Determines which side of the battlefield " +
+        "receives the summoned creatures."
+    )]
+    [SerializeField]
+    private SummonSideMode summonSideMode =
+        SummonSideMode.SourceOwner;
+
+
     [Header("Summon Pool")]
     [Tooltip("Cards that can be summoned by this effect.")]
     [SerializeField]
     private List<CardData> summonPool =
         new List<CardData>();
+
 
     [Header("Summon Settings")]
     [Tooltip("How many creatures are summoned.")]
@@ -19,15 +34,18 @@ public class SummonEffect : CardEffect
     [SerializeField]
     private int amount = 1;
 
-    [Tooltip("Selected summons cards from the list in order. Random chooses randomly from the list.")]
+    [Tooltip(
+        "Selected summons cards from the list in order. " +
+        "Random chooses randomly from the list."
+    )]
     [SerializeField]
     private SummonSelectionType selectionType =
         SummonSelectionType.Selected;
 
-    [Tooltip("Which battlefield receives the summoned creatures.")]
-    [SerializeField]
-    private PlayerSide summonSide =
-        PlayerSide.Player;
+
+    // =========================================================
+    // RESOLVE
+    // =========================================================
 
     public override void Resolve(
         RuntimeCard source,
@@ -40,11 +58,15 @@ public class SummonEffect : CardEffect
             summonPool.Count == 0)
         {
             Debug.LogWarning(
-                $"{source.Data.cardName}: SummonEffect has no cards in its summon pool."
+                $"{source.Data.cardName}: " +
+                $"SummonEffect has no cards in its summon pool."
             );
 
             return;
         }
+
+        PlayerSide summonSide =
+            GetSummonSide(source);
 
         BattlefieldManager battlefield =
             GameManager.Instance.GetBattlefield(
@@ -54,7 +76,8 @@ public class SummonEffect : CardEffect
         if (battlefield == null)
         {
             Debug.LogWarning(
-                $"Could not find battlefield for {summonSide}."
+                $"Could not find battlefield for " +
+                $"{summonSide}."
             );
 
             return;
@@ -66,21 +89,25 @@ public class SummonEffect : CardEffect
 
                 SummonSelected(
                     source,
-                    battlefield
+                    battlefield,
+                    summonSide
                 );
 
                 break;
+
 
             case SummonSelectionType.Random:
 
                 SummonRandom(
                     source,
-                    battlefield
+                    battlefield,
+                    summonSide
                 );
 
                 break;
         }
     }
+
 
     // =========================================================
     // SELECTED
@@ -88,7 +115,8 @@ public class SummonEffect : CardEffect
 
     private void SummonSelected(
         RuntimeCard source,
-        BattlefieldManager battlefield)
+        BattlefieldManager battlefield,
+        PlayerSide summonSide)
     {
         int summonCount =
             Mathf.Min(
@@ -104,10 +132,12 @@ public class SummonEffect : CardEffect
             SummonCard(
                 source,
                 battlefield,
+                summonSide,
                 cardData
             );
         }
     }
+
 
     // =========================================================
     // RANDOM
@@ -115,7 +145,8 @@ public class SummonEffect : CardEffect
 
     private void SummonRandom(
         RuntimeCard source,
-        BattlefieldManager battlefield)
+        BattlefieldManager battlefield,
+        PlayerSide summonSide)
     {
         for (int i = 0; i < amount; i++)
         {
@@ -131,10 +162,12 @@ public class SummonEffect : CardEffect
             SummonCard(
                 source,
                 battlefield,
+                summonSide,
                 selectedCard
             );
         }
     }
+
 
     // =========================================================
     // SUMMON CARD
@@ -143,19 +176,19 @@ public class SummonEffect : CardEffect
     private void SummonCard(
         RuntimeCard source,
         BattlefieldManager battlefield,
+        PlayerSide summonSide,
         CardData cardData)
     {
         if (cardData == null)
             return;
 
-        // Only Monsters and Apostles can exist
-        // as minions on the battlefield.
-        if (!(cardData is MonsterData) &&
-            !(cardData is ApostleData))
+        // Only minions can be summoned
+        // onto the battlefield.
+        if (!(cardData is MinionData))
         {
             Debug.LogWarning(
                 $"{cardData.cardName} cannot be summoned. " +
-                $"Only Monsters and Apostles can be summoned."
+                $"Only minions can be summoned."
             );
 
             return;
@@ -164,32 +197,62 @@ public class SummonEffect : CardEffect
         RuntimeCard summonedCard =
             new RuntimeCard(cardData);
 
-        // The summoned creature belongs to the
-        // battlefield it was summoned onto.
         summonedCard.SetOwner(
             summonSide
         );
 
         /*
-         * BattlefieldManager.PlayCard currently
-         * expects cards to originate from Hand.
+         * BattlefieldManager.PlayCard currently expects
+         * cards to originate from Hand.
          *
-         * This is temporary until we give
-         * BattlefieldManager a dedicated
-         * SummonCard method.
+         * We can replace this later with a dedicated
+         * BattlefieldManager.SummonCard method.
          */
         summonedCard.ChangeZone(
             CardZone.Hand
         );
 
-        battlefield.PlayCard(
-            summonedCard
-        );
+        bool summoned =
+            battlefield.PlayCard(
+                summonedCard
+            );
+
+        if (!summoned)
+        {
+            Debug.Log(
+                $"{source.Data.cardName} failed to summon " +
+                $"{cardData.cardName}."
+            );
+
+            return;
+        }
 
         Debug.Log(
             $"{source.Data.cardName} summoned " +
             $"{cardData.cardName} onto " +
             $"{summonSide}'s battlefield."
         );
+    }
+
+
+    // =========================================================
+    // SUMMON SIDE
+    // =========================================================
+
+    private PlayerSide GetSummonSide(
+        RuntimeCard source)
+    {
+        switch (summonSideMode)
+        {
+            case SummonSideMode.Player:
+                return PlayerSide.Player;
+
+            case SummonSideMode.Opponent:
+                return PlayerSide.Opponent;
+
+            case SummonSideMode.SourceOwner:
+            default:
+                return source.Owner;
+        }
     }
 }
