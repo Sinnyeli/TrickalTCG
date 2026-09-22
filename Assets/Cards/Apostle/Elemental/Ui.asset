@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
+  m_Name: Ui
+  m_EditorClassIdentifier: 
+  cardID: 
+  cardName: Ui
+  description: 'Battlecry: Silence all units.'
+  manaCost: 7
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  attack: 5
+  health: 5
+  cardRace: 5
+  keywords: 
+  battlecry: {fileID: 11400000, guid: f8b26e2409c8acde98f5b368bb93e852, type: 2}
+  deathrattle: {fileID: 0}
+  passive: {fileID: 0}
+  resonance: {fileID: 0}
+  turnStart: {fileID: 0}
+  turnEnd: {fileID: 0}
+  onDamageTaken: {fileID: 0}
+  onAttack: {fileID: 0}
+  typeIcon: {fileID: 21300000, guid: 13360f28d36dbb549b49cec9253544ac, type: 3}
+  maxEquipment: 3

@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6057201aa1a9105fa9aac6c16e16e54f, type: 3}
   m_Name: DamagePlayer
   m_EditorClassIdentifier: 
-  targetType: 12
-  amount: 1
+  targetType: 5
+  targetFilter: 0
+  cardRace: 0
+  cardType: 0
+  specificCard: {fileID: 0}
+  amount: 2

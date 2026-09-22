@@ -20,7 +20,7 @@ MonoBehaviour:
   onDrawEffects: []
   attack: 2
   health: 2
-  cardRace: 0
+  cardRace: 5
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 11400000, guid: 5dc7d014cbcbfd15db156a810b8f063c, type: 2}

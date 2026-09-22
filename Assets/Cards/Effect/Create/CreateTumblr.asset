@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09902f399cf941a77a781d70d8443ec7, type: 3}
+  m_Name: CreateTumblr
+  m_EditorClassIdentifier: 
+  targetType: 0
+  targetFilter: 0
+  cardRace: 0
+  cardType: 0
+  specificCard: {fileID: 0}
+  cardToCreate: {fileID: 11400000, guid: e14a64ffdbf155202aebf78bc4e12a23, type: 2}
+  amount: 1

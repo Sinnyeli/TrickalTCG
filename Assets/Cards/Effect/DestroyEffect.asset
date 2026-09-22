@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48064d52caf0aff28bcea2823cf970c4, type: 3}
   m_Name: DestroyEffect
   m_EditorClassIdentifier: 
-  targetType: 10
+  targetType: 2
   targetFilter: 0
   cardRace: 0
   cardType: 0

@@ -15,11 +15,11 @@ MonoBehaviour:
   cardID: 
   cardName: Prickle
   description: 
-  manaCost: 0
+  manaCost: 3
   artwork: {fileID: 21300000, guid: 9766c50a99f38f1a1b5a96e76e37ff26, type: 3}
   onDrawEffects: []
-  attack: 3
-  health: 3
+  attack: 2
+  health: 4
   cardRace: 1
   keywords: 
   battlecry: {fileID: 0}
