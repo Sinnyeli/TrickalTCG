@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Diana (Yester)
   description: First Strike. Whenever this attacks, give it +2 Attack.
   manaCost: 7
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 10729a4b67c5a6fdd97cac87969666b6, type: 3}
   onDrawEffects: []
   attack: 7
   health: 7

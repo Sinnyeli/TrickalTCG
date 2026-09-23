@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 'Passive: Friendly units deal combat damage using their Health instead
     of Attack.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: d4286078a2125b9f6a2b790d38e250dd, type: 3}
   onDrawEffects: []
   attack: 2
   health: 6

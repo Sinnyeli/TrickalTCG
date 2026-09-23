@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Shaydi
   description: 'Bypass. Battlecry: Randomize the ATK and HP of units.'
   manaCost: 6
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 4996df3cb4d5d5ed28603df24c6df624, type: 3}
   onDrawEffects: []
   attack: 3
   health: 5

@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 'Battlecry: Give another friendly Beastfolk +1/+1. If it''s Tig, give
     it +2/+2 instead. '
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 2f0df61782c6de7beb3ac4e922e87b68, type: 3}
   onDrawEffects: []
   attack: 3
   health: 3

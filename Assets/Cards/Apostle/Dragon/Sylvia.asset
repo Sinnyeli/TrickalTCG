@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Sylvia
   description: Taunt. Endure.
   manaCost: 6
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 62ad8b8c8098335f0bd4d13def01476e, type: 3}
   onDrawEffects: []
   attack: 4
   health: 9

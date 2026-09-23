@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Miro
   description: 'Battlecry: Choose a unit. Shuffle a copy of it into your deck.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 5caddbe8796ab7fff82d7f78088ff5bc, type: 3}
   onDrawEffects: []
   attack: 3
   health: 4

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Snorki
   description: 
   manaCost: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: ec1d0bb125c98337d8648d42081a85e5, type: 3}
   onDrawEffects: []
   attack: 7
   health: 7

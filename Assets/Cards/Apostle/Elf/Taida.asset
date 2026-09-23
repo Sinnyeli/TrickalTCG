@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Lazy
   description: 'After attacking, cannot attack next turn. '
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: ecab9f9ec4d24860fa6b7a3887e4c0bc, type: 3}
   onDrawEffects: []
   attack: 4
   health: 4

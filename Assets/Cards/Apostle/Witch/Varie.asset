@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 'Battlecry: Return up to 2 random Spells from your Graveyard to your
     hand.'
   manaCost: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 063c737d6aed9e561b5caba0618ee140, type: 3}
   onDrawEffects: []
   attack: 3
   health: 6

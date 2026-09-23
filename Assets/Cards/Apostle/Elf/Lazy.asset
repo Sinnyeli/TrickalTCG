@@ -16,13 +16,13 @@ MonoBehaviour:
   cardName: Lazy
   description: 'Battlecry: Deal 1 Damage'
   manaCost: 2
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: b1fe8ccf33defd010b6d4df2d8d9adaf, type: 3}
   onDrawEffects: []
   attack: 3
   health: 2
   cardRace: 4
   keywords: 
-  battlecry: {fileID: 11400000, guid: 88da3c62f34f42fdb84d75c73fd101bc, type: 2}
+  battlecry: {fileID: 11400000, guid: 6137a6a0199aa7b6ebf183c7eaa24700, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
   resonance: {fileID: 0}

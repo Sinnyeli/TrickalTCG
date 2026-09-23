@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Jade
   description: 'Battlecry: Gain 1 empty maximum Mana.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 7a928aa8ada25987ea8e815f92d0e9d3, type: 3}
   onDrawEffects: []
   attack: 3
   health: 4

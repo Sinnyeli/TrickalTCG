@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Amelia
   description: 'Battlecry: If you control Elena, give her +2/+2 and Taunt.'
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: de5dcadbf1b0822718361728608af08c, type: 3}
   onDrawEffects: []
   attack: 2
   health: 4

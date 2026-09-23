@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Dehlia
   description: 'Battlecry: If Guin is on your field, gain +1/+1 and draw a card.'
   manaCost: 2
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 90d8975cb5f8cfa25b3feb8e4c9f113a, type: 3}
   onDrawEffects: []
   attack: 2
   health: 3

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Bana
   description: 'Battlecry: Create a random weapon Artifact.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 49b865c85e68ecccd81d32369b245838, type: 3}
   onDrawEffects: []
   attack: 3
   health: 4

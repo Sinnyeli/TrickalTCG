@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Belita
   description: 'Passive: Your Spells cost 1 less.'
   manaCost: 6
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 2a1cffde9098ccf40b28ccec1dd1d060, type: 3}
   onDrawEffects: []
   attack: 4
   health: 6

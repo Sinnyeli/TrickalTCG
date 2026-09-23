@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Joanne
   description: 'Battlecry: Create 2 Bread in Hand. '
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: c2ef0b6fad9d2a7289a1fc51d8aa5f8d, type: 3}
   onDrawEffects: []
   attack: 3
   health: 5

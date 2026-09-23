@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Tig
   description: 'Double Attack. On Attack: Gain +1/+1'
   manaCost: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: d12b70fecfc0ec8c48bc0667ef436bfd, type: 3}
   onDrawEffects: []
   attack: 4
   health: 5

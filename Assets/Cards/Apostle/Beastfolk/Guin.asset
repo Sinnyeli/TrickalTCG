@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Guin
   description: 'Battlecry: Draw a card.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 9998c9056e96434388a9a450ac160cde, type: 3}
   onDrawEffects: []
   attack: 4
   health: 4

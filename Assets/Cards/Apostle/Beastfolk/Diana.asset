@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Diana
   description: Taunt. Whenever another friendly Beastfolk gains stats, gain +1 Attack.
   manaCost: 7
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: a69390aa72df144618f8b7b73f688875, type: 3}
   onDrawEffects: []
   attack: 6
   health: 8

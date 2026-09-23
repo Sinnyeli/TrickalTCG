@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Ashur
   description: 'Resonance: Create a Bread in your hand. '
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: b88575bf7c0b5966b91033dc88db80bf, type: 3}
   onDrawEffects: []
   attack: 3
   health: 4

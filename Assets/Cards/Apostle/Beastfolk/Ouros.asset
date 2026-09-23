@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Ouros
   description: 'Passive: Enemy Units have -1/-1. Friendly Beastfolk have +1/+1'
   manaCost: 8
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: e585775ce15860a698af43516cce1017, type: 3}
   onDrawEffects: []
   attack: 7
   health: 7

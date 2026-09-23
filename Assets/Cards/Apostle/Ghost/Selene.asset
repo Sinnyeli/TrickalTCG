@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Selene
   description: Bypass. Taunt.
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 99c0d4bbb189b1d13b985865845749fa, type: 3}
   onDrawEffects: []
   attack: 3
   health: 5

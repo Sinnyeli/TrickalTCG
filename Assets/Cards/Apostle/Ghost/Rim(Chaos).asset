@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 'Bypass. Battlecry: Set each other unit''s ATK and HP randomly between
     the board''s current lowest and highest stats.'
   manaCost: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 3cd596fe5095a85bf8d0e8da9df14833, type: 3}
   onDrawEffects: []
   attack: 6
   health: 2

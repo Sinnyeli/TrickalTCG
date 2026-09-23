@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Minx
   description: 'Battlecry: GIve a unit +1/+1'
   manaCost: 2
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: cd8745baf3c39398db4e360b9419cc48, type: 3}
   onDrawEffects: []
   attack: 2
   health: 2

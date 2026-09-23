@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Picora
   description: 'Battlecry and Turn End: Create a random Sticker that grants a keyword.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 9083b9e3977574457acd9641cf840f86, type: 3}
   onDrawEffects: []
   attack: 3
   health: 4

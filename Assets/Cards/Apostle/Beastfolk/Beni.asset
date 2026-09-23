@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Beni
   description: 'Battlecry: Give another friendly unit +2 Health.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: e15ef5cd01404ddf683770e45225a466, type: 3}
   onDrawEffects: []
   attack: 3
   health: 5

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Inkle
   description: 'Battlecry: Create a copy of all spells in hand.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 4066b7895f57061fba59fa1f1dd30a9c, type: 3}
   onDrawEffects: []
   attack: 3
   health: 5

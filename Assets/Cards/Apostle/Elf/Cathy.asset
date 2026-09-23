@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Cathy
   description: Shock, Stealth
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: f6ad62798143de0e782b6e7079af604c, type: 3}
   onDrawEffects: []
   attack: 2
   health: 2

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Syla
   description: 'On Attack: Deal 2 damage to the enemy player.'
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: f07655b75c4d01bbc82be93d63ba5081, type: 3}
   onDrawEffects: []
   attack: 3
   health: 2

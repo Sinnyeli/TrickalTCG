@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Sparrot
   description: 'Rush. When you play an Apostle, summon from deck. '
   manaCost: 1
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: dd29f13186d0290dd9184c3870482843, type: 3}
   onDrawEffects: []
   attack: 1
   health: 1

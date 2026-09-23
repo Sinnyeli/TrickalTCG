@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Shaydi(Twisted)
   description: 'Bypass. Battlecry: Swap the ATK and HP of all other units.'
   manaCost: 6
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 4d6a6fa64c9157e5e93e529e881d0c5d, type: 3}
   onDrawEffects: []
   attack: 5
   health: 3

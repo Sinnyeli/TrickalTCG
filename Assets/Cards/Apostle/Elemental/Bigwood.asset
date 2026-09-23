@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Bigwood
   description: Taunt, Endure.
   manaCost: 7
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 48bc2ae6b0b0e4e36ae83235773c6a7a, type: 3}
   onDrawEffects: []
   attack: 4
   health: 10

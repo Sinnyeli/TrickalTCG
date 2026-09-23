@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Caesar
   description: 'Battlecry: Destroy a unit.'
   manaCost: 6
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 01cafb93991f90f8cb77953aad38e4fb, type: 3}
   onDrawEffects: []
   attack: 4
   health: 4

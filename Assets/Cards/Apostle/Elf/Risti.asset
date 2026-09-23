@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Risti
   description: 'Battlecry: Reduce the cost of a random card in your hand by 2.'
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 60038bc9e3fd2ddc2869bf717165d951, type: 3}
   onDrawEffects: []
   attack: 2
   health: 3

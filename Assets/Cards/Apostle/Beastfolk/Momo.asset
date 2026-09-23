@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Momo
   description: 'Battlecry: Summon a 2/2 Shadow Clone of Momo.'
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 7bfdaf9bf5225a858afdf060f26a5d1e, type: 3}
   onDrawEffects: []
   attack: 2
   health: 2

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Hilde
   description: 'Battlecry: Restore 4 Health to Player'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: fd647ac2e803853eb81164f5856ec776, type: 3}
   onDrawEffects: []
   attack: 2
   health: 5

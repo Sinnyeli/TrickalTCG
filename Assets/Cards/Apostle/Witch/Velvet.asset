@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Velvet
   description: 'Resonance: Gain +1 Attack.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 36e3ce51619734e3ca7a2349ee3cfbaf, type: 3}
   onDrawEffects: []
   attack: 4
   health: 4
@@ -25,7 +25,7 @@ MonoBehaviour:
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
-  resonance: {fileID: 0}
+  resonance: {fileID: 11400000, guid: 28932fac58d64f02e98d6672ff68a79c, type: 2}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}

@@ -16,13 +16,13 @@ MonoBehaviour:
   cardName: Shaydi(Twisted)
   description: 'Bypass. Battlecry: Silence a unit.'
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: af501d1468ec88ea1b8e46725af2c790, type: 3}
   onDrawEffects: []
   attack: 2
   health: 4
   cardRace: 6
   keywords: 02000000
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: ea5ad53eaa24e4cbb834752beb42c157, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
   resonance: {fileID: 0}

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Barong
   description: 'Bypass. Battlecry: Choose a unit. When Barong dies, destroy it.'
   manaCost: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 67377bbbb4336f30183222e76363b17d, type: 3}
   onDrawEffects: []
   attack: 3
   health: 3

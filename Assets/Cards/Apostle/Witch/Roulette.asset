@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 'Battlecry: Spin the Roulette. Apply the same random result to both
     players.'
   manaCost: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: cb08b413f6fbab21bae70a761db511bc, type: 3}
   onDrawEffects: []
   attack: 4
   health: 5

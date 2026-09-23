@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Thyst
   description: 'Battlecry: Create a random item from Thyst''s questionable merchandise.'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: c5ce324e728c8f194b5620e04116381a, type: 3}
   onDrawEffects: []
   attack: 2
   health: 3

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Kanna
   description: 'Battlecry: Deal 3 damage to a unit.'
   manaCost: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: c7e8186d2ae0496fd9d75638830a5ed2, type: 3}
   onDrawEffects: []
   attack: 5
   health: 4

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Speaki
   description: 'Battlecry: Choose another unit. Copy its Attack and Health.'
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 03174ebd96edd5b96ba643c3b0376bc1, type: 3}
   onDrawEffects: []
   attack: 1
   health: 1

@@ -17,7 +17,7 @@ MonoBehaviour:
   description: If you have at least 9 Mana when playing Daya, spend 9 instead and
     transform her into Daya (Pure Shine).
   manaCost: 6
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: e4636f36e0705a4b898ae9dceaae931d, type: 3}
   onDrawEffects: []
   attack: 7
   health: 8

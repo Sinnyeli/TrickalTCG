@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Kisha
   description: 'Battlecry: Change the background music.'
   manaCost: 2
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 39a72d0d5a037165e8d4cc7e8eb4cbaa, type: 3}
   onDrawEffects: []
   attack: 2
   health: 3

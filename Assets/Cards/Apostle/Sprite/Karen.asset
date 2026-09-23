@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Karen
   description: 'On Damage Taken: Summon a Carrot'
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: c1c152dd1a7a8056489cac32ae3b1b32, type: 3}
   onDrawEffects: []
   attack: 2
   health: 4

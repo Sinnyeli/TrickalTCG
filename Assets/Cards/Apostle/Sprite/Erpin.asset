@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Erpin
   description: 'Battlecry: Cast all Bread in hand to self. '
   manaCost: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 9f62ac6fe88db934eb04c09cd104d0c5, type: 3}
   onDrawEffects: []
   attack: 3
   health: 4

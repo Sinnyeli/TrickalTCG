@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Ui
   description: 'Battlecry: Silence all units.'
   manaCost: 7
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 85f67a24d7e917aeb85fbbc1fe73e89f, type: 3}
   onDrawEffects: []
   attack: 5
   health: 5

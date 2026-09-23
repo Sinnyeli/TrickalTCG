@@ -17,4 +17,4 @@ MonoBehaviour:
   cardRace: 0
   cardType: 0
   specificCard: {fileID: 0}
-  amount: 1
+  amount: 2

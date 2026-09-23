@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Ritz
   description: 'When attacked, swap Ritz''s Attack and Heatlh before combat. '
   manaCost: 5
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 40798cca0360d1cf8812af14c6c11659, type: 3}
   onDrawEffects: []
   attack: 4
   health: 7

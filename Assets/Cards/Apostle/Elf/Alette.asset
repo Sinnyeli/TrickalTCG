@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Alette
   description: Taunt, Endure.
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 1e511b3ef76699b8e82f8adc9de6ed49, type: 3}
   onDrawEffects: []
   attack: 2
   health: 5

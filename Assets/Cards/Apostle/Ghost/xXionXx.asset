@@ -16,13 +16,13 @@ MonoBehaviour:
   cardName: xXionXx
   description: 'Bypass. Battlecry: Deal 2 damage to a unit.'
   manaCost: 2
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 478393a54ea77dd0fa397e016abd6daa, type: 3}
   onDrawEffects: []
   attack: 2
   health: 2
   cardRace: 6
   keywords: 02000000
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: 88da3c62f34f42fdb84d75c73fd101bc, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
   resonance: {fileID: 0}

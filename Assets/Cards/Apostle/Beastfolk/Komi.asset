@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Komi
   description: 'Turn End: If this didn''t attack this turn, gain +1/+1.'
   manaCost: 3
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: ad5b2556c90069ce383e0dedcc861fd2, type: 3}
   onDrawEffects: []
   attack: 2
   health: 4

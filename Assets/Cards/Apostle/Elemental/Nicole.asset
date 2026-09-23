@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Nicole
   description: 'On Attack: Deal 1 Damage to all enemy units'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 62266aa8781888399b33dd09568c8fad, type: 3}
   onDrawEffects: []
   attack: 4
   health: 4

@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Maestro the 2nd
   description: Elf + Machine. Benefits from both categories.
   manaCost: 7
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: a761c8f1680453178b59c5e021216cf2, type: 3}
   onDrawEffects: []
   attack: 6
   health: 7

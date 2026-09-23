@@ -17,7 +17,7 @@ MonoBehaviour:
   description: 'Resonance: After every 3rd spell you cast while Aya is on field,
     draw a card.'
   manaCost: 1
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: 8115b063e92356bb9a6c05f2a4c9868d, type: 3}
   onDrawEffects: []
   attack: 1
   health: 2

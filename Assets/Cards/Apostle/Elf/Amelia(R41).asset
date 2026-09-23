@@ -16,7 +16,7 @@ MonoBehaviour:
   cardName: Amelia(R41)
   description: 'Battlecry: If you control Elena, gain +2/+2'
   manaCost: 4
-  artwork: {fileID: 0}
+  artwork: {fileID: 21300000, guid: ce2c02fd05c987197a6616ed7abbd4f4, type: 3}
   onDrawEffects: []
   attack: 4
   health: 4
