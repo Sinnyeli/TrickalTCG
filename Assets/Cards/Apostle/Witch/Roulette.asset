@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Roulette
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_ROULETTE
   cardName: Roulette
   description: 'Battlecry: Spin the Roulette. Apply the same random result to both
     players.'
   manaCost: 5
   artwork: {fileID: 21300000, guid: cb08b413f6fbab21bae70a761db511bc, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 4
   health: 5
   cardRace: 1

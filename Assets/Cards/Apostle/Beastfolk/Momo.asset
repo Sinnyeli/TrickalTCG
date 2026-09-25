@@ -12,17 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Momo
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_MOMO
   cardName: Momo
   description: 'Battlecry: Summon a 2/2 Shadow Clone of Momo.'
   manaCost: 3
   artwork: {fileID: 21300000, guid: 7bfdaf9bf5225a858afdf060f26a5d1e, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 2
   health: 2
   cardRace: 3
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: 9d11648a353eeb9ffbaa85be5806e627, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
   resonance: {fileID: 0}

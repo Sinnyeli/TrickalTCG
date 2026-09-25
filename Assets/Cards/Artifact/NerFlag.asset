@@ -12,15 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43a2c3ab60965bc693f71ba0de252ed, type: 3}
   m_Name: NerFlag
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: AR_NERFLAG
   cardName: NerFlag
   description: 
-  battlecry: {fileID: 0}
-  deathrattle: {fileID: 0}
-  passive: {fileID: 0}
-  keywords: 
-  artwork: {fileID: 21300000, guid: 4abcbb450a212829b965ca9a72f1ebba, type: 3}
   manaCost: 3
+  artwork: {fileID: 21300000, guid: 4abcbb450a212829b965ca9a72f1ebba, type: 3}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attackBonus: 0
   healthBonus: 0
+  grantedKeywords: 
   artifactEffect: {fileID: 11400000, guid: 6dfa13675a049f611839dc6f240c41a6, type: 2}
+  deathrattle: {fileID: 0}

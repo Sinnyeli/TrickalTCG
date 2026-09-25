@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Skia
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_SKIA
   cardName: Skia
   description: 'Battlecry: Create a Vow of Silence in your hand'
   manaCost: 4
   artwork: {fileID: 21300000, guid: 4253bf3c50bf69474b3389296c4d7590, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 3
   health: 4
   cardRace: 0

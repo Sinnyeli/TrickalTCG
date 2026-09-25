@@ -12,14 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03b276b4f3674a1b9b4abf52ab29cb78, type: 3}
   m_Name: Fridge
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: M_FRIDGE
   cardName: 
   description: 
-  battlecry: {fileID: 0}
-  deathrattle: {fileID: 0}
-  keywords: 
-  artwork: {fileID: 0}
   manaCost: 0
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  collectible: 0
+  unlimitedCopies: 0
   attack: 0
   health: 0
-  raceID: 0
+  cardRace: 0
+  keywords: 
+  battlecry: {fileID: 0}
+  deathrattle: {fileID: 0}
+  passive: {fileID: 0}
+  resonance: {fileID: 0}
+  turnStart: {fileID: 0}
+  turnEnd: {fileID: 0}
+  onDamageTaken: {fileID: 0}
+  onAttack: {fileID: 0}

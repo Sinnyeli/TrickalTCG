@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Shuro
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_SHURO
   cardName: Shuro
   description: Whenever this unit kills a unit, gain +2/+2. If its attack or hp reaches
     7, transform into Ouros
   manaCost: 4
   artwork: {fileID: 21300000, guid: 2ed0fda044e829cfb9bbd6a3f0162f9e, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 3
   health: 3
   cardRace: 3

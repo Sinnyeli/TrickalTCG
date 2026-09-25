@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: DayaPureShine
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_DAYAPURE
   cardName: Daya Pureshine
   description: If you have at least 9 Mana when playing Daya, spend 9 instead and
     transform her into Daya (Pure Shine).
   manaCost: 9
   artwork: {fileID: 21300000, guid: 182ffa30d881eaf9889bc47a55b5e39b, type: 3}
   onDrawEffects: []
+  collectible: 0
+  unlimitedCopies: 0
   attack: 10
   health: 12
   cardRace: 2

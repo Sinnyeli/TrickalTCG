@@ -12,21 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 313982d1e242c6d278d8401d991eced2, type: 3}
   m_Name: Bomb
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: S_BOMB
   cardName: Bomb
   description: 
-  battlecry: {fileID: 0}
-  deathrattle: {fileID: 0}
-  passive: {fileID: 0}
-  resonance: {fileID: 0}
-  turnStart: {fileID: 0}
-  turnEnd: {fileID: 0}
-  onDamageTaken: {fileID: 0}
-  onAttack: {fileID: 0}
+  manaCost: 0
+  artwork: {fileID: 0}
   onDrawEffects:
   - {fileID: 11400000, guid: 00f9e2c4e03690b3f9a301adf6749880, type: 2}
   - {fileID: 11400000, guid: 82d6a5426695186fe88008247698e8de, type: 2}
-  keywords: 
-  artwork: {fileID: 0}
-  manaCost: 0
-  spellEffect: {fileID: 0}
+  collectible: 0
+  unlimitedCopies: 0
+  spellEffects: []

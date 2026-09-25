@@ -12,15 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03b276b4f3674a1b9b4abf52ab29cb78, type: 3}
   m_Name: Scarfgon
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: M_SCARFGON
   cardName: Scarfgon
   description: 'Battlecry: Deal 1 Damage'
-  battlecry: {fileID: 11400000, guid: 779d586208e8e66458a805660d42b763, type: 2}
-  deathrattle: {fileID: 0}
-  passive: {fileID: 0}
-  keywords: 03000000
-  artwork: {fileID: 21300000, guid: 013ec1e91158bb715ab9f2c8f760f8c0, type: 3}
   manaCost: 1
+  artwork: {fileID: 21300000, guid: 013ec1e91158bb715ab9f2c8f760f8c0, type: 3}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 1
   health: 1
   cardRace: 0
+  keywords: 03000000
+  battlecry: {fileID: 11400000, guid: 779d586208e8e66458a805660d42b763, type: 2}
+  deathrattle: {fileID: 0}
+  passive: {fileID: 0}
+  resonance: {fileID: 0}
+  turnStart: {fileID: 0}
+  turnEnd: {fileID: 0}
+  onDamageTaken: {fileID: 0}
+  onAttack: {fileID: 0}

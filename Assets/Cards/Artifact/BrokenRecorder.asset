@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43a2c3ab60965bc693f71ba0de252ed, type: 3}
   m_Name: BrokenRecorder
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: AR_BRECORDER
   cardName: Broken Recorder
   description: Give -2 Health to enemy
   manaCost: 0
   artwork: {fileID: 0}
   onDrawEffects: []
+  collectible: 0
+  unlimitedCopies: 0
   attackBonus: 0
   healthBonus: -2
   grantedKeywords: 

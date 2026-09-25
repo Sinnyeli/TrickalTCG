@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Rim
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_RIM
   cardName: Rim
   description: 'Bypass. Battlecry: Set every other unit''s ATK and HP to the lowest
     current stat among all units.'
   manaCost: 5
   artwork: {fileID: 21300000, guid: abcfdb7db88fd75b5a679a354b33907d, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 2
   health: 6
   cardRace: 6

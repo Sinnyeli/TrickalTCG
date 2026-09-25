@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Belita
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_BELITA
   cardName: Belita
   description: 'Passive: Your Spells cost 1 less.'
   manaCost: 6
   artwork: {fileID: 21300000, guid: 2a1cffde9098ccf40b28ccec1dd1d060, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 4
   health: 6
   cardRace: 1

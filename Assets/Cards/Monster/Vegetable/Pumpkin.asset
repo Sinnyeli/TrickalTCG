@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03b276b4f3674a1b9b4abf52ab29cb78, type: 3}
   m_Name: Pumpkin
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: M_PUMPKIN
   cardName: Pumpkin
   description: 
   manaCost: 1
   artwork: {fileID: -1028352994, guid: 002680c724a9718aeb265dfa296f6593, type: 3}
   onDrawEffects: []
+  collectible: 0
+  unlimitedCopies: 0
   attack: 1
   health: 1
   cardRace: 0

@@ -26,5 +26,16 @@ public abstract class CardData : ScriptableObject
     public IReadOnlyList<CardEffect> OnDrawEffects =>
         onDrawEffects;
 
+    [Header("Deck Building")]
+    [SerializeField]
+    private bool collectible = true;
+    
+
+    public bool Collectible => collectible;
+    [SerializeField]
+    private bool unlimitedCopies = false;
+
+    public bool UnlimitedCopies => unlimitedCopies;
+
     
 }

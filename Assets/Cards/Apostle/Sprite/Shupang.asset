@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Shupang
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_SHUPANG
   cardName: Shupang
   description: 'Battlecry: Draw 1 Card
 
@@ -20,6 +20,8 @@ MonoBehaviour:
   manaCost: 3
   artwork: {fileID: 21300000, guid: 4a472666df2c58ce7bb144952f5e5600, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 2
   health: 4
   cardRace: 0

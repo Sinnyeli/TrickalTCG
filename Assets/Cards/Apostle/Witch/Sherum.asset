@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Sherum
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_SHERUM
   cardName: Sherum
   description: 'Every third Resonance: Create a copy of the last Spell you cast.'
   manaCost: 4
   artwork: {fileID: 21300000, guid: 4bee7539300f52e27987e8ca90b125c8, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 3
   health: 5
   cardRace: 1

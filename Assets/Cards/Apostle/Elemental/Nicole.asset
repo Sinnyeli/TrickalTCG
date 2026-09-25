@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Nicole
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_NICOLE
   cardName: Nicole
   description: 'On Attack: Deal 1 Damage to all enemy units'
   manaCost: 4
   artwork: {fileID: 21300000, guid: 62266aa8781888399b33dd09568c8fad, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 4
   health: 4
   cardRace: 5

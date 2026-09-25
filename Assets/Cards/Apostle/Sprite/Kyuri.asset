@@ -12,17 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Kyuri
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_KYURI
   cardName: Kyuri
-  description: 
-  battlecry: {fileID: 0}
-  deathrattle: {fileID: 0}
-  passive: {fileID: 11400000, guid: 08cc7180a611725c0aeddd5a7bd20fbe, type: 2}
-  keywords: 
-  artwork: {fileID: 21300000, guid: d26edb4e67162743ca0ba6a9334e7c59, type: 3}
+  description: All cucumbers have 5/2 statline
   manaCost: 5
-  typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
+  artwork: {fileID: 21300000, guid: d26edb4e67162743ca0ba6a9334e7c59, type: 3}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 5
   health: 2
   cardRace: 0
+  keywords: 
+  battlecry: {fileID: 0}
+  deathrattle: {fileID: 0}
+  passive: {fileID: 11400000, guid: 08cc7180a611725c0aeddd5a7bd20fbe, type: 2}
+  resonance: {fileID: 0}
+  turnStart: {fileID: 0}
+  turnEnd: {fileID: 0}
+  onDamageTaken: {fileID: 0}
+  onAttack: {fileID: 0}
+  typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
   maxEquipment: 3

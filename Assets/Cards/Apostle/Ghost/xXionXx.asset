@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: xXionXx
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_XION
   cardName: xXionXx
   description: 'Bypass. Battlecry: Deal 2 damage to a unit.'
   manaCost: 2
   artwork: {fileID: 21300000, guid: 478393a54ea77dd0fa397e016abd6daa, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 2
   health: 2
   cardRace: 6

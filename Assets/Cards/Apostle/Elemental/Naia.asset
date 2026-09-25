@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Naia
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_NAIA
   cardName: Naia
   description: 'Battlecry: Return a unit to its owner''s hand.'
   manaCost: 5
   artwork: {fileID: 21300000, guid: aade4a95124c84ecabb958f91f775a17, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 3
   health: 4
   cardRace: 5

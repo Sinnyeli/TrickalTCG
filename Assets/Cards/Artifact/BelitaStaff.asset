@@ -12,10 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43a2c3ab60965bc693f71ba0de252ed, type: 3}
   m_Name: BelitaStaff
   m_EditorClassIdentifier: 
+  cardID: AR_BSTAFF
   cardName: BelitaStaff
   description: Belita'sStaff
-  cardType: 3
-  artwork: {fileID: 21300000, guid: 99a9e55b04126f10a9679600ef86c5ae, type: 3}
   manaCost: 2
+  artwork: {fileID: 21300000, guid: 99a9e55b04126f10a9679600ef86c5ae, type: 3}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attackBonus: 1
   healthBonus: 1
+  grantedKeywords: 
+  artifactEffect: {fileID: 0}
+  deathrattle: {fileID: 0}

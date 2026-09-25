@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 313982d1e242c6d278d8401d991eced2, type: 3}
   m_Name: VowOfSilence
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: S_VOW
   cardName: Vow of Silence
   description: Silence a Unit
   manaCost: 0
   artwork: {fileID: 0}
   onDrawEffects: []
+  collectible: 0
+  unlimitedCopies: 0
   spellEffects:
   - {fileID: 11400000, guid: ea5ad53eaa24e4cbb834752beb42c157, type: 2}

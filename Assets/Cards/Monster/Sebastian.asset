@@ -18,6 +18,8 @@ MonoBehaviour:
   manaCost: 4
   artwork: {fileID: 0}
   onDrawEffects: []
+  collectible: 0
+  unlimitedCopies: 0
   attack: 0
   health: 8
   cardRace: 0

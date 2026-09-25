@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Inkle
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_INKLE
   cardName: Inkle
   description: 'Battlecry: Create a copy of all spells in hand.'
   manaCost: 4
   artwork: {fileID: 21300000, guid: 4066b7895f57061fba59fa1f1dd30a9c, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 3
   health: 5
   cardRace: 5

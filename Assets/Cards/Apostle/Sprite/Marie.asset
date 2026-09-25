@@ -12,9 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Marie
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_MARIE
   cardName: Marie
   description: 'Battlecry: Shuffle 3 Bombs into Opponent''s Deck'
+  manaCost: 3
+  artwork: {fileID: 21300000, guid: 28b012d5afc8544abaf1258d9eb0a0aa, type: 3}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
+  attack: 3
+  health: 3
+  cardRace: 0
+  keywords: 
   battlecry: {fileID: 11400000, guid: b664e2c8e2b69c506a71c16e402efc1d, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
@@ -23,12 +32,5 @@ MonoBehaviour:
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
-  onDraw: {fileID: 0}
-  keywords: 
-  artwork: {fileID: 21300000, guid: 28b012d5afc8544abaf1258d9eb0a0aa, type: 3}
-  manaCost: 3
   typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
-  attack: 3
-  health: 3
-  cardRace: 0
   maxEquipment: 3

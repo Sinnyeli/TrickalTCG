@@ -12,19 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 313982d1e242c6d278d8401d991eced2, type: 3}
   m_Name: Farm
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: S_FARM
   cardName: Farm
   description: 
-  battlecry: {fileID: 0}
-  deathrattle: {fileID: 0}
-  passive: {fileID: 0}
-  resonance: {fileID: 0}
-  turnStart: {fileID: 0}
-  turnEnd: {fileID: 0}
-  onDamageTaken: {fileID: 0}
-  onAttack: {fileID: 0}
-  onDrawEffects: []
-  keywords: 
-  artwork: {fileID: 0}
   manaCost: 1
-  spellEffect: {fileID: 11400000, guid: 7adf5a4168ddb5b2caa571a3993423f0, type: 2}
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
+  spellEffects: []

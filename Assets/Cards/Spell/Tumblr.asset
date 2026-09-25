@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 313982d1e242c6d278d8401d991eced2, type: 3}
   m_Name: Tumblr
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: S_TUMBLR
   cardName: Bounce
   description: Bounce a Card Back to hand
   manaCost: 0
   artwork: {fileID: 0}
   onDrawEffects: []
+  collectible: 0
+  unlimitedCopies: 0
   spellEffects:
   - {fileID: 11400000, guid: aee973b74ca4c8700a71c9da1c033128, type: 2}

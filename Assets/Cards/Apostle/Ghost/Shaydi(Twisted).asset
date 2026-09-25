@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Shaydi(Twisted)
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_SHAYDIT
   cardName: Shaydi(Twisted)
   description: 'Bypass. Battlecry: Swap the ATK and HP of all other units.'
   manaCost: 6
   artwork: {fileID: 21300000, guid: 4d6a6fa64c9157e5e93e529e881d0c5d, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 5
   health: 3
   cardRace: 6

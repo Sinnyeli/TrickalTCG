@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Alice
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_ALICE
   cardName: Alice
   description: 'Bypass. Battlecry: Shuffle 3 unique Tarot cards into your deck. Draw
     all 3 to win.'
   manaCost: 5
   artwork: {fileID: 21300000, guid: ebf7baffaa4514fbe8df7f53f85f8325, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 3
   health: 5
   cardRace: 6

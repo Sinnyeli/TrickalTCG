@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Rim(Chaos)
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_CRIM
   cardName: Rim (Chaos)
   description: 'Bypass. Battlecry: Set each other unit''s ATK and HP randomly between
     the board''s current lowest and highest stats.'
   manaCost: 5
   artwork: {fileID: 21300000, guid: 3cd596fe5095a85bf8d0e8da9df14833, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 6
   health: 2
   cardRace: 6

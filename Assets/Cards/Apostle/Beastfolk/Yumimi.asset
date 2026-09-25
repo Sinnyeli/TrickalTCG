@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca04703adbe1da0e684ae58302dfaa9d, type: 3}
   m_Name: Yumimi
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: A_YUMIMI
   cardName: Yumimi
   description: 'Battlecry: Deal 2 damage to the enemy player.'
   manaCost: 2
   artwork: {fileID: 21300000, guid: 92a5a20872ebec6e89a18152b9061ada, type: 3}
   onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 2
   health: 2
   cardRace: 3

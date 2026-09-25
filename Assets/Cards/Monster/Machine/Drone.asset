@@ -12,15 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03b276b4f3674a1b9b4abf52ab29cb78, type: 3}
   m_Name: Drone
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: M_DRONE
   cardName: Drone
   description: 
-  battlecry: {fileID: 0}
-  deathrattle: {fileID: 0}
-  passive: {fileID: 0}
-  keywords: 03000000
-  artwork: {fileID: 21300000, guid: ff4990b799392bd1093979723b43589a, type: 3}
   manaCost: 3
+  artwork: {fileID: 21300000, guid: ff4990b799392bd1093979723b43589a, type: 3}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
   attack: 5
   health: 1
   cardRace: 0
+  keywords: 03000000
+  battlecry: {fileID: 0}
+  deathrattle: {fileID: 0}
+  passive: {fileID: 0}
+  resonance: {fileID: 0}
+  turnStart: {fileID: 0}
+  turnEnd: {fileID: 0}
+  onDamageTaken: {fileID: 0}
+  onAttack: {fileID: 0}

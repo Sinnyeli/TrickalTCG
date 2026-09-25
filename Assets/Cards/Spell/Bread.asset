@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 313982d1e242c6d278d8401d991eced2, type: 3}
   m_Name: Bread
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: S_BREAD
   cardName: Bread
   description: Buff a unit by +1/+1
   manaCost: 1
   artwork: {fileID: 21300000, guid: e9e47b9b9321db4c696a96ee9f85f76b, type: 3}
   onDrawEffects: []
+  collectible: 0
+  unlimitedCopies: 0
   spellEffects:
   - {fileID: 11400000, guid: b0c52eed1561c80cdbe3c8f13e3d5920, type: 2}
