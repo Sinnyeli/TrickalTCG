@@ -6,7 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/TitleScreen.unity
+    guid: 2394d6abf6f42aaf389969500f7b3760
+  - enabled: 1
     path: Assets/Scenes/Battlefield.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/DeckEditor.unity
+    guid: 0a5e9bd53963312cba3a3b78ce846a41
+  - enabled: 1
+    path: Assets/Scenes/DeckLoader.unity
+    guid: 543388b52cf2839b680b317e4deb03ed
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 5bc10bcafbef264ad9c1845591e50a7f, type: 3}

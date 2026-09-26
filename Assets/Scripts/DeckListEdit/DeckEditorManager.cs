@@ -34,7 +34,10 @@ public class DeckEditorManager : MonoBehaviour
 
     [SerializeField]
     private TMP_Text validationText;
+    private string currentDeckID;
 
+    public string CurrentDeckID =>
+        currentDeckID;
 
     // =========================================================
     // COMMANDER
@@ -83,23 +86,128 @@ public class DeckEditorManager : MonoBehaviour
     // START
     // =========================================================
 
-    private void Start()
+private void Start()
+{
+    // =========================================
+    // CREATE NEW
+    // =========================================
+
+    if (DeckEditorSession.CreatingNewDeck)
     {
-        // Deck must begin without a Commander.
-        commander = null;
+        StartNewDeck();
+        return;
+    }
 
-        selectingCommander = true;
-    
 
-        RefreshDeckCount();
+    // =========================================
+    // EDIT EXISTING
+    // =========================================
 
-        Debug.Log(
-            "Deck Editor started. " +
-            "Select an Apostle as your Commander."
+    if (!string.IsNullOrWhiteSpace(
+            DeckEditorSession.DeckID))
+    {
+        bool loaded =
+            LoadDeck(
+                DeckEditorSession.DeckID
+            );
+
+        if (!loaded)
+        {
+            Debug.LogError(
+                "Failed to load selected deck."
+            );
+        }
+
+        return;
+    }
+
+
+    // =========================================
+    // FALLBACK
+    // =========================================
+
+    Debug.LogWarning(
+        "DeckEditor opened without a deck session."
+    );
+
+    StartNewDeck();
+}
+private void GenerateNewDeckID()
+{
+    currentDeckID =
+        System.Guid.NewGuid().ToString();
+
+    Debug.Log(
+        $"Generated new Deck ID: {currentDeckID}"
+    );
+}
+
+private void StartNewDeck()
+{
+    GenerateNewDeckID();
+
+    commander = null;
+
+    deckCards.Clear();
+
+    selectingCommander = true;
+
+    if (deckNameInput != null)
+    {
+        deckNameInput.text = "";
+    }
+
+    RefreshDeckCount();
+
+    if (validationText != null)
+    {
+        validationText.text =
+            "Select an Apostle as your Commander.";
+    }
+
+    Debug.Log(
+        $"Started new deck with ID: {currentDeckID}"
+    );
+}
+
+private DeckSaveData CreateSaveData()
+{
+    // Safety fallback.
+    // Normally StartNewDeck() already generated this.
+    if (string.IsNullOrWhiteSpace(currentDeckID))
+    {
+        GenerateNewDeckID();
+    }
+
+    DeckSaveData saveData =
+        new DeckSaveData();
+
+    saveData.deckID =
+        currentDeckID;
+
+    saveData.deckName =
+        GetDeckName();
+
+    saveData.commanderID =
+        commander.CardID;
+
+    foreach (
+        KeyValuePair<CardData, int> pair
+        in deckCards)
+    {
+        DeckCardEntry entry =
+            new DeckCardEntry(
+                pair.Key.CardID,
+                pair.Value
+            );
+
+        saveData.cards.Add(
+            entry
         );
     }
 
- 
+    return saveData;
+}
   
 
     // =========================================================
@@ -696,6 +804,290 @@ private void RefreshCommanderView()
         }
     }
 
+    // =========================================================
+    // Load Deck
+    // =========================================================
+
+
+
+public bool LoadDeck(string deckID)
+{
+    if (string.IsNullOrWhiteSpace(deckID))
+    {
+        Debug.LogWarning(
+            "Cannot load deck: Deck ID is empty."
+        );
+
+        return false;
+    }
+
+    string path =
+        Path.Combine(
+            Application.persistentDataPath,
+            "Decks",
+            deckID + ".json"
+        );
+
+    if (!File.Exists(path))
+    {
+        Debug.LogWarning(
+            $"Deck file not found: {path}"
+        );
+
+        return false;
+    }
+
+    try
+    {
+        string json =
+            File.ReadAllText(path);
+
+        DeckSaveData saveData =
+            JsonUtility.FromJson<DeckSaveData>(
+                json
+            );
+
+        if (saveData == null)
+        {
+            Debug.LogError(
+                $"Failed to deserialize deck: {deckID}"
+            );
+
+            return false;
+        }
+
+        return LoadDeckData(saveData);
+    }
+    catch (System.Exception exception)
+    {
+        Debug.LogError(
+            $"Failed to load deck: " +
+            $"{exception.Message}"
+        );
+
+        return false;
+    }
+}
+private bool LoadDeckData(
+    DeckSaveData saveData)
+{
+    if (saveData == null)
+        return false;
+
+    if (cardDatabase == null)
+    {
+        Debug.LogError(
+            "DeckEditorManager has no CardDatabase."
+        );
+
+        return false;
+    }
+
+
+    // =====================================================
+    // FIND COMMANDER
+    // =====================================================
+
+    CardData commanderData =
+        cardDatabase.GetCardByID(
+            saveData.commanderID
+        );
+
+    if (!(commanderData is ApostleData loadedCommander))
+    {
+        Debug.LogError(
+            $"Commander ID " +
+            $"{saveData.commanderID} " +
+            $"does not point to an Apostle."
+        );
+
+        return false;
+    }
+
+
+    // =====================================================
+    // RESOLVE MAIN DECK
+    // =====================================================
+
+    Dictionary<CardData, int> loadedCards =
+        new Dictionary<CardData, int>();
+
+    if (saveData.cards != null)
+    {
+        foreach (DeckCardEntry entry
+                 in saveData.cards)
+        {
+            if (entry == null)
+                continue;
+
+            if (entry.count <= 0)
+                continue;
+
+
+            CardData card =
+                cardDatabase.GetCardByID(
+                    entry.cardID
+                );
+
+            if (card == null)
+            {
+                Debug.LogWarning(
+                    $"Could not find saved card: " +
+                    $"{entry.cardID}"
+                );
+
+                continue;
+            }
+
+
+            loadedCards[card] =
+                entry.count;
+        }
+    }
+
+
+    // =====================================================
+    // CLEAR CURRENT EDITOR
+    // =====================================================
+
+    ClearCurrentDeck();
+
+
+    // =====================================================
+    // RESTORE DECK ID
+    // =====================================================
+
+    currentDeckID =
+        saveData.deckID;
+
+
+    // =====================================================
+    // RESTORE DECK NAME
+    // =====================================================
+
+    if (deckNameInput != null)
+    {
+        deckNameInput.text =
+            saveData.deckName;
+    }
+
+
+    // =====================================================
+    // RESTORE COMMANDER
+    // =====================================================
+
+    commander =
+        loadedCommander;
+
+    selectingCommander =
+        false;
+
+    RefreshCommanderView();
+
+
+    // =====================================================
+    // RESTORE MAIN DECK
+    // =====================================================
+
+    foreach (
+        KeyValuePair<CardData, int> pair
+        in loadedCards)
+    {
+        deckCards.Add(
+            pair.Key,
+            pair.Value
+        );
+
+        CreateDeckListView(
+            pair.Key
+        );
+
+        RefreshDeckListView(
+            pair.Key
+        );
+    }
+
+
+    // =====================================================
+    // REFRESH UI
+    // =====================================================
+
+    RefreshDeckCount();
+
+
+    if (validationText != null)
+    {
+        validationText.text =
+            GetValidationMessage();
+    }
+
+
+    Debug.Log(
+        $"Loaded deck: {saveData.deckName} " +
+        $"[{saveData.deckID}]"
+    );
+
+
+    return true;
+}
+
+private void ClearCurrentDeck()
+{
+    // =========================================
+    // DATA
+    // =========================================
+
+    deckCards.Clear();
+
+    commander = null;
+
+
+    // =========================================
+    // DECK LIST UI
+    // =========================================
+
+    foreach (
+        KeyValuePair<CardData, DeckListCardView>
+        pair in deckListViews)
+    {
+        if (pair.Value != null)
+        {
+            Destroy(
+                pair.Value.gameObject
+            );
+        }
+    }
+
+    deckListViews.Clear();
+
+
+    // =========================================
+    // COMMANDER UI
+    // =========================================
+
+    if (commanderView != null)
+    {
+        Destroy(
+            commanderView.gameObject
+        );
+
+        commanderView = null;
+    }
+
+
+    // =========================================
+    // TEXT
+    // =========================================
+
+    if (deckNameInput != null)
+    {
+        deckNameInput.text = "";
+    }
+
+    RefreshDeckCount();
+}
+
+
    public void HandleCardDrop(
     CardData card,
     PointerEventData eventData)
@@ -758,36 +1150,6 @@ private void RefreshCommanderView()
     }
 }
 
-// =========================================
-// Create Saved Data (Deck)
-// =========================================
-private DeckSaveData CreateSaveData()
-{
-    DeckSaveData saveData =
-        new DeckSaveData();
-
-    saveData.deckName =
-        GetDeckName();
-
-    saveData.commanderID =
-        commander.CardID;
-
-    foreach (
-        KeyValuePair<CardData, int> pair
-        in deckCards)
-    {
-        DeckCardEntry entry =
-            new DeckCardEntry(
-                pair.Key.CardID,
-                pair.Value
-            );
-
-        saveData.cards.Add(entry);
-    }
-
-    return saveData;
-}
-
 public bool SaveDeck()
 {
     string validation =
@@ -841,7 +1203,7 @@ public bool SaveDeck()
     string path =
         Path.Combine(
             deckFolder,
-            safeFileName + ".json"
+            saveData.deckID + ".json"
         );
 
 
@@ -1005,7 +1367,7 @@ public void DoneEditing()
     // =========================================
 
     SceneManager.LoadScene(
-        "DeckMenuScene"
+        "DeckLoader"
     );
 }
 }
