@@ -23,7 +23,7 @@ MonoBehaviour:
   collectible: 1
   unlimitedCopies: 0
   attack: 2
-  health: 4
+  health: 1
   cardRace: 0
   keywords: 00000000
   battlecry: {fileID: 11400000, guid: 82d6a5426695186fe88008247698e8de, type: 2}

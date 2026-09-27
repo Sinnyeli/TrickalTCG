@@ -22,7 +22,8 @@ public class BattlefieldManager : MonoBehaviour
     private Dictionary<RuntimeCard, MinionView> minionViews =
         new Dictionary<RuntimeCard, MinionView>();
     public IReadOnlyList<RuntimeCard> Minions => minions;
-
+    
+public static event System.Action<RuntimeCard> OnUnitSummoned;
 
     private List<RuntimeCard> GetAllEquippedArtifacts()
     {
@@ -114,7 +115,7 @@ public class BattlefieldManager : MonoBehaviour
 
     // Create visual representation.
     CreateMinionView(card);
-
+    OnUnitSummoned?.Invoke(card);
     RefreshPassives();
     RefreshArtifactEffects();
 

@@ -9,12 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: faa7ab004b98fb40b8da35b0644382fe, type: 3}
-  m_Name: DrawCardEffect 1
+  m_Script: {fileID: 11500000, guid: 6659d0d755e91b76ea227ee941d2894b, type: 3}
+  m_Name: NotSelfTriggerCondition
   m_EditorClassIdentifier: 
-  targetType: 0
-  targetFilter: 0
-  cardRace: 0
-  cardType: 0
-  specificCard: {fileID: 0}
-  amount: 1

@@ -21,10 +21,10 @@ MonoBehaviour:
   collectible: 1
   unlimitedCopies: 0
   attack: 2
-  health: 3
+  health: 2
   cardRace: 3
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: 62b7d2a6466535319a8bebaf4831cd7d, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
   resonance: {fileID: 0}

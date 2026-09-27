@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ea1060c608966056b7cbe01121afd82, type: 3}
+  m_Name: DehliaCondition
+  m_EditorClassIdentifier: 
+  targetType: 0
+  targetFilter: 0
+  cardRace: 0
+  cardType: 0
+  specificCard: {fileID: 0}
+  condition: {fileID: 11400000, guid: 49bd38c70189982cba3641d461d46065, type: 2}
+  effects:
+  - {fileID: 11400000, guid: b0c52eed1561c80cdbe3c8f13e3d5920, type: 2}
+  - {fileID: 11400000, guid: 82d6a5426695186fe88008247698e8de, type: 2}

@@ -58,6 +58,7 @@ public class RuntimeCard
 
     public PlayerSide Owner { get; private set; }
     private List<RuntimeModifier> modifiers = new List<RuntimeModifier>();
+    public static event System.Action<RuntimeCard, RuntimeModifier> OnStatsGained;
     
 
     public int GetMaxEquipment()
@@ -295,19 +296,41 @@ private int GetBaseHealth()
         }
 
 
-     public void AddModifier(RuntimeModifier modifier)
-        {
-            if (modifier == null)
-                return;
+public void AddModifier(
+    RuntimeModifier modifier)
+{
+    if (modifier == null)
+        return;
 
-            modifiers.Add(modifier);
+    modifiers.Add(
+        modifier
+    );
+    // =========================================
+    // HEALTH
+    // =========================================
 
-            // Health buffs also increase current health.
-            if (modifier.HealthBonus > 0)
-            {
-                currentHealth += modifier.HealthBonus;
-            }
-        }
+    // Health buffs also increase current health.
+    if (modifier.HealthBonus > 0)
+    {
+        currentHealth +=
+            modifier.HealthBonus;
+    }
+
+
+    // =========================================
+    // STAT GAIN EVENT
+    // =========================================
+
+   if ((modifier.AttackBonus > 0 ||
+     modifier.HealthBonus > 0) &&
+    !modifier.IsPassive)
+    {
+        OnStatsGained?.Invoke(
+            this,
+            modifier
+        );
+    }
+}
 
 
         public void ModifyManaCost(int amount)
