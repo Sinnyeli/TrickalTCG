@@ -66,10 +66,6 @@ public class GameManager : MonoBehaviour
     public BattlefieldManager OpponentBattlefieldManager =>
         opponentBattlefieldManager;
 
-    [SerializeField]
-    private DeckManager opponentDeck;
-
-
 
 private void Awake()
 {
@@ -87,18 +83,15 @@ private void Awake()
     Instance = this;
 }
 
-    private void Start()
-    {
-        StartGame();
-    }
 
-    private void StartGame()
+
+    public void StartGame()
     {
          gameOverUI.Hide();
     // Player
         CreatePlayerViews();
         
-        deckManager.InitializeDeck();
+ 
         RuntimeCard playerCommander = deckManager.GetCommander();
 
         if (playerCommander != null)

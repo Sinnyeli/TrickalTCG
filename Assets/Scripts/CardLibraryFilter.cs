@@ -35,13 +35,35 @@ public class CardLibraryFilter : MonoBehaviour
             new Dictionary<CardData, DeckEditorCardView>();
 
 
-    private void Start()
-    {
-        SetupDropdowns();
-        CreateCardLibrary();
-        ApplyFilters();
-    }
+private void Start()
+{
+    Debug.Log(
+        $"CardLibraryFilter START in scene: " +
+        $"{UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}"
+    );
 
+    Debug.Log(
+        $"Database assigned: {cardDatabase != null}"
+    );
+
+    Debug.Log(
+        $"Content assigned: {cardContent != null}"
+    );
+
+    Debug.Log(
+        $"Prefab assigned: {cardViewPrefab != null}"
+    );
+
+    SetupDropdowns();
+
+    CreateCardLibrary();
+
+    Debug.Log(
+        $"Card views created: {cardViews.Count}"
+    );
+
+    ApplyFilters();
+}
 
     // =========================================================
     // SETUP FILTERS

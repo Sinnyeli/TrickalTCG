@@ -1369,5 +1369,21 @@ public void DoneEditing()
     SceneManager.LoadScene(
         "DeckLoader"
     );
+    // =========================================================
+// CANCEL / DISCARD EDIT
+// =========================================================
 }
+public void CancelDeckEdit()
+{
+
+
+    // Clear the current editor session.
+    // Do NOT save anything.
+    DeckEditorSession.Clear();
+
+    SceneManager.LoadScene(
+        "DeckLoader"
+    );
+}
+
 }

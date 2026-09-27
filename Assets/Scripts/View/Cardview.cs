@@ -195,7 +195,7 @@ if (droppedOnBattlefield)
         return;
 }
 
-ReturnToHand();
+    ReturnToHand();
 }
 
     private void ReturnToHand()
@@ -211,6 +211,7 @@ ReturnToHand();
         {
             handManager.RefreshHandLayout();
         }
+        RefreshLocalization();
     }
 
     private MinionView GetMinionUnderPointer(
@@ -258,6 +259,43 @@ ReturnToHand();
 
         return null;
     }
+    private void RefreshLocalization()
+    {
+        if (runtimeCard == null)
+            return;
 
+        if (LocalizationManager.Instance == null)
+        {
+            nameText.text =
+                runtimeCard.Data.cardName;
+
+            return;
+        }
+
+        nameText.text =
+            LocalizationManager.Instance
+                .GetCardName(
+                    runtimeCard.Data
+                );
+    }
+    private void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance
+                .OnLanguageChanged +=
+                RefreshLocalization;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance
+                .OnLanguageChanged -=
+                RefreshLocalization;
+        }
+    }
 
 }

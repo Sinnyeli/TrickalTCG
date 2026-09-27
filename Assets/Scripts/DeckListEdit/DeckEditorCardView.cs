@@ -15,6 +15,10 @@ public class DeckEditorCardView :
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text manaCostText;
 
+    [SerializeField] private TMP_Text descriptionText;
+    [SerializeField] private TMP_Text attackText;
+    [SerializeField] private TMP_Text healthText;
+
     private CardData cardData;
     private DeckEditorManager deckEditor;
 
@@ -54,13 +58,29 @@ public class DeckEditorCardView :
         if (nameText != null)
             nameText.text = cardData.cardName;
 
+        if (artworkImage != null)
+         artworkImage.sprite = cardData.artwork;
+
         if (manaCostText != null)
             manaCostText.text =
                 cardData.manaCost.ToString();
 
-        if (artworkImage != null)
-            artworkImage.sprite =
-                cardData.artwork;
+        if (descriptionText != null)
+                descriptionText.text =
+                cardData.description.ToString();
+
+     /*   if (attackText != null)
+           attackText.text =
+                cardData.attack.ToString();
+
+        if (healthText != null)
+            healthText.text =
+                cardData.health.ToString();
+
+        
+*/
+        RefreshStats();
+        RefreshLocalization();
     }
 
 
@@ -237,5 +257,114 @@ public class DeckEditorCardView :
 
         dragGhost = null;
         dragGhostRect = null;
+    }
+
+private void RefreshStats()
+{
+    if (attackText != null)
+        attackText.gameObject.SetActive(false);
+
+    if (healthText != null)
+        healthText.gameObject.SetActive(false);
+
+
+    // =========================================
+    // APOSTLE
+    // =========================================
+
+    if (cardData is ApostleData apostle)
+    {
+        if (attackText != null)
+        {
+            attackText.gameObject.SetActive(true);
+            attackText.text =
+                apostle.attack.ToString();
+        }
+
+        if (healthText != null)
+        {
+            healthText.gameObject.SetActive(true);
+            healthText.text =
+                apostle.health.ToString();
+        }
+
+        return;
+    }
+
+
+    // =========================================
+    // MONSTER
+    // =========================================
+
+    if (cardData is MonsterData monster)
+    {
+        if (attackText != null)
+        {
+            attackText.gameObject.SetActive(true);
+            attackText.text =
+                monster.attack.ToString();
+        }
+
+        if (healthText != null)
+        {
+            healthText.gameObject.SetActive(true);
+            healthText.text =
+                monster.health.ToString();
+        }
+    }
+}
+
+    // =========================================================
+    // LOCALIZATION
+    // =========================================================
+
+    private void RefreshLocalization()
+    {
+        if (cardData == null)
+            return;
+
+
+        if (nameText != null)
+        {
+            // Use localization if available.
+            if (LocalizationManager.Instance != null)
+            {
+                nameText.text =
+                    LocalizationManager.Instance
+                        .GetCardName(cardData);
+            }
+
+            // Useful fallback if the manager
+            // isn't present during development.
+            else
+            {
+                nameText.text =
+                    cardData.cardName;
+            }
+        }
+    }
+      // =========================================================
+    // LANGUAGE EVENT
+    // =========================================================
+
+    private void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance
+                .OnLanguageChanged +=
+                RefreshLocalization;
+        }
+    }
+
+
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance
+                .OnLanguageChanged -=
+                RefreshLocalization;
+        }
     }
 }

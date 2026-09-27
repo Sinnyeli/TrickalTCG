@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour
@@ -22,7 +23,9 @@ public class TurnManager : MonoBehaviour
 
     public int PlayerMaxMana => playerMaxMana;
     public int OpponentMaxMana => opponentMaxMana;
-    
+    [SerializeField]
+   
+    public event Action<PlayerSide> OnTurnStarted;
 
     private void Start()
     {
@@ -80,11 +83,12 @@ public void StartTurn()
     
     if (GameManager.Instance.IsGameOver)
         return;
-
+// =========================================
+// AI TURN
+// =========================================
     GameManager.Instance.DrawCard(currentSide);
+    OnTurnStarted?.Invoke(currentSide);
 }
-
-
     public void EndTurn()
     {
         if (GameManager.Instance.IsGameOver)

@@ -186,6 +186,5 @@ public bool TryEquipArtifact(RuntimeCard artifact)
 }
 
 
-        
 }
 

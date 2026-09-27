@@ -112,6 +112,7 @@ public class DeckListCardView : MonoBehaviour
         if (artworkImage != null)
             artworkImage.sprite =
                 cardData.artwork;
+        RefreshLocalization();
     }
 
 
@@ -172,4 +173,44 @@ public class DeckListCardView : MonoBehaviour
         if (countText != null)
             countText.text = count.ToString();
     }
+
+    private void RefreshLocalization()
+{
+    if (cardData == null)
+        return;
+
+    if (nameText == null)
+        return;
+
+    if (LocalizationManager.Instance != null)
+    {
+        nameText.text =
+            LocalizationManager.Instance
+                .GetCardName(cardData);
+    }
+    else
+    {
+        nameText.text =
+            cardData.cardName;
+    }
+}
+private void OnEnable()
+{
+    if (LocalizationManager.Instance != null)
+    {
+        LocalizationManager.Instance
+            .OnLanguageChanged +=
+            RefreshLocalization;
+    }
+}
+
+private void OnDisable()
+{
+    if (LocalizationManager.Instance != null)
+    {
+        LocalizationManager.Instance
+            .OnLanguageChanged -=
+            RefreshLocalization;
+    }
+}
 }

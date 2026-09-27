@@ -70,6 +70,25 @@ public bool Attack(RuntimeCard defender)
         return false;
     }
 
+    // =========================================
+// TAUNT CHECK
+// =========================================
+
+    PlayerSide defendingSide =
+        defender.Owner;
+
+    if (HasTaunt(defendingSide) &&
+        !defender.HasKeyword(CardKeyword.Taunt))
+    {
+        Debug.Log(
+            "Cannot attack another unit while " +
+            "a Taunt unit is on the battlefield."
+        );
+
+        return false;
+    }
+
+
     Debug.Log(
         $"{attacker.Data.cardName} attacks " +
         $"{defender.Data.cardName}"
@@ -245,7 +264,7 @@ private bool HasTaunt(PlayerSide defendingSide)
 
     foreach (RuntimeCard card in battlefield.Minions)
     {
-        if (card.HasKeyword(CardKeyword.Taunt))
+        if (card.HasKeyword(CardKeyword.Taunt) && !card.IsStealthed)
             return true;
     }
 

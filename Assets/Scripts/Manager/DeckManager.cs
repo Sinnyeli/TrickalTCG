@@ -18,66 +18,20 @@ public class DeckManager : MonoBehaviour
     public PlayerSide Owner => owner;
     public int RemainingCards => drawPile.Count;
 
-  public void InitializeDeck()
+ public void InitializeDeck()
 {
-    drawPile.Clear();
-    discardPile.Clear();
-
-    // =========================================
-    // CREATE COMMANDER
-    // =========================================
-
-    if (deckData.commander != null)
-    {
-        Commander = new RuntimeCard(
-            deckData.commander,
-            true
-        );
-
-        Commander.SetOwner(owner);
-
-        Commander.ChangeZone(
-            CardZone.Hand
-        );
-    }
-    else
+    if (deckData == null)
     {
         Debug.LogError(
-            $"{owner} deck has no Commander assigned!"
-        );
-    }
-
-    // =========================================
-    // CREATE NORMAL DECK
-    // =========================================
-
-    foreach (CardData cardData in deckData.cards)
-    {
-        if (cardData == null)
-            continue;
-
-        RuntimeCard card =
-            new RuntimeCard(cardData);
-
-        card.SetOwner(owner);
-
-        card.ChangeZone(
-            CardZone.Deck
+            $"{owner} has no DeckData assigned."
         );
 
-        drawPile.Add(card);
+        return;
     }
 
-    // =========================================
-    // SHUFFLE
-    // =========================================
-
-    Shuffle();
-
-    Debug.Log(
-        $"{owner} deck initialized. " +
-        $"Commander: {Commander?.Data.cardName}, " +
-        $"Cards: {drawPile.Count}"
+    InitializeDeck(
+        deckData.commander,
+        deckData.cards
     );
 }
     public int GetDeckCount()
@@ -176,6 +130,9 @@ public class DeckManager : MonoBehaviour
         RuntimeCard card =
             new RuntimeCard(cardData);
 
+        card.SetOwner(
+            owner
+        );
         card.ChangeZone(
             CardZone.Deck
         );
@@ -235,6 +192,101 @@ public class DeckManager : MonoBehaviour
                 temp;
         }
     }
+// =========================================
+// INITIALIZE FROM CARD DATA
+// =========================================
 
-    
+public void InitializeDeck(
+    ApostleData commanderData,
+    IEnumerable<CardData> cards)
+{
+    drawPile.Clear();
+    discardPile.Clear();
+
+    Commander = null;
+
+
+    // =========================================
+    // CREATE COMMANDER
+    // =========================================
+
+    if (commanderData != null)
+    {
+        Commander =
+            new RuntimeCard(
+                commanderData,
+                true
+            );
+
+        Commander.SetOwner(
+            owner
+        );
+
+        Commander.ChangeZone(
+            CardZone.Hand
+        );
+    }
+    else
+    {
+        Debug.LogError(
+            $"{owner} deck has no Commander assigned!"
+        );
+
+        return;
+    }
+
+
+    // =========================================
+    // CREATE NORMAL DECK
+    // =========================================
+
+    if (cards != null)
+    {
+        foreach (
+            CardData cardData
+            in cards)
+        {
+            if (cardData == null)
+                continue;
+
+
+            RuntimeCard card =
+                new RuntimeCard(
+                    cardData
+                );
+
+            card.SetOwner(
+                owner
+            );
+
+            card.ChangeZone(
+                CardZone.Deck
+            );
+
+            drawPile.Add(
+                card
+            );
+        }
+    }
+
+
+    // =========================================
+    // SHUFFLE
+    // =========================================
+
+    Shuffle();
+
+
+    Debug.Log(
+        $"{owner} deck initialized. " +
+        $"Commander: " +
+        $"{Commander?.Data.cardName}, " +
+        $"Cards: {drawPile.Count}"
+    );
+}
+    public void SetDeckData(
+    DeckData data)
+{
+    deckData = data;
+}
 }

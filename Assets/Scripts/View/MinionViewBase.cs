@@ -41,7 +41,26 @@ public abstract class MinionViewBase : MonoBehaviour
 
         CardData data = card.Data;
 
-        nameText.text = data.cardName;
+        RefreshLocalization();
+            if (runtimeCard == null)
+        return;
+
+            if (nameText == null)
+                return;
+
+            if (LocalizationManager.Instance != null)
+            {
+                nameText.text =
+                    LocalizationManager.Instance
+                        .GetCardName(
+                            runtimeCard.Data
+                        );
+            }
+            else
+            {
+                nameText.text =
+                    runtimeCard.Data.cardName;
+            }
 
         if (data.artwork != null)
             artworkImage.sprite = data.artwork;
@@ -144,6 +163,49 @@ private Image GetArtifactSlot(int index)
             return null;
     }
 }
+
+private void RefreshLocalization()
+{
+    if (runtimeCard == null)
+        return;
+
+    if (nameText == null)
+        return;
+
+    if (LocalizationManager.Instance != null)
+    {
+        nameText.text =
+            LocalizationManager.Instance
+                .GetCardName(
+                    runtimeCard.Data
+                );
+    }
+    else
+    {
+        nameText.text =
+            runtimeCard.Data.cardName;
+    }
+}
+protected virtual void OnEnable()
+{
+    if (LocalizationManager.Instance != null)
+    {
+        LocalizationManager.Instance
+            .OnLanguageChanged +=
+            RefreshLocalization;
+    }
+}
+
+protected virtual void OnDisable()
+{
+    if (LocalizationManager.Instance != null)
+    {
+        LocalizationManager.Instance
+            .OnLanguageChanged -=
+            RefreshLocalization;
+    }
+}
+        
 
 
 }
