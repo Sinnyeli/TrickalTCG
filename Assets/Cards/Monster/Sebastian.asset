@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03b276b4f3674a1b9b4abf52ab29cb78, type: 3}
   m_Name: Sebastian
   m_EditorClassIdentifier: 
-  cardID: 
+  cardID: M_SEBASTIAN
   cardName: Sebastian
   description: Taunt
   manaCost: 4

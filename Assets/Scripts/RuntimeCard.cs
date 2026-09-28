@@ -59,8 +59,15 @@ public class RuntimeCard
     public PlayerSide Owner { get; private set; }
     private List<RuntimeModifier> modifiers = new List<RuntimeModifier>();
     public static event System.Action<RuntimeCard, RuntimeModifier> OnStatsGained;
-    
+    private bool hasAttackedThisTurn;
 
+    public bool HasAttackedThisTurn =>
+        hasAttackedThisTurn;
+    
+    public void MarkAttacked()
+    {
+        hasAttackedThisTurn = true;
+    }
     public int GetMaxEquipment()
     {
         if (Data is ApostleData apostleData)
@@ -365,6 +372,8 @@ public void AddModifier(
     {
         canAttack = true;
         cannotAttackHero = false;
+         hasAttackedThisTurn = false;
+
     }
 
     public void RemoveModifiersFromSource(RuntimeCard source)

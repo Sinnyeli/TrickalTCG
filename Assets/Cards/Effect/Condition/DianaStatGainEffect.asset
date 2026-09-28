@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62231076bb28ab5e7940633ac206aa27, type: 3}
   m_Name: DianaStatGainEffect
   m_EditorClassIdentifier: 
-  targetType: 0
+  targetType: 1
   targetFilter: 0
   cardRace: 0
   cardType: 0

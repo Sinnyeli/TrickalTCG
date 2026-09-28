@@ -20,9 +20,6 @@ public class JubeeAIController : MonoBehaviour
     [SerializeField]
     private TurnManager turnManager;
 
-    [Header("Target")]
-    [SerializeField]
-    private PlayerView enemyPlayerView;
 
 
     [Header("Timing")]
@@ -244,74 +241,83 @@ public class JubeeAIController : MonoBehaviour
     // =========================================================
 
     private IEnumerator AttackWithMinions()
+{
+    List<RuntimeCard> attackers =
+        new List<RuntimeCard>(
+            battlefieldManager.Minions
+        );
+
+    HashSet<RuntimeCard> attemptedAttackers =
+        new HashSet<RuntimeCard>();
+
+
+    foreach (RuntimeCard attacker in attackers)
     {
-        List<RuntimeCard> attackers =
-            new List<RuntimeCard>(
-                battlefieldManager.Minions
-            );
+        if (attacker == null)
+            continue;
+
+        if (attemptedAttackers.Contains(attacker))
+            continue;
+
+        attemptedAttackers.Add(attacker);
 
 
-        foreach (RuntimeCard attacker
-                 in attackers)
+        if (!turnManager.IsMyTurn(
+                PlayerSide.Opponent))
         {
-            if (attacker == null)
-                continue;
-
-            if (!turnManager.IsMyTurn(
-                    PlayerSide.Opponent))
-            {
-                yield break;
-            }
+            yield break;
+        }
 
 
-            if (!attacker.CanAttack)
-                continue;
+        if (!attacker.CanAttack)
+            continue;
 
 
-            bool selected =
-                combatManager.SelectAttacker(
-                    attacker
+        bool selected =
+            combatManager.SelectAttacker(
+                attacker
+            );
+
+        if (!selected)
+            continue;
+
+
+        yield return new WaitForSeconds(
+            actionDelay
+        );
+
+
+        bool attacked =
+            TryAttackEnemyMinion();
+
+    if (!attacked)
+    {
+        PlayerView enemyPlayer =
+            GameManager.Instance.GetPlayerView(
+                PlayerSide.Player
+            );
+
+        if (enemyPlayer != null)
+        {
+            attacked =
+                combatManager.Attack(
+                    enemyPlayer
                 );
-
-
-            if (!selected)
-                continue;
-
-
-            yield return new WaitForSeconds(
-                actionDelay
-            );
-
-
-            bool attacked =
-                TryAttackEnemyMinion();
-
-
-            // If no valid minion attack happened,
-            // try the player directly.
-            if (!attacked)
-            {
-                attacked =
-                    combatManager.Attack(
-                        enemyPlayerView
-                    );
-            }
-
-
-            // Important:
-            // Attack(hero) can fail due to Taunt,
-            // Rush restriction, etc.
-            if (!attacked)
-            {
-                combatManager.ClearSelection();
-            }
-
-
-            yield return new WaitForSeconds(
-                actionDelay
-            );
         }
     }
+
+
+        if (!attacked)
+        {
+            combatManager.ClearSelection();
+        }
+
+
+        yield return new WaitForSeconds(
+            actionDelay
+        );
+    }
+}
 
 
     // =========================================================

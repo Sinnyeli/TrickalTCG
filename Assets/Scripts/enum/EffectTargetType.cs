@@ -25,7 +25,7 @@ public enum EffectTargetType
 
     AnyTarget,
     RandomTarget,
-
+    TriggerCard,
 
     CardRace
 }

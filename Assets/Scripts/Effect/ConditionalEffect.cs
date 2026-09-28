@@ -18,52 +18,43 @@ public class ConditionalEffect : CardEffect
         new List<CardEffect>();
 
 
-    public override void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets)
+ public override void Resolve(
+    RuntimeCard source,
+    List<RuntimeCard> targets)
+{
+    if (source == null)
+        return;
+
+    if (condition == null)
     {
-        if (source == null)
-            return;
+        Debug.LogWarning(
+            "ConditionalEffect has no condition."
+        );
 
-
-        // =========================================
-        // CHECK CONDITION
-        // =========================================
-
-        if (condition == null)
-        {
-            Debug.LogWarning(
-                "ConditionalEffect has no condition."
-            );
-
-            return;
-        }
-
-
-        if (!condition.IsMet(source))
-        {
-            Debug.Log(
-                $"{source.Data.cardName}: " +
-                $"condition not met."
-            );
-
-            return;
-        }
-
-
-        // =========================================
-        // RESOLVE CHILD EFFECTS
-        // =========================================
-
-        foreach (CardEffect effect in effects)
-        {
-            if (effect == null)
-                continue;
-
-            effect.Resolve(
-                source,
-                targets
-            );
-        }
+        return;
     }
+
+    if (!condition.IsMet(source))
+    {
+        Debug.Log(
+            $"{source.Data.cardName}: " +
+            $"condition not met."
+        );
+
+        return;
+    }
+
+    foreach (CardEffect effect in effects)
+    {
+        if (effect == null)
+            continue;
+
+        GameManager.Instance
+            .EffectManager
+            .ResolveCardEffect(
+                source,
+                effect
+            );
+    }
+}
 }

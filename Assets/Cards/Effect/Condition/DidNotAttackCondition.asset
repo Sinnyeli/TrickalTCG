@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f619ac805d04c0d3af2887e58680946, type: 3}
-  m_Name: JubeeDeck
+  m_Script: {fileID: 11500000, guid: db232b9f2fd896f9a8a8610793d4e249, type: 3}
+  m_Name: DidNotAttackCondition
   m_EditorClassIdentifier: 
-  commander: {fileID: 11400000, guid: 48183d34b55639f3281779dcf90b541a, type: 2}
-  cards:
-  - {fileID: 11400000, guid: 48183d34b55639f3281779dcf90b541a, type: 2}

@@ -109,6 +109,7 @@ public bool Attack(RuntimeCard defender)
         // Attacker strikes first.
         bool defenderTookDamage =
             defender.TakeDamage(attackerDamage);
+            
 
         TriggerOnDamageTaken(
             defender,
@@ -247,6 +248,16 @@ public bool Attack(PlayerView defender)
 
     defender.TakeDamage(attackerDamage);
     attacker.DisableAttack();
+    Debug.Log(
+    $"HERO ATTACK TARGET | " +
+    $"Object={defender.gameObject.name} | " +
+    $"InstanceID={defender.GetInstanceID()} | " +
+    $"Side={defender.Side} | " +
+    $"HP={defender.CurrentHealth}/{defender.MaxHealth} | " +
+    $"Damage={attackerDamage}"
+    );
+
+    defender.TakeDamage(attackerDamage);
 
     ClearSelection();
 

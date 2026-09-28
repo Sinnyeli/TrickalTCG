@@ -34,9 +34,9 @@ public class TriggeredEffect : CardEffect
         RuntimeCard source,
         List<RuntimeCard> targets)
     {
-        // Triggered effects don't resolve immediately.
+        // Triggered effects do not resolve immediately.
         // TriggeredEffectManager activates them when
-        // their trigger occurs.
+        // the appropriate gameplay event occurs.
     }
 
 
@@ -53,9 +53,9 @@ public class TriggeredEffect : CardEffect
             return;
 
 
-        // =========================================
-        // CONDITIONS
-        // =========================================
+        // =====================================================
+        // CHECK CONDITIONS
+        // =====================================================
 
         foreach (TriggerCondition condition
                  in conditions)
@@ -73,28 +73,87 @@ public class TriggeredEffect : CardEffect
         }
 
 
-        // =========================================
-        // EFFECTS
-        // =========================================
-
-        List<RuntimeCard> targets =
-            new List<RuntimeCard>();
-
-        if (triggerCard != null)
-        {
-            targets.Add(triggerCard);
-        }
-
+        // =====================================================
+        // RESOLVE CHILD EFFECTS
+        // =====================================================
 
         foreach (CardEffect effect in effects)
         {
             if (effect == null)
                 continue;
 
-            effect.Resolve(
-                source,
-                targets
-            );
+
+            // =================================================
+            // TRIGGER CARD TARGET
+            //
+            // Used for effects such as Epica:
+            //
+            // "After you summon a unit,
+            // give IT +1/+1."
+            // =================================================
+
+            if (effect.TargetType ==
+                EffectTargetType.TriggerCard)
+            {
+                if (triggerCard == null)
+                    continue;
+
+                // Make sure the trigger card also passes
+                // the effect's normal target filter.
+                if (!effect.MatchesTargetFilter(
+                        triggerCard))
+                {
+                    continue;
+                }
+
+
+                List<RuntimeCard> triggerTargets =
+                    new List<RuntimeCard>
+                    {
+                        triggerCard
+                    };
+
+
+                effect.Resolve(
+                    source,
+                    triggerTargets
+                );
+
+                continue;
+            }
+
+
+            // =================================================
+            // NORMAL TARGETING
+            //
+            // Self, FriendlyUnit, EnemyUnit, etc.
+            // continue through the normal EffectManager.
+            //
+            // Used for effects such as Diana:
+            //
+            // StatsGained trigger
+            // -> condition checks the Beastfolk
+            // -> BuffEffect targets Diana herself.
+            // =================================================
+
+            if (GameManager.Instance == null ||
+                GameManager.Instance.EffectManager == null)
+            {
+                Debug.LogError(
+                    "TriggeredEffect could not find " +
+                    "EffectManager."
+                );
+
+                continue;
+            }
+
+
+            GameManager.Instance
+                .EffectManager
+                .ResolveCardEffect(
+                    source,
+                    effect
+                );
         }
     }
 }

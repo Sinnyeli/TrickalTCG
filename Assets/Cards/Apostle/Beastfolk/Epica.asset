@@ -26,7 +26,7 @@ MonoBehaviour:
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
-  passive: {fileID: 0}
+  passive: {fileID: 11400000, guid: 65a4ce5c140ae50dbb148b14983bf7de, type: 2}
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}

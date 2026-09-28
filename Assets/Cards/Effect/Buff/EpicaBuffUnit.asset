@@ -9,9 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f619ac805d04c0d3af2887e58680946, type: 3}
-  m_Name: JubeeDeck
+  m_Script: {fileID: 11500000, guid: bd2997eb252c9be16baf8174d7653317, type: 3}
+  m_Name: EpicaBuffUnit
   m_EditorClassIdentifier: 
-  commander: {fileID: 11400000, guid: 48183d34b55639f3281779dcf90b541a, type: 2}
-  cards:
-  - {fileID: 11400000, guid: 48183d34b55639f3281779dcf90b541a, type: 2}
+  targetType: 15
+  targetFilter: 0
+  cardRace: 8
+  cardType: 0
+  specificCard: {fileID: 0}
+  attackAmount: 1
+  healthAmount: 1

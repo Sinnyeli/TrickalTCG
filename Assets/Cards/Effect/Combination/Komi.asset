@@ -9,17 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ece1ffa29e88e1598b58971b2cecb152, type: 3}
-  m_Name: EpicaEffect
+  m_Script: {fileID: 11500000, guid: 2ea1060c608966056b7cbe01121afd82, type: 3}
+  m_Name: Komi
   m_EditorClassIdentifier: 
   targetType: 0
   targetFilter: 0
   cardRace: 0
   cardType: 0
   specificCard: {fileID: 0}
-  triggerType: 1
-  conditions:
-  - {fileID: 11400000, guid: 222795be016d0e80780707ff1fcfe92e, type: 2}
-  - {fileID: 11400000, guid: 1b8f9df6ee9a113eeab21da858a37377, type: 2}
+  condition: {fileID: 11400000, guid: 283d676ae6f2a98eeb986ca0873277e2, type: 2}
   effects:
-  - {fileID: 11400000, guid: 1c4abad940511df3a85b77d2c5bf2c81, type: 2}
+  - {fileID: 11400000, guid: b0c52eed1561c80cdbe3c8f13e3d5920, type: 2}

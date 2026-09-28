@@ -15,18 +15,37 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
 
     public PlayerSide Side => side;
 
-    private void Awake()
-    {
-        currentHealth = maxHealth;
-        RefreshHealth();    
-    }
+private void Awake()
+{
+    currentHealth = maxHealth;
+
+    Debug.Log(
+        $"PLAYER VIEW AWAKE | " +
+        $"Object={gameObject.name} | " +
+        $"InstanceID={GetInstanceID()} | " +
+        $"Side={side} | " +
+        $"HP={currentHealth}/{maxHealth}"
+    );
+
+    RefreshHealth();
+}
      
-  
-    public void SetSide(PlayerSide newSide)
-        {
-            side = newSide;
-            RefreshView();
-        }
+  public void SetSide(PlayerSide newSide)
+    {
+        side = newSide;
+        currentHealth = maxHealth;
+
+        RefreshView();
+        RefreshHealth();
+
+        Debug.Log(
+            $"PLAYER VIEW SET SIDE | " +
+            $"Object={gameObject.name} | " +
+            $"InstanceID={GetInstanceID()} | " +
+            $"Side={side} | " +
+            $"HP={currentHealth}/{maxHealth}"
+        );
+    }
 
     private void RefreshView()
     {
@@ -46,22 +65,45 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
         healthText.text =
             $"{currentHealth} / {maxHealth}";
     }
-    public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        currentHealth = Mathf.Max(currentHealth, 0);
+ public void TakeDamage(int damage)
+{
+    if (damage <= 0)
+        return;
 
-        RefreshHealth();
+    Debug.Log(
+        $"BEFORE DAMAGE: " +
+        $"Side={side}, " +
+        $"HP={currentHealth}, " +
+        $"Damage={damage}"
+    );
 
-        Debug.Log(
-            $"{side} Player HP: {currentHealth}/{maxHealth}"
+
+    currentHealth -= damage;
+
+    currentHealth =
+        Mathf.Max(
+            currentHealth,
+            0
         );
 
-        if (currentHealth <= 0)
-        {
-            GameManager.Instance.PlayerDefeated(side);
-        }
+
+    Debug.Log(
+        $"AFTER DAMAGE: " +
+        $"Side={side}, " +
+        $"HP={currentHealth}"
+    );
+
+
+    RefreshHealth();
+
+
+    if (currentHealth <= 0)
+    {
+        GameManager.Instance.PlayerDefeated(
+            side
+        );
     }
+}
         public void Heal(int amount)
     {
         if (amount <= 0)
