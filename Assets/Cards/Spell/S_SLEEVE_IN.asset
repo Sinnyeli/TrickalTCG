@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 313982d1e242c6d278d8401d991eced2, type: 3}
+  m_Name: S_SLEEVE_IN
+  m_EditorClassIdentifier: 
+  cardID: S_SLEEVE_IN
+  cardName: "\uC18C\uB9E4 \uB123\uAE30"
+  description: "\uD328\uC758 \uC544\uD2F0\uD329\uD2B8 \uD558\uB098\uB97C \uC120\uD0DD\uD558\uC5EC
+    \uBE44\uC6A9\uC744 \uC9C0\uBD88\uD558\uC9C0 \uC54A\uACE0 \uC544\uAD70 \uC0AC\uB3C4
+    \uD558\uB098\uC5D0\uAC8C \uC7A5\uCC29\uD569\uB2C8\uB2E4."
+  manaCost: 2
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
+  spellEffects: []

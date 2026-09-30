@@ -193,6 +193,13 @@ public bool Attack(RuntimeCard defender)
 
 public bool Attack(PlayerView defender)
 {
+        Debug.LogError(
+        $"=== ATTACK PLAYER CALLED ===\n" +
+        $"Frame: {Time.frameCount}\n" +
+        $"Attacker: {selectedAttacker?.Data?.cardName}\n" +
+        $"Target: {defender?.Side}\n" +
+        $"Stack:\n{System.Environment.StackTrace}"
+    );
     if (selectedAttacker == null)
     {
         Debug.Log("No attacker selected.");
@@ -248,16 +255,7 @@ public bool Attack(PlayerView defender)
 
     defender.TakeDamage(attackerDamage);
     attacker.DisableAttack();
-    Debug.Log(
-    $"HERO ATTACK TARGET | " +
-    $"Object={defender.gameObject.name} | " +
-    $"InstanceID={defender.GetInstanceID()} | " +
-    $"Side={defender.Side} | " +
-    $"HP={defender.CurrentHealth}/{defender.MaxHealth} | " +
-    $"Damage={attackerDamage}"
-    );
 
-    defender.TakeDamage(attackerDamage);
 
     ClearSelection();
 

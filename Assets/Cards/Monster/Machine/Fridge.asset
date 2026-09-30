@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Fridge
   m_EditorClassIdentifier: 
   cardID: M_FRIDGE
-  cardName: 
+  cardName: Fridge
   description: 
-  manaCost: 0
+  manaCost: 3
   artwork: {fileID: 0}
   onDrawEffects: []
   collectible: 0
   unlimitedCopies: 0
-  attack: 0
-  health: 0
-  cardRace: 0
+  attack: 1
+  health: 5
+  cardRace: 7
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}

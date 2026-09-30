@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43a2c3ab60965bc693f71ba0de252ed, type: 3}
+  m_Name: AR_30KG_KETTLEBELL
+  m_EditorClassIdentifier: 
+  cardID: AR_30KG_KETTLEBELL
+  cardName: "30KG \uCF00\uD2C0\uBCA8"
+  description: "\uC7A5\uCC29\uC790\uB294 Rush\uB97C \uC783\uACE0 \uC7A5\uCC29\uD55C
+    \uD134\uC5D0\uB294 \uACF5\uACA9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4."
+  manaCost: 2
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
+  attackBonus: 3
+  healthBonus: 2
+  grantedKeywords: 
+  artifactEffect: {fileID: 0}
+  deathrattle: {fileID: 0}

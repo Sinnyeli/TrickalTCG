@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43a2c3ab60965bc693f71ba0de252ed, type: 3}
+  m_Name: AR_RITZ_EARTHBREAKER
+  m_EditorClassIdentifier: 
+  cardID: AR_RITZ_EARTHBREAKER
+  cardName: "\uB9AC\uCE20\uC758 \uB300\uC9C0 \uBF40\uAC1C\uAE30"
+  description: "\uC7A5\uCC29\uC790\uAC00 \uACF5\uACA9\uD560 \uB54C \uC774\uBC88 \uC804\uD22C
+    \uB3D9\uC548 \uBC29\uC5B4\uB825 \uC808\uBC18\uC744 \uACF5\uACA9\uB825\uC5D0 \uCD94\uAC00\uD569\uB2C8\uB2E4."
+  manaCost: 4
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
+  attackBonus: 3
+  healthBonus: 0
+  grantedKeywords: 
+  artifactEffect: {fileID: 0}
+  deathrattle: {fileID: 0}

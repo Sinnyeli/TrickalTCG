@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43a2c3ab60965bc693f71ba0de252ed, type: 3}
+  m_Name: AR_ALUMINUM_THIMBLE
+  m_EditorClassIdentifier: 
+  cardID: AR_ALUMINUM_THIMBLE
+  cardName: "Aluminum Thimble / \uC54C\uB8E8\uBBF8\uB284 \uACE8\uBB34"
+  description: 
+  manaCost: 1
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
+  attackBonus: 0
+  healthBonus: 2
+  grantedKeywords: 
+  artifactEffect: {fileID: 0}
+  deathrattle: {fileID: 0}

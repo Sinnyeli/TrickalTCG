@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_SYLPHYR
   cardName: Sylphyr
-  description: Number are stuck at 3
+  description: Values are fixed at 3.
   manaCost: 3
   artwork: {fileID: 21300000, guid: cff8318ef30210182ad8848b5798dfef, type: 3}
   onDrawEffects: []

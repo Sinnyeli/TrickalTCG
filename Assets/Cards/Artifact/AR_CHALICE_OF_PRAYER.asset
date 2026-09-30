@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43a2c3ab60965bc693f71ba0de252ed, type: 3}
+  m_Name: AR_CHALICE_OF_PRAYER
+  m_EditorClassIdentifier: 
+  cardID: AR_CHALICE_OF_PRAYER
+  cardName: "\uAE30\uC6D0\uC758 \uC131\uBC30"
+  description: "\uC7A5\uCC29\uC790\uAC00 \uC8FD\uC73C\uBA74 \uB0B4 \uD50C\uB808\uC774\uC5B4\uC758
+    \uCCB4\uB825\uC744 5 \uD68C\uBCF5\uD558\uACE0 \uCE74\uB4DC\uB97C 1\uC7A5 \uBF51\uC2B5\uB2C8\uB2E4."
+  manaCost: 5
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
+  attackBonus: 0
+  healthBonus: 3
+  grantedKeywords: 
+  artifactEffect: {fileID: 0}
+  deathrattle: {fileID: 0}

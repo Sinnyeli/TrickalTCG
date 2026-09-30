@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_DAYAPURE
   cardName: Daya Pureshine
-  description: If you have at least 9 Mana when playing Daya, spend 9 instead and
-    transform her into Daya (Pure Shine).
+  description: Transformed form of Daya (Pure Shine).
   manaCost: 9
   artwork: {fileID: 21300000, guid: 182ffa30d881eaf9889bc47a55b5e39b, type: 3}
   onDrawEffects: []

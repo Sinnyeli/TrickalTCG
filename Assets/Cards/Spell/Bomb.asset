@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: S_BOMB
   cardName: Bomb
-  description: 
+  description: "\uBF51\uC73C\uBA74 \uD3ED\uBC1C\uD569\uB2C8\uB2E4."
   manaCost: 0
   artwork: {fileID: 0}
   onDrawEffects:

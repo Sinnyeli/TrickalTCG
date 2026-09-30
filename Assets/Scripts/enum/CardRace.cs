@@ -12,5 +12,6 @@ public enum CardRace
     Elemental,
     Ghost,
     Machine,
-    Vegetable
+    Vegetable,
+    Unspecified
 }

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43a2c3ab60965bc693f71ba0de252ed, type: 3}
+  m_Name: AR_TECH_BATTERY
+  m_EditorClassIdentifier: 
+  cardID: AR_TECH_BATTERY
+  cardName: "\uB9C8\uB3C4\uACF5\uD559 \uBC30\uD130\uB9AC"
+  description: "\uB0B4 \uD134\uC5D0 \uCC98\uC74C \uB9C8\uBC95\uC744 \uC0AC\uC6A9\uD560
+    \uB54C \uB9C8\uB098\uB97C 1 \uD68C\uBCF5\uD569\uB2C8\uB2E4."
+  manaCost: 4
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
+  attackBonus: 1
+  healthBonus: 1
+  grantedKeywords: 
+  artifactEffect: {fileID: 0}
+  deathrattle: {fileID: 0}

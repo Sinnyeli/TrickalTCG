@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b43a2c3ab60965bc693f71ba0de252ed, type: 3}
+  m_Name: AR_LUCKY_DIE
+  m_EditorClassIdentifier: 
+  cardID: AR_LUCKY_DIE
+  cardName: "\uD589\uC6B4\uC758 \uC8FC\uC0AC\uC704"
+  description: "\uB0B4 \uD134 \uC2DC\uC791 \uC2DC \uC7A5\uCC29\uC790\uC5D0\uAC8C
+    \uBB34\uC791\uC704\uB85C \uACF5\uACA9 +1 \uB610\uB294 \uBC29\uC5B4 +1\uC744 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+  manaCost: 2
+  artwork: {fileID: 0}
+  onDrawEffects: []
+  collectible: 1
+  unlimitedCopies: 0
+  attackBonus: 1
+  healthBonus: 1
+  grantedKeywords: 
+  artifactEffect: {fileID: 0}
+  deathrattle: {fileID: 0}

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: M_PUMPKIN
   cardName: Pumpkin
-  description: 
+  description: Bypass
   manaCost: 1
   artwork: {fileID: -1028352994, guid: 002680c724a9718aeb265dfa296f6593, type: 3}
   onDrawEffects: []
