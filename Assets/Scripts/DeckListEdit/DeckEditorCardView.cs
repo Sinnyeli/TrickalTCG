@@ -323,6 +323,13 @@ private void RefreshStats()
         if (cardData == null)
             return;
 
+        if (descriptionText != null)
+        {
+            LocalizationManager localization = LocalizationManager.Instance;
+            descriptionText.text = localization == null
+                ? cardData.description : localization.GetCardText(cardData);
+        }
+
 
         if (nameText != null)
         {

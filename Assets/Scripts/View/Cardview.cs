@@ -263,20 +263,12 @@ if (droppedOnBattlefield)
     {
         if (runtimeCard == null)
             return;
-
-        if (LocalizationManager.Instance == null)
-        {
-            nameText.text =
-                runtimeCard.Data.cardName;
-
-            return;
-        }
-
-        nameText.text =
-            LocalizationManager.Instance
-                .GetCardName(
-                    runtimeCard.Data
-                );
+        CardData data = runtimeCard.Data;
+        LocalizationManager localization = LocalizationManager.Instance;
+        if (nameText != null)
+            nameText.text = localization == null ? data.cardName : localization.GetCardName(data);
+        if (descriptionText != null)
+            descriptionText.text = localization == null ? data.description : localization.GetCardText(data);
     }
     private void OnEnable()
     {

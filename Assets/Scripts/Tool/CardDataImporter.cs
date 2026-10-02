@@ -14,6 +14,7 @@ public static class CardDataImporter
     private sealed class Row
     {
         public string Type, ID, Name, Description;
+        public string NameEnglish, NameKorean, DescriptionEnglish, DescriptionKorean;
         public int Cost, Attack, Health, AttackBonus, HealthBonus, MaxEquipment;
         public CardRace Race;
         public List<CardKeyword> Keywords, GrantedKeywords;
@@ -29,9 +30,13 @@ public static class CardDataImporter
         try
         {
             List<Row> rows = ReadAndValidate(path);
+            string localization = rows.Any(row => row.NameEnglish != null)
+                ? BuildLocalization(rows) : null;
             int created = rows.Count(row => row.Existing == null);
             if (!EditorUtility.DisplayDialog("Import Card Data",
-                $"Validated {rows.Count} rows: create {created}, update {rows.Count - created}.\n\nArtwork, effect references, and existing asset paths will be preserved.",
+                $"Validated {rows.Count} rows: create {created}, update {rows.Count - created}.\n" +
+                (localization == null ? "" : "English and Korean card text will update Localization.csv.\n") +
+                "\nArtwork, effect references, and existing asset paths will be preserved.",
                 "Import", "Cancel")) return;
 
             var newCards = new List<CardData>();
@@ -41,6 +46,8 @@ public static class CardDataImporter
                 if (row.Existing == null) newCards.Add(card);
             }
             RegisterNewCards(newCards);
+            if (localization != null)
+                File.WriteAllText(CardDataCsv.LocalizationPath, localization, new UTF8Encoding(true));
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log($"Imported {rows.Count} cards ({created} new) from {path}");
@@ -58,8 +65,9 @@ public static class CardDataImporter
         List<List<string>> table = CardDataCsv.Parse(content);
         if (table.Count == 0) throw new FormatException("CSV is empty.");
         table[0][0] = table[0][0].TrimStart('\uFEFF');
-        if (!table[0].SequenceEqual(CardDataExporter.Headers))
-            throw new FormatException("Header mismatch. Re-export with Tools > Cards > Export Card Data CSV. The old ID,Description file is not importable.");
+        bool localized = table[0].SequenceEqual(CardDataExporter.Headers);
+        if (!localized && !table[0].SequenceEqual(CardDataExporter.Headers.Take(15)))
+            throw new FormatException("Header mismatch. Export a fresh Card Data CSV. The old ID,Description file is not importable.");
 
         var existing = new Dictionary<string, CardData>(StringComparer.Ordinal);
         foreach (CardData card in CardDataCsv.FindCards())
@@ -77,8 +85,9 @@ public static class CardDataImporter
         {
             List<string> cells = table[index];
             int line = index + 1;
-            if (cells.Count != CardDataExporter.Headers.Length)
-                throw new FormatException($"Row {line}: expected {CardDataExporter.Headers.Length} columns, found {cells.Count}.");
+            int columnCount = localized ? CardDataExporter.Headers.Length : 15;
+            if (cells.Count != columnCount)
+                throw new FormatException($"Row {line}: expected {columnCount} columns, found {cells.Count}.");
             string id = cells[1].Trim();
             if (!Regex.IsMatch(id, "^[A-Za-z0-9_-]+$"))
                 throw new FormatException($"Row {line}: CardID '{id}' must contain only ASCII letters, numbers, _ or -.");
@@ -89,7 +98,8 @@ public static class CardDataImporter
             existing.TryGetValue(id, out CardData card);
             if (card != null && card.GetType().Name != type + "Data")
                 throw new FormatException($"Row {line}: {id} is a {card.GetType().Name}; changing type would break references.");
-            if (string.IsNullOrWhiteSpace(cells[2]))
+            if (string.IsNullOrWhiteSpace(cells[2]) &&
+                !(card != null && string.IsNullOrWhiteSpace(card.cardName) && cells[2] == card.cardName))
                 throw new FormatException($"Row {line}: Name is required.");
 
             var row = new Row
@@ -99,12 +109,21 @@ public static class CardDataImporter
                 Collectible = ParseBool(cells[9], line, "Collectible"),
                 UnlimitedCopies = ParseBool(cells[10], line, "UnlimitedCopies"), Existing = card
             };
+            if (localized)
+            {
+                row.NameEnglish = cells[15];
+                row.NameKorean = cells[16];
+                row.DescriptionEnglish = cells[17];
+                row.DescriptionKorean = cells[18];
+
+            }
             if (row.Cost < 0) throw new FormatException($"Row {line}: Cost cannot be negative.");
             if (type == "Apostle" || type == "Monster")
             {
                 row.Attack = ParseInt(cells[5], line, "Attack");
                 row.Health = ParseInt(cells[6], line, "Health");
-                if (row.Health <= 0) throw new FormatException($"Row {line}: Health must be positive.");
+                if (row.Health <= 0 && !(card is MinionData existingMinion && existingMinion.health == row.Health))
+                    throw new FormatException($"Row {line}: Health must be positive for new or changed cards.");
                 row.Race = string.IsNullOrWhiteSpace(cells[7]) ? CardRace.Unspecified : ParseEnum<CardRace>(cells[7], line, "Race");
                 row.Keywords = ParseKeywords(cells[8], line, "Keywords");
                 if (type == "Apostle")
@@ -123,6 +142,40 @@ public static class CardDataImporter
         }
         if (rows.Count == 0) throw new FormatException("CSV has no card rows.");
         return rows;
+    }
+
+    private static string BuildLocalization(List<Row> cards)
+    {
+        List<List<string>> rows = CardDataCsv.ReadLocalizationRows();
+        var indexes = new Dictionary<string, int>(StringComparer.Ordinal);
+        for (int i = 1; i < rows.Count; i++)
+        {
+            string key = rows[i][0];
+            if (string.IsNullOrWhiteSpace(key)) continue;
+            if (indexes.ContainsKey(key)) throw new FormatException($"Duplicate localization key: {key}.");
+            indexes.Add(key, i);
+        }
+        foreach (Row card in cards)
+        {
+            SetTranslation(rows, indexes, card.ID + "_NAME", card.NameEnglish, card.NameKorean);
+            SetTranslation(rows, indexes, card.ID + "_TEXT", card.DescriptionEnglish, card.DescriptionKorean);
+        }
+        var csv = new StringBuilder();
+        foreach (List<string> row in rows) CardDataCsv.AppendRow(csv, row);
+        return csv.ToString();
+    }
+
+    private static void SetTranslation(List<List<string>> rows, Dictionary<string, int> indexes,
+        string key, string english, string korean)
+    {
+        if (!indexes.TryGetValue(key, out int index))
+        {
+            index = rows.Count;
+            rows.Add(new List<string> { key, "", "" });
+            indexes.Add(key, index);
+        }
+        rows[index][1] = english;
+        rows[index][2] = korean;
     }
 
     private static int ParseInt(string text, int row, string column)

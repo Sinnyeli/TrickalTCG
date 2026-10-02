@@ -1,277 +1,577 @@
-Key,English,Korean
-UI_BATTLE,Battle,대전
-UI_EDIT_DECK,Edit Deck,덱 편집
-UI_CREATE_DECK,Create New Deck,새 덱 만들기
-UI_DONE,Done,완료
-UI_DELETE,Delete,삭제
-UI_EDIT,Edit,편집
-UI_SELECT_DECK,Select Deck,덱 선택
-UI_DECKS,Decks,덱
-UI_CARD_DATABASE,Card Database,카드 목록
-UI_SEARCH,Search,검색
-A_ALETTE_NAME,Alette,알레트
-A_ALETTE_TEXT,,
-A_ALICE_NAME,Alice,앨리스
-A_ALICE_TEXT,,
-A_AMELIA_NAME,Amelia,아멜리아
-A_AMELIA_TEXT,,
-A_ANNETTE_NAME,Annette,아네트
-A_ANNETTE_TEXT,,
-A_ARUKO_NAME,Aruko,아루코
-A_ARUKO_TEXT,,
-A_ASANA_NAME,Asana,아사나
-A_ASANA_TEXT,,
-A_ASHUR_NAME,Ashur,에슈르
-A_ASHUR_TEXT,,
-A_AYA_NAME,Aya,아야
-A_AYA_TEXT,,
-A_AYLA_NAME,Ayla,아일라
-A_AYLA_TEXT,,
-A_BANA_NAME,Bana,바나
-A_BANA_TEXT,,
-A_BARONG_NAME,Barong,바롱
-A_BARONG_TEXT,,
-A_BELITA_NAME,Belita,벨리타
-A_BELITA_TEXT,,
-A_BENI_NAME,Beni,베니
-A_BENI_TEXT,,
-A_BIGWOOD_NAME,Bigwood,빅우드
-A_BIGWOOD_TEXT,,
-A_BLANCHE_NAME,Blanche,블랑셰
-A_BLANCHE_TEXT,,
-A_BUTTER_NAME,Butter,버터
-A_BUTTER_TEXT,,
-A_CAESAR_NAME,Caesar,시저
-A_CAESAR_TEXT,,
-A_CATHY_NAME,Cathy,캐시
-A_CATHY_TEXT,,
-A_CHLOE_NAME,Chloe,클로에
-A_CHLOE_TEXT,,
-A_CHOPI_NAME,Chopi,쵸피
-A_CHOPI_TEXT,,
-A_CMAYO_NAME,Mayo (Cool),마요 (멋짐)
-A_CMAYO_TEXT,,
-A_CRIM_NAME,Rim (Chaos),림 (혼돈)
-A_CRIM_TEXT,,
-A_DAYA_NAME,Daya,다야
-A_DAYA_TEXT,,
-A_DAYAPURE_NAME,Daya (Pure Shine),다야 (퓨어샤인)
-A_DAYAPURE_TEXT,,
-A_DEHLIA_NAME,Dehlia,델리아
-A_DEHLIA_TEXT,,
-A_DIANA_NAME,Diana,디아나
-A_DIANA_TEXT,,
-A_DIANAY_NAME,Diana(Yester),디아나(왕년)
-A_DIANAY_TEXT,,
-A_ED_NAME,Ed,이드
-A_ED_TEXT,,
-A_EISHA_NAME,Eisha,아이시아
-A_EISHA_TEXT,,
-A_ELENA_NAME,Elena,엘레나
-A_ELENA_TEXT,,
-A_EPICA_NAME,Epica,에피카
-A_EPICA_TEXT,,
-A_ERPIN_NAME,Erpin,에르핀
-A_ERPIN_TEXT,,
-A_ESPI_NAME,Espi,에스피
-A_ESPI_TEXT,,
-A_GAVIA_NAME,Gavia,가비아
-A_GAVIA_TEXT,,
-A_GUIN_NAME,Guin,그윈
-A_GUIN_TEXT,,
-A_HEIDI_NAME,Heidi,하이디
-A_HEIDI_TEXT,,
-A_HILDE_NAME,Hilde,힐데
-A_HILDE_TEXT,,
-A_IFRIT_NAME,Ifrit,이프리트
-A_IFRIT_TEXT,,
-A_INKLE_NAME,Inkle,잉클
-A_INKLE_TEXT,,
-A_JADE_NAME,Jade,제이드
-A_JADE_TEXT,,
-A_JOANNE_NAME,Joanne,죠안
-A_JOANNE_TEXT,,
-A_JUBEE_NAME,Jubee,쥬비
-A_JUBEE_TEXT,,
-A_KANNA_NAME,Kanna,칸나
-A_KANNA_TEXT,,
-A_KAREN_NAME,Karen,카렌
-A_KAREN_TEXT,,
-A_KIDIAN_NAME,Kidian,키디언
-A_KIDIAN_TEXT,,
-A_KISHA_NAME,Kisha,키샤
-A_KISHA_TEXT,,
-A_KOMI_NAME,Komi,코미
-A_KOMI_TEXT,,
-A_KYAROT_NAME,Kyarot,캬롯
-A_KYAROT_TEXT,,
-A_KYURI_NAME,Kyuri,큐리
-A_KYURI_TEXT,,
-A_LAZY_NAME,Lazy,레이지
-A_LAZY_TEXT,,
-A_LEON_NAME,Leon,리온
-A_LEON_TEXT,,
-A_LETHE_NAME,Lethe,레테
-A_LETHE_TEXT,,
-A_LEVI_NAME,Levi,레비
-A_LEVI_TEXT,,
-A_LUPO_NAME,Lupo,루포
-A_LUPO_TEXT,,
-A_MAESTRO_NAME,Maestro the 2ND,마에스트로 2호
-A_MAESTRO_TEXT,,
-A_MAISON_NAME,Maison,메이죵
-A_MAISON_TEXT,,
-A_MAKASHA_NAME,Makasha,마카샤
-A_MAKASHA_TEXT,,
-A_MARGO_NAME,Margo,마고
-A_MARGO_TEXT,,
-A_MARIE_NAME,Marie,마리
-A_MARIE_TEXT,,
-A_MAYO_NAME,Mayo,마요
-A_MAYO_TEXT,,
-A_MINX_NAME,Minx,밍스
-A_MINX_TEXT,,
-A_MIRO_NAME,Miro,미로
-A_MIRO_TEXT,,
-A_MOMO_NAME,Momo,모모
-A_MOMO_TEXT,,
-A_MUTE_NAME,Mute,뮤트
-A_MUTE_TEXT,,
-A_NAIA_NAME,Naia,나이아
-A_NAIA_TEXT,,
-A_NERE_NAME,Nere,네르
-A_NERE_TEXT,,
-A_NETTY_NAME,Netty,네티
-A_NETTY_TEXT,,
-A_NICOLE_NAME,Nicole,니콜
-A_NICOLE_TEXT,,
-A_OPAL_NAME,Opal,오팔
-A_OPAL_TEXT,,
-A_ORE_NAME,Ore,오르
-A_ORE_TEXT,,
-A_OUROS_NAME,Ouros,우로스
-A_OUROS_TEXT,,
-A_PATRA_NAME,Patra,파트라
-A_PATRA_TEXT,,
-A_PICORA_NAME,Picora,피코라
-A_PICORA_TEXT,,
-A_POLANG_NAME,Polang,폴랑
-A_POLANG_TEXT,,
-A_POSHER_NAME,Posher,포셔
-A_POSHER_TEXT,,
-A_PRICKLE_NAME,Prickle,프리클
-A_PRICKLE_TEXT,,
-A_PYRA_NAME,Pyra,피라
-A_PYRA_TEXT,,
-A_RAIKA_NAME,Raika,라이카
-A_RAIKA_TEXT,,
-A_RAN_NAME,Ran,란
-A_RAN_TEXT,,
-A_RENEWA_NAME,Renewa,리뉴아
-A_RENEWA_TEXT,,
-A_RICOTA_NAME,Ricota,리코타
-A_RICOTA_TEXT,,
-A_RIM_NAME,Rim,림
-A_RIM_TEXT,,
-A_RISTI_NAME,Risti,리스티
-A_RISTI_TEXT,,
-A_RITZ_NAME,Ritz,리츠
-A_RITZ_TEXT,,
-A_RMELIA_NAME,Amelia (R41),아멜리아 (R41)
-A_RMELIA_TEXT,,
-A_RONNIE_NAME,Ronnie,로니
-A_RONNIE_TEXT,,
-A_ROULETTE_NAME,Roulette,롤렛
-A_ROULETTE_TEXT,,
-A_RUDD_NAME,Rudd,루드
-A_RUDD_TEXT,,
-A_SARI_NAME,Sari,사리
-A_SARI_TEXT,,
-A_SASHA_NAME,Sasha,사샤
-A_SASHA_TEXT,,
-A_SELENE_NAME,Selene,셀린
-A_SELENE_TEXT,,
-A_SHAYDI_NAME,Shaydi,셰이디
-A_SHAYDI_TEXT,,
-A_SHAYDIT_NAME,Shaydi (Twisted),셰이디 (역전)
-A_SHAYDIT_TEXT,,
-A_SHERUM_NAME,Sherum,셰럼
-A_SHERUM_TEXT,,
-A_SHUPANG_NAME,Shupang,슈팡
-A_SHUPANG_TEXT,,
-A_SHURO_NAME,Shuro,슈로
-A_SHURO_TEXT,,
-A_SKIA_NAME,Skia,스키아
-A_SKIA_TEXT,,
-A_SNORKI_NAME,Snorki,스노키
-A_SNORKI_TEXT,,
-A_SPARROT_NAME,Sparrot,스패럿
-A_SPARROT_TEXT,,
-A_SPEAKI_NAME,Speaki,스피키
-A_SPEAKI_TEXT,,
-A_SYLA_NAME,Syla,실라
-A_SYLA_TEXT,,
-A_SYLPHYR_NAME,Sylphyr,실피르
-A_SYLPHYR_TEXT,,
-A_SYLVIA_NAME,Syliva,실비아
-A_SYLVIA_TEXT,,
-A_TAIDA_NAME,Taida,타이다
-A_TAIDA_TEXT,,
-A_THYST_NAME,Thyst,시스트
-A_THYST_TEXT,,
-A_TIG_NAME,Tig,티그
-A_TIG_TEXT,,
-A_UI_NAME,UI,우이
-A_UI_TEXT,,
-A_VARIE_NAME,Varie,바리에
-A_VARIE_TEXT,,
-A_VELA_NAME,Vela,벨라
-A_VELA_TEXT,,
-A_VELVET_NAME,Velvet,벨벳
-A_VELVET_TEXT,,
-A_VEROO_NAME,Veroo,베루
-A_VEROO_TEXT,,
-A_VIVI_NAME,Vivi,비비
-A_VIVI_TEXT,,
-A_XION_NAME,Xion,시온
-A_XION_TEXT,,
-A_YUMIMI_NAME,Yumimi,유미미
-A_YUMIMI_TEXT,,
-AR_BRECORDER_NAME,Broken Recorder,부서진 리코더
-AR_BRECORDER_TEXT,,
-AR_BSTAFF_NAME,Belita’s Staff,벨리타의 지팡이
-AR_BSTAFF_TEXT,,
-AR_IFRITSWORD_NAME,Ifrit’s Sword,이프리트의 검
-AR_IFRITSWORD_TEXT,,
-AR_NERFLAG_NAME,Nere’s Flag,네르의 깃발
-AR_NERFLAG_TEXT,,
-M_CUCUMBER_NAME,Cucumber,오이
-M_CUCUMBER_TEXT,,
-M_DRONE_NAME,Drone,드론
-M_DRONE_TEXT,,
-M_FRIDGE_NAME,Frostnova Fridge Unit,프로스트노바 냉동유닛
-M_FRIDGE_TEXT,,
-M_PUMPKIN_NAME,Pumpkin,호박
-M_PUMPKIN_TEXT,,
-M_SCARFGON_NAME,Scarfgon,스카프곤
-M_SCARFGON_TEXT,,
-M_SPRITESOLDIER_NAME,Sprite Soldier,요정 병사
-M_SPRITESOLDIER_TEXT,,
-S_BOMB_NAME,Bomb,폭탄
-S_BOMB_TEXT,,
-S_BREAD_NAME,Bread,빵
-S_BREAD_TEXT,,
-S_COIN_NAME,Random Coin,랜덤코인
-S_COIN_TEXT,,
-S_FARM_NAME,Farm,농사짓기
-S_FARM_TEXT,,
-S_MAKASHA_NAME,Ehehe,이히히
-S_MAKASHA_TEXT,,
-S_MINT_NAME,Mint,민트
-S_MINT_TEXT,,
-S_MOW_NAME,Master of Weapon,무기의 달인
-S_MOW_TEXT,,
-S_TUMBLR_NAME,Tumbler,텀플러
-S_TUMBLR_TEXT,,
-S_VOW_NAME,Vow of Silence,침묵의 수행
-S_VOW_TEXT,,
+﻿"Key","English","Korean"
+"UI_BATTLE","Battle","대전"
+"UI_EDIT_DECK","Edit Deck","덱 편집"
+"UI_CREATE_DECK","Create New Deck","새 덱 만들기"
+"UI_DONE","Done","완료"
+"UI_DELETE","Delete","삭제"
+"UI_EDIT","Edit","편집"
+"UI_SELECT_DECK","Select Deck","덱 선택"
+"UI_DECKS","Decks","덱"
+"UI_CARD_DATABASE","Card Database","카드 목록"
+"UI_SEARCH","Search","검색"
+"A_ALETTE_NAME","Alette","알레트"
+"A_ALETTE_TEXT","Taunt, Endure.","도발. 참기."
+"A_ALICE_NAME","Alice","앨리스"
+"A_ALICE_TEXT","Bypass. Battlecry: Shuffle 3 unique Tarot cards into your deck. Draw all 3 to win.","우회. 등장: 서로 다른 타로 3장을 내 덱에 섞기. 모두 뽑으면 승리."
+"A_AMELIA_NAME","Amelia","아멜리아"
+"A_AMELIA_TEXT","Battlecry: If you control Elena, give her +2/+2 and Taunt.","등장: 내 필드에 엘레나가 있으면 엘레나에게 +2/+2와 도발 부여."
+"A_ANNETTE_NAME","Annette","아네트"
+"A_ANNETTE_TEXT","Battlecry: Choose another friendly unit. It attacks a random enemy unit.","등장: 다른 아군 유닛이 무작위 적 유닛을 공격."
+"A_ARUKO_NAME","Aruko","아루코"
+"A_ARUKO_TEXT","Battlecry: Dance Battle (All units attack a random unit)","등장: 댄스 배틀. 모든 유닛이 무작위 유닛을 공격."
+"A_ASANA_NAME","Asana","아사나"
+"A_ASANA_TEXT","Resonance: Restore 1 Health to Asana and give her +1 Attack.","공명: 자신 체력 1 회복 및 공격 +1."
+"A_ASHUR_NAME","Ashur","에슈르"
+"A_ASHUR_TEXT","Resonance: Create a Bread in your hand.","공명: 빵을 패에 생성."
+"A_AYA_NAME","Aya","아야"
+"A_AYA_TEXT","Resonance: After every 3rd spell you cast while Aya is on field, draw a card.","공명: 필드에 있는 동안 마법 3번 사용마다 카드 1장 뽑기."
+"A_AYLA_NAME","Ayla","아일라"
+"A_AYLA_TEXT","Deathrattle: Deal Damage Equal to Damage Taken","퇴장: 받은 피해만큼 피해."
+"A_BANA_NAME","Bana","바나"
+"A_BANA_TEXT","Battlecry: Draw a random Artifact.","등장: 무작위 아티팩트를 1장 뽑기."
+"A_BARONG_NAME","Barong","바롱"
+"A_BARONG_TEXT","Bypass. Battlecry: Choose a unit. When Barong dies, destroy it.","우회. 등장: 유닛 지정. 자신 사망 시 지정한 유닛 파괴."
+"A_BELITA_NAME","Belita","벨리타"
+"A_BELITA_TEXT","Passive: Your Spells cost 1 less.","내 마법 비용 -1."
+"A_BENI_NAME","Beni","베니"
+"A_BENI_TEXT","Battlecry: Give another friendly unit +2 Health.","등장: 다른 아군 유닛에게 방어 +2 부여."
+"A_BIGWOOD_NAME","Bigwood","빅우드"
+"A_BIGWOOD_TEXT","Taunt, Endure.","도발. 참기."
+"A_BLANCHE_NAME","Blanche","블랑셰"
+"A_BLANCHE_TEXT","Battlecry: Deal damage to a unit equal to its Attack.","등장: 유닛에게 그 유닛의 공격력만큼 피해."
+"A_BUTTER_NAME","Butter","버터"
+"A_BUTTER_TEXT","After taking damage, gain +1/+1.","피해 시 +1/+1."
+"A_CAESAR_NAME","Caesar","시저"
+"A_CAESAR_TEXT","Battlecry: Destroy a unit.","등장: 유닛 하나를 파괴."
+"A_CATHY_NAME","Cathy","캐시"
+"A_CATHY_TEXT","Shock, Stealth","감전. 은신."
+"A_CHLOE_NAME","Chloe","클로에"
+"A_CHLOE_TEXT","Battlecry: Summon a Sebastian","등장: 세바스찬 소환."
+"A_CHOPI_NAME","Chopi","쵸피"
+"A_CHOPI_TEXT","On Attack: Gain +1 Attack.","공격 시 공격 +1."
+"A_CMAYO_NAME","Mayo (Cool)","마요 (멋짐)"
+"A_CMAYO_TEXT","Rush, Taunt","속공. 도발."
+"A_CRIM_NAME","Rim (Chaos)","림 (혼돈)"
+"A_CRIM_TEXT","Bypass. Battlecry: Set each other unit's ATK and HP randomly between the board's current lowest and highest stats.","우회. 등장: 다른 모든 유닛의 공격력·체력을 필드 최저~최고 스탯 사이의 무작위 값으로 설정."
+"A_DAYA_NAME","Daya","다야"
+"A_DAYA_TEXT","If you have at least 9 Mana when playing Daya, spend 9 instead and transform her into Daya (Pure Shine).","사용 시 마나가 9 이상이면 마나 9를 쓰고 다야(퓨어샤인)로 변신."
+"A_DAYAPURE_NAME","Daya (Pure Shine)","다야 (퓨어샤인)"
+"A_DAYAPURE_TEXT","Transformed form of Daya (Pure Shine).","다야의 퓨어샤인 변신 형태."
+"A_DEHLIA_NAME","Dehlia","델리아"
+"A_DEHLIA_TEXT","Battlecry: If Guin is on your field, gain +1/+1 and draw a card.","등장: 내 필드에 그윈이 있으면 +1/+1을 얻고 카드 1장 뽑기."
+"A_DIANA_NAME","Diana","디아나"
+"A_DIANA_TEXT","Taunt. Whenever another friendly Beastfolk gains stats, gain +1 Attack.","도발. 다른 아군 수인 강화 시 공격 +1."
+"A_DIANAY_NAME","Diana(Yester)","디아나(왕년)"
+"A_DIANAY_TEXT","First Strike. Whenever this attacks, give it +2 Attack.","선빵. 공격 시 공격 +2."
+"A_ED_NAME","Ed","이드"
+"A_ED_TEXT","Turn End: Gain a Dream counter. At 3, awaken into a major payoff.","턴 종료: 꿈 카운터 획득. 3개가 되면 각성."
+"A_EISHA_NAME","Eisha","아이시아"
+"A_EISHA_TEXT","Battlecry: Summon a Fridge.","등장: 냉동고 1개 소환."
+"A_ELENA_NAME","Elena","엘레나"
+"A_ELENA_TEXT","Battlecry: Create M.E.O.W.","등장: M.E.O.W. 생성."
+"A_EPICA_NAME","Epica","에피카"
+"A_EPICA_TEXT","Passive: After you summon a unit, give it +1/+1","아군 유닛 소환 시 그 유닛 +1/+1."
+"A_ERPIN_NAME","Erpin","에르핀"
+"A_ERPIN_TEXT","Battlecry: Cast all Bread in hand to self.","등장: 패의 모든 빵을 자신에게 시전."
+"A_ESPI_NAME","Espi","에스피"
+"A_ESPI_TEXT","Bypass. On Attack: Draw the top card of the opponent's deck.","우회. 공격 시 상대 덱 맨 위 카드 뽑기."
+"A_GAVIA_NAME","Gavia","가비아"
+"A_GAVIA_TEXT","On Damage Taken: Deal 1 damage to all enemy units.","피해 시 모든 적 유닛에게 피해 1."
+"A_GUIN_NAME","Guin","그윈"
+"A_GUIN_TEXT","Battlecry: Draw a card.","등장: 카드 1장 뽑기."
+"A_HEIDI_NAME","Heidi","하이디"
+"A_HEIDI_TEXT","Battlecry: Give another unit +2 Attack","등장: 다른 유닛에게 공격 +2 부여."
+"A_HILDE_NAME","Hilde","힐데"
+"A_HILDE_TEXT","Battlecry: Restore 4 Health to Player","등장: 내 영웅의 체력 4 회복."
+"A_IFRIT_NAME","Ifrit","이프리트"
+"A_IFRIT_TEXT","Deathrattle: Equip Sword of Ifrit to Random Ally Minion","퇴장: 무작위 아군 유닛에게 이프리트의 검을 장착."
+"A_INKLE_NAME","Inkle","잉클"
+"A_INKLE_TEXT","Battlecry: Create a copy of all spells in hand.","등장: 패의 모든 마법의 복사본 생성."
+"A_JADE_NAME","Jade","제이드"
+"A_JADE_TEXT","Battlecry: Gain 1 empty maximum Mana.","등장: 빈 최대 마나 +1."
+"A_JOANNE_NAME","Joanne","죠안"
+"A_JOANNE_TEXT","Battlecry: Create 2 Bread in Hand.","등장: 빵 2장을 패에 생성."
+"A_JUBEE_NAME","Jubee","쥬비"
+"A_JUBEE_TEXT","Gain +1/+1 per Jubee on Field","필드의 쥬비당 +1/+1."
+"A_KANNA_NAME","Kanna","칸나"
+"A_KANNA_TEXT","Battlecry: Deal 3 damage to a unit.","등장: 유닛에게 피해 3."
+"A_KAREN_NAME","Karen","카렌"
+"A_KAREN_TEXT","On Damage Taken: Summon a Carrot","피해 시 당근 1개 소환."
+"A_KIDIAN_NAME","Kidian","키디언"
+"A_KIDIAN_TEXT","Rush","속공."
+"A_KISHA_NAME","Kisha","키샤"
+"A_KISHA_TEXT","Battlecry: Change the background music.","등장: 배경음악을 변경."
+"A_KOMI_NAME","Komi","코미"
+"A_KOMI_TEXT","Turn End: If this didn't attack this turn, gain +1/+1.","턴 종료: 이번 턴 공격하지 않았다면 +1/+1 획득."
+"A_KYAROT_NAME","Kyarot","캬롯"
+"A_KYAROT_TEXT","Battlecry: Buff all Friendly Vegetables by +2/+2","등장: 모든 아군 채소에게 +2/+2 부여."
+"A_KYURI_NAME","Kyuri","큐리"
+"A_KYURI_TEXT","All cucumbers have 5/2 statline","모든 오이의 공격력·체력은 5/2."
+"A_LAZY_NAME","Lazy","레이지"
+"A_LAZY_TEXT","Battlecry: Deal 1 Damage","등장: 피해 1."
+"A_LEON_NAME","Leon","리온"
+"A_LEON_TEXT","Taunt. Whenever you take damage, gain +1 Attack.","도발. 피해 시 공격 +1."
+"A_LETHE_NAME","Lethe","레테"
+"A_LETHE_TEXT","Bypass. Battlecry: Silence a unit.","우회. 등장: 유닛 하나를 침묵."
+"A_LEVI_NAME","Levi","레비"
+"A_LEVI_TEXT","Gains a Study counter whenever you cast a spell. At 5, Graduate.","마법을 사용할 때마다 학습 카운터 획득. 5개가 되면 졸업."
+"A_LUPO_NAME","Lupo","루포"
+"A_LUPO_TEXT","Battlecry: Give another friendly Beastfolk +1/+1. If it's Tig, give it +2/+2 instead.","등장: 다른 아군 수인 하나에게 +1/+1 부여. 티그라면 대신 +2/+2 부여."
+"A_MAESTRO_NAME","Maestro the 2ND","마에스트로 2호"
+"A_MAESTRO_TEXT","Elf + Machine. Benefits from both categories.","엘프·기계. 두 분류의 효과를 모두 받음."
+"A_MAISON_NAME","Maison","메이죵"
+"A_MAISON_TEXT","Battlecry: Draw a Sari","등장: 사리를 1장 뽑기."
+"A_MAKASHA_NAME","Makasha","마카샤"
+"A_MAKASHA_TEXT","Battlecry: Create 3 Makasha's Laugh cards in your hand.","등장: 「이히히~」 3장을 패에 생성."
+"A_MARGO_NAME","Margo","마고"
+"A_MARGO_TEXT","Passive: Other friendly Beastfolk have +1 Attack.","다른 아군 수인 공격 +1."
+"A_MARIE_NAME","Marie","마리"
+"A_MARIE_TEXT","Battlecry: Shuffle 3 Bombs into Opponent's Deck","등장: 폭탄 3장을 상대 덱에 섞기."
+"A_MAYO_NAME","Mayo","마요"
+"A_MAYO_TEXT","Battlecry: Create a random Artifact in your hand.","등장: 무작위 아티팩트 하나를 패에 생성."
+"A_MINX_NAME","Minx","밍스"
+"A_MINX_TEXT","Battlecry: Give a unit +1/+1","등장: 유닛에게 +1/+1 부여."
+"A_MIRO_NAME","Miro","미로"
+"A_MIRO_TEXT","Battlecry: Choose a unit. Shuffle a copy of it into your deck.","등장: 유닛 하나를 선택하여 그 복사본을 내 덱에 섞기."
+"A_MOMO_NAME","Momo","모모"
+"A_MOMO_TEXT","Battlecry: Summon a 2/2 Shadow Clone of Momo.","등장: 모모의 2/2 그림자 복제본 1개 소환."
+"A_MUTE_NAME","Mute","뮤트"
+"A_MUTE_TEXT","Battlecry: Look at the top 2 cards of the enemy deck. Destroy one.","등장: 상대 덱 맨 위 2장을 보고 하나를 파괴."
+"A_NAIA_NAME","Naia","나이아"
+"A_NAIA_TEXT","Battlecry: Return a unit to its owner's hand.","등장: 유닛 하나를 주인의 패로 되돌리기."
+"A_NERE_NAME","Nere","네르"
+"A_NERE_TEXT","Your sprites have +1 Health","아군 요정 방어 +1."
+"A_NETTY_NAME","Netty","네티"
+"A_NETTY_TEXT","Battlecry: Equip a random Artifact from your hand to Netty.","등장: 패의 무작위 아티팩트 하나를 네티에게 장착."
+"A_NICOLE_NAME","Nicole","니콜"
+"A_NICOLE_TEXT","On Attack: Deal 1 Damage to all enemy units","공격 시 모든 적 유닛에게 피해 1."
+"A_OPAL_NAME","Opal","오팔"
+"A_OPAL_TEXT","Takes 1 additional damage from all sources.","받는 피해 +1."
+"A_ORE_NAME","Ore","오르"
+"A_ORE_TEXT","Battlecry: Create a random Machine Monster.","등장: 무작위 기계 몬스터 1개 생성."
+"A_OUROS_NAME","Ouros","우로스"
+"A_OUROS_TEXT","Passive: Enemy Units have -1/-1. Friendly Beastfolk have +1/+1","적 유닛 -1/-1. 아군 수인 +1/+1."
+"A_PATRA_NAME","Patra","파트라"
+"A_PATRA_TEXT","Battlecry: Create a Mint Bread in your hand.","등장: 민트빵을 패에 생성."
+"A_PICORA_NAME","Picora","피코라"
+"A_PICORA_TEXT","Battlecry and Turn End: Create a random Sticker that grants a keyword.","등장/턴 종료: 키워드를 부여하는 무작위 스티커 생성."
+"A_POLANG_NAME","Polang","폴랑"
+"A_POLANG_TEXT","Battlecry: Summon 3 Sprite Soldiers","등장: 요정 병사 3명 소환."
+"A_POSHER_NAME","Posher","포셔"
+"A_POSHER_TEXT","Battlecry: Create a random Potion.","등장: 무작위 포션 1개 생성."
+"A_PRICKLE_NAME","Prickle","프리클"
+"A_PRICKLE_TEXT","Resonance: Deal 1 damage to the enemy player.","공명: 적 영웅에게 피해 1."
+"A_PYRA_NAME","Pyra","피라"
+"A_PYRA_TEXT","Battlecry: Your next card costs 2 less","등장: 다음 사용하는 카드의 비용이 2 감소."
+"A_RAIKA_NAME","Raika","라이카"
+"A_RAIKA_TEXT","Shock","감전."
+"A_RAN_NAME","Ran","란"
+"A_RAN_TEXT","On Attack: Give another random friendly Beastfolk +1/+1","공격 시 다른 무작위 아군 수인 하나에게 +1/+1 부여."
+"A_RENEWA_NAME","Renewa","리뉴아"
+"A_RENEWA_TEXT","Battlecry: Friendly units take no damage this turn.","등장: 이번 턴 아군 피해 면역."
+"A_RICOTA_NAME","Ricota","리코타"
+"A_RICOTA_TEXT","At the end of the turn, create a Bread in your hand","턴 종료: 빵을 패에 생성."
+"A_RIM_NAME","Rim","림"
+"A_RIM_TEXT","Bypass. Battlecry: Set every other unit's ATK and HP to the lowest current stat among all units.","우회. 등장: 다른 모든 유닛의 공격력·체력을 필드의 최저 스탯으로 설정."
+"A_RISTI_NAME","Risti","리스티"
+"A_RISTI_TEXT","Battlecry: Reduce the cost of a random card in your hand by 2.","등장: 패의 무작위 카드 하나의 비용 -2."
+"A_RITZ_NAME","Ritz","리츠"
+"A_RITZ_TEXT","When attacked, swap Ritz's Attack and Health before combat.","공격받기 전 자신의 공격력과 체력 교환."
+"A_RMELIA_NAME","Amelia (R41)","아멜리아 (R41)"
+"A_RMELIA_TEXT","Battlecry: If you control Elena, gain +2/+2","등장: 내 필드에 엘레나가 있으면 +2/+2 획득."
+"A_RONNIE_NAME","Ronnie","로니"
+"A_RONNIE_TEXT","Deathrattle: Create a Broken Recorder in your hand.","퇴장: 망가진 녹음기를 패에 생성."
+"A_ROULETTE_NAME","Roulette","롤렛"
+"A_ROULETTE_TEXT","Battlecry: Spin the Roulette. Apply the same random result to both players.","등장: 룰렛을 돌리기. 양 플레이어에게 같은 무작위 결과를 적용."
+"A_RUDD_NAME","Rudd","루드"
+"A_RUDD_TEXT","Whenever Rudd gains stats, gain an additional +1/+1.","강화 시 추가 +1/+1."
+"A_SARI_NAME","Sari","사리"
+"A_SARI_TEXT","Battlecry: Draw a Veroo","등장: 베루를 1장 뽑기."
+"A_SASHA_NAME","Sasha","사샤"
+"A_SASHA_TEXT","Battlecry: Create a Tumbler in your hand.","등장: 텀블러를 패에 생성."
+"A_SELENE_NAME","Selene","셀린"
+"A_SELENE_TEXT","Bypass. Taunt.","우회. 도발."
+"A_SHAYDI_NAME","Shaydi","셰이디"
+"A_SHAYDI_TEXT","Bypass. Battlecry: Randomize the ATK and HP of units.","우회. 등장: 유닛들의 공격력과 방어력을 무작위로 설정."
+"A_SHAYDIT_NAME","Shaydi (Twisted)","셰이디 (역전)"
+"A_SHAYDIT_TEXT","Bypass. Battlecry: Swap the ATK and HP of all other units.","우회. 등장: 다른 모든 유닛의 공격력과 방어력을 교환."
+"A_SHERUM_NAME","Sherum","셰럼"
+"A_SHERUM_TEXT","Every third Resonance: Create a copy of the last Spell you cast.","공명 3회마다 마지막으로 쓴 마법 복사."
+"A_SHUPANG_NAME","Shupang","슈팡"
+"A_SHUPANG_TEXT","Battlecry: Draw 1 Card At the end of turn, return to hand.","등장: 카드 1장 뽑기. 턴 종료: 패로 복귀."
+"A_SHURO_NAME","Shuro","슈로"
+"A_SHURO_TEXT","Whenever this unit kills a unit, gain +2/+2. If its attack or hp reaches 7, transform into Ouros","유닛 처치 시 +2/+2. 공격력이나 체력이 7에 도달하면 우로스로 변신."
+"A_SKIA_NAME","Skia","스키아"
+"A_SKIA_TEXT","Battlecry: Create a Vow of Silence in your hand","등장: 침묵의 수행을 패에 생성."
+"A_SNORKI_NAME","Snorki","스노키"
+"A_SNORKI_TEXT","",""
+"A_SPARROT_NAME","Sparrot","스패럿"
+"A_SPARROT_TEXT","Rush. When you play an Apostle, summon from deck.","속공. 사도 사용 시 덱에서 자신 소환."
+"A_SPEAKI_NAME","Speaki","스피키"
+"A_SPEAKI_TEXT","Battlecry: Choose another unit. Copy its Attack and Health.","등장: 다른 유닛의 공격력과 방어력을 복사."
+"A_SYLA_NAME","Syla","실라"
+"A_SYLA_TEXT","Rush. On Attack: Deal 2 damage to the enemy player.","속공. 공격 시 적 영웅에게 피해 2."
+"A_SYLPHYR_NAME","Sylphyr","실피르"
+"A_SYLPHYR_TEXT","Values are fixed at 3.","수치는 3으로 고정."
+"A_SYLVIA_NAME","Syliva","실비아"
+"A_SYLVIA_TEXT","Taunt. Endure.","도발. 참기."
+"A_TAIDA_NAME","Taida","타이다"
+"A_TAIDA_TEXT","After attacking, cannot attack next turn.","공격 후 다음 턴 공격 불가."
+"A_THYST_NAME","Thyst","시스트"
+"A_THYST_TEXT","Battlecry: Create a random item from Thyst's questionable merchandise.","등장: 시스트의 수상한 상품 중 무작위 아이템 1개 생성."
+"A_TIG_NAME","Tig","티그"
+"A_TIG_TEXT","Double Attack. On Attack: Gain +1/+1","2회 공격. 공격 시 +1/+1."
+"A_UI_NAME","UI","우이"
+"A_UI_TEXT","Battlecry: Silence all units.","등장: 모든 유닛을 침묵."
+"A_VARIE_NAME","Varie","바리에"
+"A_VARIE_TEXT","Battlecry: Return up to 2 random Spells from your Graveyard to your hand.","등장: 내 무덤에서 무작위 마법을 최대 2장 패로 되돌리기."
+"A_VELA_NAME","Vela","벨라"
+"A_VELA_TEXT","Battlecry: Transform a Minion into Pumpkin","등장: 유닛을 호박으로 변신."
+"A_VELVET_NAME","Velvet","벨벳"
+"A_VELVET_TEXT","Resonance: Gain +1 Attack.","공명: 공격 +1 획득."
+"A_VEROO_NAME","Veroo","베루"
+"A_VEROO_TEXT","Battlecry: Draw a Maison","등장: 메죵을 1장 뽑기."
+"A_VIVI_NAME","Vivi","비비"
+"A_VIVI_TEXT","Passive: Friendly units deal combat damage using their Health instead of Attack.","아군은 공격력 대신 체력으로 전투 피해를 줌."
+"A_XION_NAME","Xion","시온"
+"A_XION_TEXT","Bypass. Battlecry: Deal 2 damage to a unit.","우회. 등장: 유닛에게 피해 2."
+"A_YUMIMI_NAME","Yumimi","유미미"
+"A_YUMIMI_TEXT","Battlecry: Deal 2 damage to the enemy player.","등장: 적 영웅에게 피해 2."
+"AR_BRECORDER_NAME","Broken Recorder","부서진 리코더"
+"AR_BRECORDER_TEXT","Give -2 Health to enemy","적에게 방어 -2 부여."
+"AR_BSTAFF_NAME","Belita’s Staff","벨리타의 지팡이"
+"AR_BSTAFF_TEXT","The equipped Apostle's abilities deal 1 additional damage to enemies.","장착자의 능력이 적에게 주는 피해 +1."
+"AR_IFRITSWORD_NAME","Ifrit’s Sword","이프리트의 검"
+"AR_IFRITSWORD_TEXT","If none holds the sword, Ifrit comes back to find it","아무도 검을 보유하지 않으면 이프리트가 검을 찾으러 복귀."
+"AR_NERFLAG_NAME","Nere’s Flag","네르의 깃발"
+"AR_NERFLAG_TEXT","While equipped, other allied units +1/+1.","장착 중 다른 모든 아군 +1/+1."
+"M_CUCUMBER_NAME","Cucumber","오이"
+"M_CUCUMBER_TEXT","Rush","속공."
+"M_DRONE_NAME","Drone","드론"
+"M_DRONE_TEXT","Stealth","은신."
+"M_FRIDGE_NAME","Frostnova Fridge Unit","프로스트노바 냉동유닛"
+"M_FRIDGE_TEXT","",""
+"M_PUMPKIN_NAME","Pumpkin","호박"
+"M_PUMPKIN_TEXT","Bypass","우회."
+"M_SCARFGON_NAME","Scarfgon","스카프곤"
+"M_SCARFGON_TEXT","Stealth. Battlecry: Deal 1 damage to a target.","은신. 등장: 대상에게 피해 1."
+"M_SPRITESOLDIER_NAME","Sprite Soldier","요정 병사"
+"M_SPRITESOLDIER_TEXT","",""
+"S_BOMB_NAME","Bomb","폭탄"
+"S_BOMB_TEXT","Explodes when drawn.","뽑으면 폭발."
+"S_BREAD_NAME","Bread","빵"
+"S_BREAD_TEXT","Buff a unit by +1/+1","유닛에게 +1/+1 부여."
+"S_COIN_NAME","Random Coin","랜덤코인"
+"S_COIN_TEXT","Increase Max Mana by 1","최대 마나가 1 증가."
+"S_FARM_NAME","Farm","농사짓기"
+"S_FARM_TEXT","",""
+"S_MAKASHA_NAME","Ehehe","이히히"
+"S_MAKASHA_TEXT","Makes Makasha Laugh Noise","마카샤의 웃음소리를 재생."
+"S_MINT_NAME","Mint","민트"
+"S_MINT_TEXT","Deal 2 Damage","피해 2."
+"S_MOW_NAME","Master of Weapon","무기의 달인"
+"S_MOW_TEXT","Master of Weapon",""
+"S_TUMBLR_NAME","Tumbler","텀플러"
+"S_TUMBLR_TEXT","Bounce a Card Back to hand","카드 하나를 패로 되돌리기."
+"S_VOW_NAME","Vow of Silence","침묵의 수행"
+"S_VOW_TEXT","Silence a Unit","유닛 하나를 침묵."
+"M_SEBASTIAN_NAME","",""
+"M_SEBASTIAN_TEXT","Taunt","도발."
+"S_HEALTH_BOOST_NAME","","체력 증진"
+"S_HEALTH_BOOST_TEXT","Increase your player's maximum Health by 3 and restore 3 Health.","내 영웅 최대 체력 +3. 체력 3 회복."
+"S_SELF_IMPROVEMENT_NAME","","자기 계발"
+"S_SELF_IMPROVEMENT_TEXT","Give a friendly unit +1/+1.","아군 유닛에게 +1/+1 부여."
+"S_HEALTHY_BODY_NAME","","건강한 신체"
+"S_HEALTHY_BODY_TEXT","Give a friendly unit +2/+2.","아군 유닛에게 +2/+2 부여."
+"S_AFTERIMAGE_NAME","","그건 내 잔상"
+"S_AFTERIMAGE_TEXT","Summon a 1/1 copy of a friendly unit, retaining its abilities and keywords.","아군 유닛의 능력·키워드를 가진 1/1 복사본 소환."
+"S_SODA_CAPSULE_NAME","","소다맛 캡슐"
+"S_SODA_CAPSULE_TEXT","Give a friendly unit +3 Health this turn.","이번 턴 아군 유닛에게 방어 +3 부여."
+"S_STRAWBERRY_CAPSULE_NAME","","딸기맛 캡슐"
+"S_STRAWBERRY_CAPSULE_TEXT","Give a friendly unit +3 Attack this turn.","이번 턴 아군 유닛에게 공격 +3 부여."
+"S_APPRENTICE_MAGE_NAME","","견습마법사"
+"S_APPRENTICE_MAGE_TEXT","Deal 3 damage to an enemy unit or the enemy player.","적 유닛 또는 적 영웅에게 피해 3."
+"S_EARLY_LEAVE_NAME","","조기 퇴근"
+"S_EARLY_LEAVE_TEXT","Return a friendly unit to your hand and reduce its cost by 1.","아군 유닛 하나를 패로 되돌리고 그 카드의 비용 -1."
+"S_PROMOTION_NAME","","신분 상승"
+"S_PROMOTION_TEXT","Give a friendly Monster +2/+2.","아군 몬스터 하나에게 +2/+2 부여."
+"S_PERSONAL_TRAINING_NAME","","개인 트레이닝"
+"S_PERSONAL_TRAINING_TEXT","Give a friendly Apostle +1/+2.","아군 사도 하나에게 +1/+2 부여."
+"S_CRITICAL_STRIKE_NAME","","회심의 일격"
+"S_CRITICAL_STRIKE_TEXT","Give a friendly unit +3 Attack this turn.","이번 턴 아군 유닛에게 공격 +3 부여."
+"S_FEAT_OF_STRENGTH_NAME","","차력 시범"
+"S_FEAT_OF_STRENGTH_TEXT","Choose a friendly unit. Deal damage equal to its defense to a random enemy unit.","선택한 아군의 방어력만큼 무작위 적 유닛에게 피해."
+"S_IGNORE_WEAK_NAME","","약자 무시"
+"S_IGNORE_WEAK_TEXT","Give a friendly unit Bypass and +1 Attack this turn.","이번 턴 아군 유닛에게 우회와 공격 +1 부여."
+"S_SCHOLAR_NAME","","학자"
+"S_SCHOLAR_TEXT","Draw 2 cards.","카드 2장 뽑기."
+"S_GET_THAT_ONE_NAME","","저놈을 잡아라"
+"S_GET_THAT_ONE_TEXT","Choose an enemy unit. This turn, friendly units gain +2 Attack when attacking it.","적 유닛 지정. 이번 턴 그 유닛을 공격하는 아군 공격 +2."
+"S_ENDURE_NAME","","방탄불괴"
+"S_ENDURE_TEXT","Give a friendly unit Endure. This grant can be silenced.","아군 유닛 참기 획득. 침묵으로 제거 가능."
+"S_THREAD_OF_REASON_NAME","","이성의 끈"
+"S_THREAD_OF_REASON_TEXT","Silence a friendly unit, then restore 3 Health to it.","아군 유닛 침묵 후 체력 3 회복."
+"S_OPEN_RUN_NAME","","오픈런"
+"S_OPEN_RUN_TEXT","The next card you use this turn costs 2 less.","이번 턴 다음 카드 비용 -2."
+"S_MEMBERSHIP_CARD_NAME","","멤버십 카드"
+"S_MEMBERSHIP_CARD_TEXT","Choose a card in your hand and permanently reduce its cost by 2.","선택한 패 카드의 비용 영구 -2."
+"S_FINAL_SPRINT_NAME","","막판 스퍼트"
+"S_FINAL_SPRINT_TEXT","Give a friendly unit +4/+4 and Rush this turn. Destroy it at the end of the turn.","이번 턴 아군 유닛 +4/+4 및 속공. 턴 종료: 해당 유닛 파괴."
+"S_EFFICIENT_RECOVERY_NAME","","효율적인 회복"
+"S_EFFICIENT_RECOVERY_TEXT","Restore 2 Health to all friendly units.","모든 아군 유닛의 체력 2 회복."
+"S_WARM_HEART_NAME","","따뜻한 마음씨"
+"S_WARM_HEART_TEXT","Restore 5 Health to a unit or player.","유닛 또는 플레이어의 체력 5 회복."
+"S_TAKE_HITS_PAINLESSLY_NAME","","안 아프게 맞는 법"
+"S_TAKE_HITS_PAINLESSLY_TEXT","Give all friendly units Endure. These grants can be silenced.","모든 아군 참기 획득. 침묵으로 제거 가능."
+"S_REAR_GUARD_NAME","","후발대"
+"S_REAR_GUARD_TEXT","Give your rightmost unit +1/+3.","맨 오른쪽 아군 유닛에게 +1/+3 부여."
+"S_CENTER_GOOD_NAME","","중앙 GOOD"
+"S_CENTER_GOOD_TEXT","Give the friendly unit closest to the center of your field +2/+2.","중앙에 가장 가까운 아군 유닛에게 +2/+2 부여."
+"S_VANGUARD_NAME","","선봉대"
+"S_VANGUARD_TEXT","Give your leftmost unit +3/+1.","맨 왼쪽 아군 유닛에게 +3/+1 부여."
+"S_MORALE_BOOST_NAME","","사기진작"
+"S_MORALE_BOOST_TEXT","Each friendly unit is forced to attack a random enemy unit.","모든 아군이 각각 무작위 적 유닛을 강제 공격."
+"S_SURPRISE_BOX_NAME","","깜짝 상자"
+"S_SURPRISE_BOX_TEXT","Cast 5 random spells, each at a random valid target.","무작위 마법 5개를 각각 무작위 유효 대상에게 시전."
+"S_PASTEL_PICNIC_NAME","","파스텔 빛 소풍"
+"S_PASTEL_PICNIC_TEXT","Return all friendly units to your hand. Reduce the cost of each returned card by 1.","모든 아군을 패로 되돌리기. 돌아온 카드 비용 -1."
+"S_MEDITATION_TIME_NAME","","명상의 시간"
+"S_MEDITATION_TIME_TEXT","All units cannot attack until the beginning of your next turn.","다음 내 턴 시작까지 모든 유닛 공격 불가."
+"S_AROMATHERAPY_NAME","","아로마 테라피"
+"S_AROMATHERAPY_TEXT","Restore all units to full Health.","모든 유닛 체력 완전 회복."
+"S_SLEEVE_IN_NAME","","소매 넣기"
+"S_SLEEVE_IN_TEXT","Choose an Artifact in your hand and equip it to a friendly Apostle without paying its cost.","패의 아티팩트를 선택한 아군 사도에게 무료 장착."
+"S_SUSPICIOUS_POTION_NAME","","수상한 물약"
+"S_SUSPICIOUS_POTION_TEXT","Create a random Suspicious Potion in your hand.","무작위 「수상한 포션」 하나를 패에 생성."
+"S_GROUP_PROMOTION_NAME","","단체 월반"
+"S_GROUP_PROMOTION_TEXT","",""
+"S_MASTER_OF_COMBAT_NAME","","전투의 달인"
+"S_MASTER_OF_COMBAT_TEXT","Give a friendly unit the ability to attack again each time it kills an enemy this turn.","이번 턴 선택한 아군은 적 처치 시 재공격 가능."
+"S_TACTICAL_MANUAL_NAME","","전술 교본"
+"S_TACTICAL_MANUAL_TEXT","Swap a friendly unit's Attack and defense. Give it Rush this turn.","아군 유닛의 공격력·방어력 교환. 이번 턴 속공 획득."
+"AR_ERPIN_STAFF_NAME","","에르핀의 지팡이"
+"AR_ERPIN_STAFF_TEXT","",""
+"AR_SYLA_WIND_ARROW_NAME","","실라의 바람살"
+"AR_SYLA_WIND_ARROW_TEXT","When the equipped Apostle attacks, deal 1 damage to the enemy player.","장착자 공격 시 적 영웅에게 피해 1."
+"AR_SHAYDI_CHAIN_SCYTHE_NAME","","셰이디의 차원사슬낫"
+"AR_SHAYDI_CHAIN_SCYTHE_TEXT","After the equipped Apostle kills an enemy unit, create a 1/1 copy of that unit in your hand with its abilities and keywords.","장착자가 적 유닛을 처치하면 그 유닛의 1/1 복사본을 패에 생성."
+"AR_DAYA_CUTTER_NAME","","다야의 다이아몬드 커터"
+"AR_DAYA_CUTTER_TEXT","When the equipped Apostle attacks, ignore the target's Endure and Taunt for that combat.","장착자 공격 시 이번 전투 동안 대상의 참기·도발 무시."
+"AR_RIM_SCYTHE_NAME","","림의 낫"
+"AR_RIM_SCYTHE_TEXT","Freeze enemy units damaged by the equipped Apostle.","장착자가 피해를 준 적 유닛을 빙결."
+"AR_AMELIA_EPAD_NAME","","아멜리아의 E-Pad 클래식"
+"AR_AMELIA_EPAD_TEXT","When a friendly Machine enters the battlefield, give the equipped Apostle +1/+1.","아군 기계가 등장하면 장착자에게 +1/+1 부여."
+"AR_BLANCHE_BLUEBIRD_NAME","","블랑셰의 유리 파랑새"
+"AR_BLANCHE_BLUEBIRD_TEXT","When the equipped Apostle's Attack or defense changes, add 1 to the higher changed value.","장착자 스탯 변경 시 변경된 공격력·방어력 중 높은 쪽 +1."
+"AR_RITZ_EARTHBREAKER_NAME","","리츠의 대지 뽀개기"
+"AR_RITZ_EARTHBREAKER_TEXT","During the equipped Apostle's attack, add half its defense to attack for that combat.","장착자 공격 시 이번 전투 동안 방어력 절반을 공격력에 추가."
+"AR_LEVI_DAGGER_NAME","","레비의 단도"
+"AR_LEVI_DAGGER_TEXT","After the equipped Apostle attacks and deals damage, draw 1 Spell. Once per turn.","장착자가 공격으로 피해를 주면 마법 1장 뽑기. 턴당 1회."
+"AR_BUTTER_YELLOW_CARD_NAME","","버터의 옐로카드"
+"AR_BUTTER_YELLOW_CARD_TEXT","The equipped Apostle gains Endure.","장착자에게 참기 부여."
+"AR_HILDE_UNIFORM_NAME","","힐데의 간호복"
+"AR_HILDE_UNIFORM_TEXT","Heal the equipped Apostle 2 at its controller's turn end.","내 턴 종료: 장착자의 체력 2 회복."
+"AR_CLEAR_WEATHER_NAME","","날씨는 맑음 카드"
+"AR_CLEAR_WEATHER_TEXT","Prevent the first Freeze or Silence applied to the equipped Apostle, then destroy this Artifact.","장착자의 첫 빙결/침묵 무효화 후 이 아티팩트 파괴."
+"AR_ELDAIN_LAMP_NAME","","엘다인 램프"
+"AR_ELDAIN_LAMP_TEXT","On equip, replay the equipped Apostle's Battlecry if present.","장착 시 장착자의 등장 효과를 다시 발동."
+"AR_LIFE_GEM_NAME","","생명의 보석"
+"AR_LIFE_GEM_TEXT","Increase the equipped Apostle's maximum and current Health by 4.","장착자의 최대·현재 체력 +4."
+"AR_SOFT_VEST_NAME","","말랑말랑한 조끼"
+"AR_SOFT_VEST_TEXT","Reduce the first damage the equipped Apostle takes each turn by 2.","매 턴 장착자의 첫 피해 -2."
+"AR_ASSASSIN_MANUAL_NAME","","암살자의 비급"
+"AR_ASSASSIN_MANUAL_TEXT","The equipped Apostle gains Bypass.","장착자에게 우회 부여."
+"AR_30KG_KETTLEBELL_NAME","","30KG 케틀벨"
+"AR_30KG_KETTLEBELL_TEXT","The equipped Apostle loses Rush and cannot attack on the turn this Artifact is equipped.","장착자 속공 제거. 장착한 턴 공격 불가."
+"AR_FURNACE_SWORD_NAME","","용광검"
+"AR_FURNACE_SWORD_TEXT","Before the equipped Apostle attacks, deal 1 damage to its attack target.","장착자 공격 전 대상에게 피해 1."
+"AR_RUSTY_RED_SWORD_NAME","","녹슨 붉은검"
+"AR_RUSTY_RED_SWORD_TEXT","",""
+"AR_GROWTH_POTION_NAME","","거대화 물약 (artifact)"
+"AR_GROWTH_POTION_TEXT","When equipped, double the equipped Apostle's maximum and current Health.","장착 시 장착자의 최대·현재 체력 ×2."
+"AR_SHUSHUSHUK_GLOVE_NAME","","슈슈슈슉 글러브"
+"AR_SHUSHUSHUK_GLOVE_TEXT","The equipped Apostle may attack again after killing an enemy unit.","장착자가 적 유닛을 처치하면 재공격 가능."
+"AR_VOLCANICA_JUICE_NAME","","볼케니카 특산 과일 주스"
+"AR_VOLCANICA_JUICE_TEXT","On equip, restore the equipped Apostle to maximum HP after stat bonus.","장착 시 장착자 체력 완전 회복."
+"AR_RISTI_CONTROLLER_NAME","","리스티의 게임 컨트롤러"
+"AR_RISTI_CONTROLLER_TEXT","At the end of your turn, view opponent's top card, choose to leave on top or move to bottom.","내 턴 종료: 상대 덱 맨 위 카드를 보고 맨 위에 두거나 맨 아래로 이동."
+"AR_TECH_BATTERY_NAME","","마도공학 배터리"
+"AR_TECH_BATTERY_TEXT","The first Spell you use on your turn restores 1 Mana.","내 턴에 처음 마법을 사용할 때 마나 1 회복."
+"AR_NETTY_RECORD_NAME","","네티의 발굴기록서"
+"AR_NETTY_RECORD_TEXT","When another Artifact is equipped to the equipped Apostle, give it +1/+1.","장착자에게 다른 아티팩트를 장착하면 장착자에게 +1/+1 부여."
+"AR_PRICKLE_SEAL_NAME","","프리클의 여왕 대리 인장"
+"AR_PRICKLE_SEAL_TEXT","After the equipped Apostle's effect damages the enemy player, deal 1 additional damage to that player.","장착자의 효과가 적 영웅에게 피해를 주면 추가로 피해 1."
+"AR_RUDD_TRAINING_BOOK_NAME","","루드의 운동교본"
+"AR_RUDD_TRAINING_BOOK_TEXT","At the end of your turn, give the equipped Apostle +1/+1.","내 턴 종료: 장착자에게 +1/+1 부여."
+"AR_SELENE_MIRAGE_NAME","","셀리네의 미드나잇 미라주"
+"AR_SELENE_MIRAGE_TEXT","When the equipped Apostle dies, return it to your hand and destroy this Artifact.","장착자 사망 시 패로 복귀 후 이 아티팩트 파괴."
+"AR_KYAROT_SUGARCANE_NAME","","캬롯의 사탕수수"
+"AR_KYAROT_SUGARCANE_TEXT","When the equipped Apostle attacks, summon a 1/1 Carrot with Bypass.","장착자가 공격하면 우회를 가진 1/1 당근 1개 소환."
+"AR_JADE_PEN_NAME","","제이드의 비싼 만년필"
+"AR_JADE_PEN_TEXT","At the end of your turn, draw 1 card if the equipped Apostle took damage during that turn.","내 턴 종료: 이번 턴 장착자가 피해를 받았다면 카드 1장 뽑기."
+"AR_KOMI_PILLOW_NAME","","코미의 베개"
+"AR_KOMI_PILLOW_TEXT","At the end of your turn, if the equipped Apostle has not attacked this turn, heal it for 2.","내 턴 종료: 장착자가 공격하지 않았다면 체력 2 회복."
+"AR_GOBLIN_HOOD_NAME","","도깨비감투"
+"AR_GOBLIN_HOOD_TEXT","The equipped Apostle gains Bypass. After it attacks the enemy player, return it to your hand.","장착자 우회 획득. 적 영웅 공격 후 패로 복귀."
+"AR_CHALICE_OF_PRAYER_NAME","","기원의 성배"
+"AR_CHALICE_OF_PRAYER_TEXT","When the equipped Apostle dies, restore 5 Health to your player and draw 1 card.","장착자 사망 시 내 영웅 체력 5 회복 및 카드 1장 뽑기."
+"AR_JADE_SPELLBOOK_NAME","","옥빛 마법서"
+"AR_JADE_SPELLBOOK_TEXT","While the equipped Apostle is on field, first friendly spell each turn costs 1 less.","장착자가 필드에 있는 동안 매 턴 첫 마법 비용 -1."
+"AR_SHARP_STAFF_NAME","","날카로운 지팡이"
+"AR_SHARP_STAFF_TEXT","The equipped Apostle's effects deal +1 damage.","장착자의 효과 피해 +1."
+"AR_GOLDEN_CROWN_NAME","","황금 왕관"
+"AR_GOLDEN_CROWN_TEXT","While equipped, other friendly units gain +1 attack.","장착 중 다른 아군 공격 +1."
+"AR_COMBAT_MANUAL_NAME","","전투 지침서"
+"AR_COMBAT_MANUAL_TEXT","The equipped Apostle gains +2 attack for combat when attacking an enemy unit.","장착자가 적 유닛을 공격하는 전투 동안 공격 +2."
+"AR_HEALING_PENDANT_NAME","","치유의 팬던트"
+"AR_HEALING_PENDANT_TEXT","At the end of your turn, heal the equipped Apostle 1.","내 턴 종료: 장착자의 체력 1 회복."
+"AR_BLESSED_PAULDRON_NAME","","축복받은 견갑"
+"AR_BLESSED_PAULDRON_TEXT","The equipped Apostle gains Taunt.","장착자에게 도발 부여."
+"AR_PENITENT_MACE_NAME","","참회의 메이스"
+"AR_PENITENT_MACE_TEXT","After the equipped Apostle damages an enemy unit, that unit gets -1 attack.","장착자가 적 유닛에게 피해를 주면 그 유닛의 공격력이 1 감소."
+"AR_EMERGENCY_BELT_NAME","","긴급 보호 벨트"
+"AR_EMERGENCY_BELT_TEXT","First would-be lethal damage to the equipped Apostle leaves it at 1 HP, then destroys this artifact.","장착자의 첫 치명적 피해 시 체력 1로 생존 후 이 아티팩트 파괴."
+"AR_PRIEST_INCENSE_NAME","","제사장의 향로"
+"AR_PRIEST_INCENSE_TEXT","At the end of your turn, heal every other friendly unit 1.","내 턴 종료: 다른 모든 아군 유닛의 체력 1 회복."
+"AR_SCALE_ARMOR_NAME","","비늘 갑옷"
+"AR_SCALE_ARMOR_TEXT","The equipped Apostle takes 1 less combat damage.","장착자의 받는 전투 피해 -1."
+"AR_CLOAK_AND_DAGGER_NAME","","망토와 단검"
+"AR_CLOAK_AND_DAGGER_TEXT","The equipped Apostle gains Bypass and +2 Attack while attacking the enemy player.","장착자 우회 획득. 적 영웅 공격 중 공격 +2."
+"AR_BALLOON_ARMOR_NAME","","풍선갑옷"
+"AR_BALLOON_ARMOR_TEXT","Each time the equipped Apostle takes damage, this artifact's health bonus drops by 1.","장착자 피해 시 이 아티팩트의 체력 보너스 -1."
+"AR_RUBBER_GAUNTLET_NAME","","고무고무 건틀릿"
+"AR_RUBBER_GAUNTLET_TEXT","The equipped Apostle may attack any enemy unit despite Taunt.","장착자는 도발을 무시하고 적 유닛 공격 가능."
+"AR_EXPLODING_MUFFIN_NAME","","폭발 머핀"
+"AR_EXPLODING_MUFFIN_TEXT","When the equipped Apostle dies, deal 1 damage to all units.","장착자 사망 시 모든 유닛에게 피해 1."
+"AR_RONNIE_GAUNTLET_NAME","","로네의 건틀릿"
+"AR_RONNIE_GAUNTLET_TEXT","Whenever the equipped Apostle is buffed, give the equipped Apostle +1 attack.","장착자 강화 시 추가 공격 +1."
+"AR_MADNESS_MASK_NAME","","광기의 가면"
+"AR_MADNESS_MASK_TEXT","When the equipped Apostle actually takes damage, give it +1 attack.","장착자 피해 시 공격 +1."
+"AR_LUCKY_DIE_NAME","","행운의 주사위"
+"AR_LUCKY_DIE_TEXT","At the start of your turn, randomly give the equipped Apostle +1 attack or +1 health.","내 턴 시작: 장착자에게 무작위로 공격 +1 또는 방어 +1 부여."
+"AR_ELF_WAND_NAME","","엘프산 요술봉"
+"AR_ELF_WAND_TEXT","The first Spell you use after equipping this Artifact costs 1 less.","장착 후 처음 사용하는 마법의 비용이 1 감소."
+"AR_RADIANT_TIARA_NAME","","찬란한 티아라"
+"AR_RADIANT_TIARA_TEXT","While equipped, other allied Apostles get +1 attack.","장착 중 다른 아군 사도 공격 +1."
+"AR_DIAMOND_BRACELET_NAME","","다이아몬드 팔찌"
+"AR_DIAMOND_BRACELET_TEXT","",""
+"AR_THORN_CROWN_NAME","","가시 왕관"
+"AR_THORN_CROWN_TEXT","After an enemy unit attacks the equipped Apostle, deal 1 to that attacker after combat.","장착자를 공격한 적 유닛에게 전투 후 피해 1."
+"AR_GREED_RING_NAME","","탐욕의 반지"
+"AR_GREED_RING_TEXT","After the equipped Apostle kills an enemy unit, draw 1 card. Once per turn.","장착자 적 유닛 처치 시 카드 1장 뽑기. 턴당 1회."
+"AR_STEEL_GREATSWORD_NAME","","강철 대검"
+"AR_STEEL_GREATSWORD_TEXT","",""
+"AR_BURNING_BRANCH_NAME","","불타는 가지"
+"AR_BURNING_BRANCH_TEXT","After the equipped Apostle damages enemy unit, deal 1 additional damage to it.","장착자가 적 유닛에게 피해를 주면 추가로 피해 1."
+"AR_LEATHER_ARMOR_NAME","","가죽 갑옷"
+"AR_LEATHER_ARMOR_TEXT","",""
+"AR_OBSIDIAN_SHURIKEN_NAME","","흑요석 수리검"
+"AR_OBSIDIAN_SHURIKEN_TEXT","Before the equipped Apostle attacks, deal 1 to chosen attack target.","장착자가 공격하기 전에 공격 대상에게 피해 1."
+"AR_MIST_DAGGER_NAME","","안개 비수"
+"AR_MIST_DAGGER_TEXT","The equipped Apostle gains Bypass.","장착자에게 우회 부여."
+"AR_OLD_ARROW_NAME","","낡은 화살"
+"AR_OLD_ARROW_TEXT","",""
+"AR_FOX_DAGGER_NAME","","여우 단검"
+"AR_FOX_DAGGER_TEXT","When the equipped Apostle damages enemy hero, grant +1 attack until the next turn.","장착자가 적 영웅에게 피해를 주면 다음 턴까지 공격 +1 획득."
+"AR_WORSHIP_FRAME_NAME","","숭배용 액자"
+"AR_WORSHIP_FRAME_TEXT","While equipped, other friendly units of the equipped Apostle's race get +1 attack.","장착 중 같은 종족의 다른 아군 공격 +1."
+"AR_ATTASWORD_NAME","","앗따검"
+"AR_ATTASWORD_TEXT","After the equipped Apostle attacks, permanently give it +1 attack.","장착자가 공격 후 공격 +1 획득."
+"AR_PORK_CUTLET_PIN_NAME","","돈까스모양 머리핀"
+"AR_PORK_CUTLET_PIN_TEXT","When equipped, create a Pork Cutlet Spell in your hand.","장착 시 「돈까스」 마법을 1장 패에 생성."
+"AR_ATTATTAGUN_NAME","","앗땃따건"
+"AR_ATTATTAGUN_TEXT","The equipped Apostle gains Shock.","장착자에게 감전 부여."
+"AR_BURNING_BOW_NAME","","활활불타활"
+"AR_BURNING_BOW_TEXT","When the equipped Apostle attacks an enemy unit, deal 1 to target and its immediate left/right neighbors in enemy field order.","장착자 공격 시 적 유닛 대상과 양옆 유닛에게 피해 1."
+"AR_PATCHED_STAFF_NAME","Patched Staff","덧댄 지팡이"
+"AR_PATCHED_STAFF_TEXT","",""
+"AR_MAKESHIFT_WOODEN_SWORD_NAME","Makeshift Wooden Sword","급조한 목검"
+"AR_MAKESHIFT_WOODEN_SWORD_TEXT","",""
+"AR_ALUMINUM_THIMBLE_NAME","Aluminum Thimble","알루미늄 골무"
+"AR_ALUMINUM_THIMBLE_TEXT","",""
+"AR_RUSTY_AWL_NAME","Rusty Awl","녹슨 송곳"
+"AR_RUSTY_AWL_TEXT","After the equipped Apostle deals damage to an enemy unit, deal 1 additional damage to it.","장착자가 적 유닛에게 피해를 주면, 그 유닛에게 추가 피해 1."
+"AR_LEAF_ROBE_NAME","Leaf Robe","잎사귀 로브"
+"AR_LEAF_ROBE_TEXT","The equipped Apostle gains Bypass this turn.","장착한 턴 장착자 우회 획득."
+"AR_GEMSTONE_RING_NAME","Gemstone Ring","보석 반지"
+"AR_GEMSTONE_RING_TEXT","",""
+"AR_CARDBOARD_ARMOR_NAME","Cardboard Armor","골판지 갑옷"
+"AR_CARDBOARD_ARMOR_TEXT","After the equipped Apostle takes damage, destroy this Artifact.","장착자 피해 시 이 아티팩트 파괴."
+"AR_CLOTH_WRAP_ROBE_NAME","Cloth-Wrap Robe","보자기 로브"
+"AR_CLOTH_WRAP_ROBE_TEXT","When equipped, restore 1 Health to the equipped Apostle.","장착 시 장착자의 체력 1 회복."
+"AR_TOWEL_HEADBAND_NAME","Towel Headband","수건 머리띠"
+"AR_TOWEL_HEADBAND_TEXT","If the equipped Apostle is damaged, it gains +1 ATK.","장착자가 피해 상태면 공격 +1."
+"AR_OLDWOOD_DAGGER_NAME","Oldwood Dagger","고목나무 비수"
+"AR_OLDWOOD_DAGGER_TEXT","",""
+"AR_SLIME_CUSHION_NAME","Slime Cushion","슬라임 쿠션"
+"AR_SLIME_CUSHION_TEXT","Reduce the first damage the equipped Apostle takes each turn by 1.","매 턴 장착자의 첫 피해 -1."
+"AR_OVEN_MITT_NAME","Oven Mitt","오븐 장갑"
+"AR_OVEN_MITT_TEXT","At the end of your turn, create a Bread card in your hand.","내 턴 종료: 「빵」을 1장 생성."
+"AR_WEIGHTED_VEST_NAME","Weighted Vest","중량 조끼"
+"AR_WEIGHTED_VEST_TEXT","The equipped Apostle cannot attack on the turn this Artifact is equipped.","장착자는 장착한 턴 공격 불가."
+"AR_HEALING_LANTERN_NAME","Healing Lantern","치유의 호롱불"
+"AR_HEALING_LANTERN_TEXT","At the end of your turn, restore 1 Health to the equipped Apostle.","내 턴 종료: 장착자의 체력 1 회복."
+"AR_CLEVER_MOVE_NAME","Clever Move","묘수"
+"AR_CLEVER_MOVE_TEXT","When equipped, draw 1 card, then discard 1 card.","장착 시 카드 1장 뽑고 1장 버리기."
+"AR_FAIRY_ROBE_NAME","Fairy Robe","요정 로브"
+"AR_FAIRY_ROBE_TEXT","If the equipped Apostle is a Fairy, it gains an additional +1/+1.","장착자가 요정이라면 추가로 +1/+1 획득."
+"M_BULHYOJASON_NAME","","불효자손"
+"M_BULHYOJASON_TEXT","Deathrattle: Create a +1/+1 Artifact in your hand.","퇴장: +1/+1 아티팩트 하나를 패에 생성."
+"M_SANSAMO_NAME","","산사모"
+"M_SANSAMO_TEXT","",""
+"M_RACCOON_ARCHER_NAME","","라쿤아치"
+"M_RACCOON_ARCHER_TEXT","",""
+"M_MEOGOM_NAME","","머곰"
+"M_MEOGOM_TEXT","Taunt","도발."
+"M_LUPARU_NAME","","루파루"
+"M_LUPARU_TEXT","",""
+"M_DRONE_S_NAME","","드론 S형"
+"M_DRONE_S_TEXT","",""
+"M_DRONE_G_NAME","","드론 G형"
+"M_DRONE_G_TEXT","",""
+"M_DRONE_U_NAME","","드론 U형"
+"M_DRONE_U_TEXT","",""
+"M_FURRY_NAME","","퍼리"
+"M_FURRY_TEXT","",""
+"M_BLANKET_GHOST_NAME","","이불령"
+"M_BLANKET_GHOST_TEXT","Bypass","우회."
+"M_LOW_SUGAR_FAIRY_NAME","","저혈당 요정"
+"M_LOW_SUGAR_FAIRY_TEXT","Battlecry: Create a random Vegetable Monster.","등장: 무작위 채소 몬스터 1개 생성."
+"M_HIGH_SUGAR_FAIRY_NAME","","고혈당 요정"
+"M_HIGH_SUGAR_FAIRY_TEXT","Battlecry: Create a Bread.","등장: 「빵」 생성."
+"M_HOBAGING_NAME","","호바깅"
+"M_HOBAGING_TEXT","Deathrattle: Summon a Pumpkin Monster.","퇴장: 호박 몬스터 1개 소환."
+"M_SHAYDIA_FAN_NAME","","셰이디아 극성팬"
+"M_SHAYDIA_FAN_TEXT","Bypass","우회."
+"M_BEASTFOLK_BERSERKER_NAME","","수인 광전사"
+"M_BEASTFOLK_BERSERKER_TEXT","While damaged, gain +1 Attack.","피해 상태면 공격 +1."
+"M_BEASTFOLK_ARCHER_NAME","","수인 궁수"
+"M_BEASTFOLK_ARCHER_TEXT","",""
+"M_GOMOGUJI_NAME","","고모구지"
+"M_GOMOGUJI_TEXT","",""
+"M_HANIPCHO_NAME","","한입초"
+"M_HANIPCHO_TEXT","",""
+"M_WISP_NAME","","위스프"
+"M_WISP_TEXT","",""
+"M_ELF_ASSAULT_NAME","","엘프 돌격병"
+"M_ELF_ASSAULT_TEXT","Rush","속공."
+"M_ELF_SOLDIER_NAME","","엘프 병사수"
+"M_ELF_SOLDIER_TEXT","",""
+"M_NURURING_NAME","","누루링"
+"M_NURURING_TEXT","",""
+"M_MOKDORYONG_NAME","","목도룡"
+"M_MOKDORYONG_TEXT","Battlecry: Deal 1 damage to a target.","등장: 대상에게 피해 1."
+"M_DONGSEOK_NAME","","동석"
+"M_DONGSEOK_TEXT","Taunt","도발."
+"M_MUSCLE_DRAGON_NAME","","근육인데용"
+"M_MUSCLE_DRAGON_TEXT","",""
+"M_HAETPAENGI_NAME","","햇팽이"
+"M_HAETPAENGI_TEXT","",""
+"M_GIREOYONG_NAME","","길어용"
+"M_GIREOYONG_TEXT","",""
+"M_MOKMAEKKIM_NAME","","목맥킴"
+"M_MOKMAEKKIM_TEXT","Deathrattle: Create a Bread.","퇴장: 「빵」 생성."
+"M_CRUMB_NAME","","부스러기"
+"M_CRUMB_TEXT","Deathrattle: Create a Bread.","퇴장: 「빵」 생성."
+"M_NEW_HEART_SAFE_NAME","","새마음금고"
+"M_NEW_HEART_SAFE_TEXT","Deathrattle: Create a Random Coin.","퇴장: 「랜덤 코인」 생성."

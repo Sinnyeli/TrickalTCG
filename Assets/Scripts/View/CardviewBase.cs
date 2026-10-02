@@ -26,8 +26,9 @@ public abstract class CardviewBase : MonoBehaviour
         // get runtime card. Get data from it. 
         CardData data = card.Data;
 
-        nameText.text = data.cardName;
-        descriptionText.text = data.description;
+        LocalizationManager localization = LocalizationManager.Instance;
+        nameText.text = localization == null ? data.cardName : localization.GetCardName(data);
+        descriptionText.text = localization == null ? data.description : localization.GetCardText(data);
         costText.text = data.manaCost.ToString();
 
       if (artworkImage != null)

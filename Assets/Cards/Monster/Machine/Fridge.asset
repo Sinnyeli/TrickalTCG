@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Fridge
   m_EditorClassIdentifier: 
   cardID: M_FRIDGE
-  cardName: Fridge
+  cardName: Frostnova Fridge Unit
   description: 
   manaCost: 3
   artwork: {fileID: 0}
@@ -22,7 +22,7 @@ MonoBehaviour:
   unlimitedCopies: 0
   attack: 1
   health: 5
-  cardRace: 7
+  cardRace: 0
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
