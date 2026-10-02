@@ -26,12 +26,13 @@ MonoBehaviour:
   health: 1
   cardRace: 0
   keywords: 00000000
-  battlecry: {fileID: 11400000, guid: 82d6a5426695186fe88008247698e8de, type: 2}
+  battlecry: {fileID: 11400000, guid: 26a45740fd0e232dba0f907102370d58, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
-  turnEnd: {fileID: 11400000, guid: d26a3bc0ca857855eaa4033da904ca3e, type: 2}
+  turnEnd: {fileID: 11400000, guid: 9fb7be5769031bb3ebcc24510e36cb1f, type: 2}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}

@@ -6,10 +6,18 @@ public class RuntimeCard
 {
     public static event System.Action<CardTriggerType, RuntimeCard, RuntimeCard, RuntimeModifier> OnGameplayTrigger;
     private readonly Dictionary<TriggeredEffect, int> triggerCounts = new Dictionary<TriggeredEffect, int>();
+    private readonly Dictionary<TriggeredEffect, int> triggerTurns = new Dictionary<TriggeredEffect, int>();
     public RuntimeCard LastDamageSource { get; private set; }
     public RuntimeModifier LethalStatSnapshot { get; private set; }
     public int CountTrigger(TriggeredEffect effect)
     {
+        if (effect.ResetEachTurn && GameManager.Instance != null && GameManager.Instance.TurnManager != null)
+        {
+            int turn = GameManager.Instance.TurnManager.TurnNumber;
+            if (!triggerTurns.TryGetValue(effect, out int previousTurn) || previousTurn != turn)
+                triggerCounts.Remove(effect);
+            triggerTurns[effect] = turn;
+        }
         triggerCounts.TryGetValue(effect, out int count);
         triggerCounts[effect] = ++count;
         return count;
@@ -558,6 +566,7 @@ public void Kill(RuntimeCard source = null)
 public void ResetAfterBounce()
 {
     triggerCounts.Clear();
+    triggerTurns.Clear();
     LastDamageSource = null;
     LethalStatSnapshot = null;
     modifiers.Clear();
@@ -596,6 +605,7 @@ public bool TransformInto(CardData newData)
 
     // Clear temporary battlefield modifications.
     triggerCounts.Clear();
+    triggerTurns.Clear();
     LastDamageSource = null;
     LethalStatSnapshot = null;
     modifiers.Clear();

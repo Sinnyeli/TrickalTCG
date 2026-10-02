@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using System.IO;
+using System.Text;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +14,11 @@ public static class TriggerEffectInitializer
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) return;
         var cards = CardDataCsv.FindCards();
+        var duplicates = cards.Where(c => !string.IsNullOrWhiteSpace(c.CardID)).GroupBy(c => c.CardID).FirstOrDefault(g => g.Count() > 1);
+        if (duplicates != null) throw new InvalidOperationException("Duplicate CardID: " + duplicates.Key);
+        if (AssetDatabase.LoadAssetAtPath<CardDatabase>("Assets/Cards/Database/CardDatabase.asset") == null)
+            throw new InvalidOperationException("CardDatabase.asset missing; import the catalog first.");
+        CardDataCsv.ReadLocalizationRows();
         var shuro = cards.SingleOrDefault(c => c.CardID == "A_SHURO") as MinionData;
         var ouros = cards.SingleOrDefault(c => c.CardID == "A_OUROS") as MinionData;
         if (shuro == null || ouros == null)
@@ -74,19 +82,34 @@ public static class TriggerEffectInitializer
     }
     private static void ConfigureLevi(System.Collections.Generic.List<CardData> cards, CardEffect reward)
     {
-        var levi = cards.SingleOrDefault(c => c.CardID == "A_LEVI") as ApostleData;
-        if (levi == null) { Debug.LogWarning("A_LEVI missing; Levi initialization skipped."); return; }
-        var upgraded = cards.SingleOrDefault(c => c.CardID == "A_LEVI_UPGRADED") as ApostleData;
+        var levi = FindApostle(cards, "A_LEVI");
+        if (levi == null)
+        {
+            levi = Make<ApostleData>("A_LEVI");
+            Configure(levi, s => {
+                s.FindProperty("cardID").stringValue = "A_LEVI";
+                s.FindProperty("cardName").stringValue = "Levi";
+                s.FindProperty("collectible").boolValue = true;
+            });
+            cards.Add(levi);
+        }
+        var upgraded = FindApostle(cards, "A_LEVI_2");
+        // Migrate the earlier generated form in place to preserve its GUID and references.
+        if (upgraded == null) upgraded = FindApostle(cards, "A_LEVI_UPGRADED");
         if (upgraded == null)
         {
-            upgraded = Make<ApostleData>("A_LEVI_UPGRADED");
+            upgraded = Make<ApostleData>("A_LEVI_2");
             Configure(upgraded, s => {
-                s.FindProperty("cardID").stringValue = "A_LEVI_UPGRADED";
+                s.FindProperty("cardID").stringValue = "A_LEVI_2";
                 s.FindProperty("cardName").stringValue = "Levi (Upgraded)";
                 s.FindProperty("collectible").boolValue = false;
                 s.FindProperty("artwork").objectReferenceValue = levi.artwork;
             });
         }
+        Configure(upgraded, s => {
+            s.FindProperty("cardID").stringValue = "A_LEVI_2";
+            s.FindProperty("collectible").boolValue = false;
+        });
         foreach (var form in new[] { levi, upgraded })
             Configure(form, s => {
                 s.FindProperty("manaCost").intValue = 3;
@@ -94,7 +117,7 @@ public static class TriggerEffectInitializer
                 s.FindProperty("health").intValue = form == levi ? 2 : 4;
                 s.FindProperty("cardRace").enumValueIndex = (int)CardRace.Witch;
             });
-        var transform = Make<TransformAndRewardEffect>("FX_LeviTransformUpgraded");
+        var transform = Make<TransformAndRewardEffect>("FX_LeviGraduateAndReward");
         Configure(transform, s => {
             s.FindProperty("transformInto").objectReferenceValue = upgraded;
             s.FindProperty("reward").objectReferenceValue = reward;
@@ -126,12 +149,36 @@ public static class TriggerEffectInitializer
         });
         Configure(upgraded, s => s.FindProperty("description").stringValue = "Quest completed: your spells cost 1 less for the rest of this game.");
         var database = AssetDatabase.LoadAssetAtPath<CardDatabase>("Assets/Cards/Database/CardDatabase.asset");
-        if (database != null) Configure(database, s => {
+        Configure(database, s => {
             var list = s.FindProperty("allCards");
-            for (int i = 0; i < list.arraySize; i++) if (list.GetArrayElementAtIndex(i).objectReferenceValue == upgraded) return;
-            int index = list.arraySize; list.arraySize++;
-            list.GetArrayElementAtIndex(index).objectReferenceValue = upgraded;
+            foreach (var form in new[] { levi, upgraded })
+            {
+                bool present = false;
+                for (int i = 0; i < list.arraySize; i++) if (list.GetArrayElementAtIndex(i).objectReferenceValue == form) present = true;
+                if (!present) { int index = list.arraySize; list.arraySize++; list.GetArrayElementAtIndex(index).objectReferenceValue = form; }
+            }
         });
+        var rows = CardDataCsv.ReadLocalizationRows();
+        PutTranslation(rows, "A_LEVI_NAME", "Levi", "레비");
+        PutTranslation(rows, "A_LEVI_TEXT", levi.description, "필드에 있는 동안 한 턴에 마법 5번 사용 시 졸업. 이번 게임 동안 내 마법 비용 −1.");
+        PutTranslation(rows, "A_LEVI_2_NAME", "Levi (Graduated)", "레비(졸업)");
+        PutTranslation(rows, "A_LEVI_2_TEXT", upgraded.description, "졸업 완료: 이번 게임 동안 내 마법 비용 −1.");
+        var csv = new StringBuilder();
+        foreach (var row in rows) CardDataCsv.AppendRow(csv, row);
+        File.WriteAllText(CardDataCsv.LocalizationPath, csv.ToString(), new UTF8Encoding(true));
+        AssetDatabase.ImportAsset(CardDataCsv.LocalizationPath);
+    }
+    private static ApostleData FindApostle(List<CardData> cards, string id)
+    {
+        var card = cards.SingleOrDefault(c => c.CardID == id);
+        if (card != null && !(card is ApostleData)) throw new InvalidOperationException(id + " must be ApostleData.");
+        return card as ApostleData;
+    }
+    private static void PutTranslation(List<List<string>> rows, string key, string english, string korean)
+    {
+        var row = rows.Skip(1).SingleOrDefault(r => r[0] == key);
+        if (row == null) rows.Add(new List<string> { key, english, korean });
+        else { row[1] = english; row[2] = korean; }
     }
     private static void AttachBreadTrigger(CardData card, string name, CardTriggerType type, CardEffect child, params TriggerCondition[] conditions)
     {
@@ -164,6 +211,7 @@ public static class TriggerEffectInitializer
         Configure(effect, s => {
             s.FindProperty("triggerType").enumValueIndex = (int)CardTriggerType.UnitKilled;
             s.FindProperty("actorMustBeSelf").boolValue = true;
+            s.FindProperty("resetEachTurn").boolValue = false;
             s.FindProperty("requiredOccurrences").intValue = count;
             s.FindProperty("repeatAfterThreshold").boolValue = repeat;
             s.FindProperty("matchRole").enumValueIndex = (int)TriggeredEffect.EventRole.Subject;

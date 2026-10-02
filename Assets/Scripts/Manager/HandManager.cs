@@ -578,7 +578,6 @@ private void CompleteSpellCast(
     if (turnManager == null)
         return;
 
-    RuntimeCard.PublishTrigger(CardTriggerType.SpellCast, card, card);
     Debug.Log(
         $"{card.Data.cardName} finished casting."
     );
@@ -591,6 +590,7 @@ private void CompleteSpellCast(
         card.Owner,
         cost
     );
+    RuntimeCard.PublishTrigger(CardTriggerType.SpellCast, card, card);
 
     DeckManager deck =
         GameManager.Instance.GetDeck(card.Owner);

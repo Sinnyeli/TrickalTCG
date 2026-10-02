@@ -25,9 +25,10 @@ MonoBehaviour:
   health: 3
   cardRace: 0
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: ae93bf398fa1feea393316eb78a68e11, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}

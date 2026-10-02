@@ -1,0 +1,39 @@
+# Initialization report
+
+- Created non-collectible token M_CARROT.
+- Created non-collectible token AR_TOKEN_BUFF11.
+- Carrot and Small Charm use provisional cost 1. Existing token stats are preserved.
+- S_BREAD / spellEffects → FX_BuffAny11
+- S_SELF_IMPROVEMENT / spellEffects → FX_BuffFriendly11
+- S_HEALTHY_BODY / spellEffects → FX_BuffFriendly22
+- S_PROMOTION / spellEffects → FX_BuffMonster22
+- S_PERSONAL_TRAINING / spellEffects → FX_BuffApostle12
+- S_APPRENTICE_MAGE / spellEffects → FX_DamageEnemyTarget3
+- S_SCHOLAR / spellEffects → FX_Draw2
+- S_EFFICIENT_RECOVERY / spellEffects → FX_HealAllFriendly2
+- S_WARM_HEART / spellEffects → FX_HealAnyTarget5
+- S_AROMATHERAPY / spellEffects → FX_FullHealAll
+- S_VOW / spellEffects → FX_SilenceUnit
+- S_TUMBLR / spellEffects → FX_BounceUnit
+- S_THREAD_OF_REASON / spellEffects → FX_SilenceThenHeal3
+- S_VANGUARD / spellEffects → FX_Position_Leftmost
+- S_CENTER_GOOD / spellEffects → FX_Position_Center
+- S_REAR_GUARD / spellEffects → FX_Position_Rightmost
+- A_CHLOE / battlecry → FX_SummonSebastian
+- A_SASHA / battlecry → FX_CreateTumbler
+- A_SKIA / battlecry → FX_CreateQuiet
+- A_THYST / battlecry → FX_CreateCheapArtifact
+- A_ORE / battlecry → FX_CreateRandomMachine
+- A_PATRA / battlecry → FX_CreateMintBread
+- A_SHUPANG / battlecry → FX_Draw1
+- A_SHUPANG / turnEnd → FX_BounceSelf
+- M_BULHYOJASON / deathrattle → FX_CreateSmallCharm
+- M_LOW_SUGAR_FAIRY / battlecry → FX_CreateRandomVegetable
+- M_HIGH_SUGAR_FAIRY / battlecry → FX_CreateBread
+- M_HOBAGING / deathrattle → FX_SummonPumpkin
+- M_MOKMAEKKIM / deathrattle → FX_CreateBread
+- M_CRUMB / deathrattle → FX_CreateBread
+- M_NEW_HEART_SAFE / deathrattle → FX_CreateRandomCoin
+- M_MOKDORYONG / battlecry → FX_DamageAnyTarget1
+- Pending latest-design abilities: Mayo collectible pool; Polang Fairy aura; Joanne Fairy-enter trigger; Ricota enemy-death cooking; Ashur Bread-use Fireball; Shupang attack draw.
+- Cheap artifacts currently means collectible cost <= 2; center targeting chooses the left center on an even board. Review these provisional conventions.

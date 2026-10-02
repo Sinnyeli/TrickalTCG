@@ -21,4 +21,4 @@ MonoBehaviour:
   collectible: 0
   unlimitedCopies: 0
   spellEffects:
-  - {fileID: 11400000, guid: b0c52eed1561c80cdbe3c8f13e3d5920, type: 2}
+  - {fileID: 11400000, guid: 17e33131004bd9cb2980c212629fbf98, type: 2}

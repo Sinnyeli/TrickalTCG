@@ -5,7 +5,7 @@ using System.Text;
 
 public static class CardIDExporter
 {
-    [MenuItem("Tools/Export Card IDs")]
+    [MenuItem("Tools/Cards/Export Card IDs TXT")]
     public static void ExportCardIDs()
     {
         string[] guids = AssetDatabase.FindAssets("t:CardData");

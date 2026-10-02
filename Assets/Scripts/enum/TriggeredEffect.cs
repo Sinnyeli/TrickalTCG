@@ -28,6 +28,8 @@ public class TriggeredEffect : CardEffect
     [SerializeField] private bool actorMustBeSelf;
     [SerializeField, Min(1)] private int requiredOccurrences = 1;
     [SerializeField] private bool repeatAfterThreshold = true;
+    [SerializeField] private bool resetEachTurn;
+    public bool ResetEachTurn => resetEachTurn;
     private readonly HashSet<RuntimeCard> resolvingSources = new HashSet<RuntimeCard>();
 
     public void ResolveGameplayTrigger(RuntimeCard source, RuntimeCard actor, RuntimeCard subject, RuntimeModifier snapshot)

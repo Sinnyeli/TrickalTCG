@@ -14,19 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_LEVI
   cardName: Levi
-  description: Gains a Study counter whenever you cast a spell. At 5, Graduate.
-  manaCost: 2
+  description: While on the field, cast 5 spells in one turn to transform. Your spells
+    cost 1 less for the rest of this game.
+  manaCost: 3
   artwork: {fileID: 21300000, guid: a716fff576831b7058ea911b17d75ac8, type: 3}
   onDrawEffects: []
   collectible: 1
   unlimitedCopies: 0
   attack: 2
-  health: 3
+  health: 2
   cardRace: 1
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
-  passive: {fileID: 0}
+  passive: {fileID: 11400000, guid: 06871aa0a85ab489badb55542d1b8b9e, type: 2}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
