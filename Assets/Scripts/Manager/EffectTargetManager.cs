@@ -106,6 +106,11 @@ public void SelectHeroTarget(PlayerView target)
             target
         );
     }
+    else if (currentEffect is HealEffect healEffect)
+    {
+        healEffect.ResolveHero(sourceCard, target);
+    }
+    else return;
 
     ClearTargetSelection();
 }
@@ -126,6 +131,7 @@ public void SelectHeroTarget(PlayerView target)
             switch (currentEffect.TargetType)
             {
                 case EffectTargetType.EnemyUnit:
+                case EffectTargetType.EnemyTarget:
                     validOwner = target.Owner != sourceCard.Owner;
                     break;
 
@@ -159,6 +165,7 @@ public void SelectHeroTarget(PlayerView target)
         switch (currentEffect.TargetType)
         {
             case EffectTargetType.EnemyHero:
+            case EffectTargetType.EnemyTarget:
                 return target.Side != sourceCard.Owner;
 
             case EffectTargetType.FriendlyHero:
@@ -195,6 +202,9 @@ public bool HasValidTarget(
 
     switch (effect.TargetType)
     {
+        case EffectTargetType.EnemyTarget:
+            return GameManager.Instance.GetPlayerView(GetOpposingSide(source.Owner)) != null
+                || HasEnemyUnit(source, effect);
         case EffectTargetType.EnemyUnit:
             return HasEnemyUnit(source, effect);
 

@@ -39,6 +39,11 @@ public abstract class MinionData : CardData
     [SerializeField]
     private CardEffect passive;
 
+    // Additional passives, including event-driven TriggeredEffect assets.
+    // The original passive field remains serialized for existing cards.
+    [SerializeField]
+    private List<CardEffect> additionalPassives = new List<CardEffect>();
+
     [SerializeField]
     private CardEffect resonance;
 
@@ -57,6 +62,23 @@ public abstract class MinionData : CardData
     public CardEffect Battlecry => battlecry;
     public CardEffect Deathrattle => deathrattle;
     public CardEffect Passive => passive;
+    public IEnumerable<CardEffect> Passives
+    {
+        get
+        {
+            if (passive != null)
+                yield return passive;
+
+            if (additionalPassives == null)
+                yield break;
+
+            foreach (CardEffect effect in additionalPassives)
+            {
+                if (effect != null)
+                    yield return effect;
+            }
+        }
+    }
     public CardEffect Resonance => resonance;
     public CardEffect TurnStart => turnStart;
     public CardEffect TurnEnd => turnEnd;

@@ -4,6 +4,19 @@ using Unity.Mathematics;
 
 public class RuntimeCard
 {
+    public static event System.Action<CardTriggerType, RuntimeCard, RuntimeCard, RuntimeModifier> OnGameplayTrigger;
+    private readonly Dictionary<TriggeredEffect, int> triggerCounts = new Dictionary<TriggeredEffect, int>();
+    public RuntimeCard LastDamageSource { get; private set; }
+    public RuntimeModifier LethalStatSnapshot { get; private set; }
+    public int CountTrigger(TriggeredEffect effect)
+    {
+        triggerCounts.TryGetValue(effect, out int count);
+        triggerCounts[effect] = ++count;
+        return count;
+    }
+    public void ResetTriggerCount(TriggeredEffect effect) => triggerCounts.Remove(effect);
+    public static void PublishTrigger(CardTriggerType type, RuntimeCard actor, RuntimeCard subject, RuntimeModifier snapshot = null)
+        => OnGameplayTrigger?.Invoke(type, actor, subject, snapshot);
     private int currentHealth;
     private bool canAttack;
     public int CurrentHealth => currentHealth;
@@ -26,7 +39,8 @@ public class RuntimeCard
 
     return Mathf.Max(
         0,
-        Data.manaCost + manaCostModifier
+        Data.manaCost + manaCostModifier -
+        (Data is SpellData && GameManager.Instance != null ? GameManager.Instance.GetPermanentSpellDiscount(Owner) : 0)
     );
 }
     private bool resolvingPassive = false;
@@ -153,7 +167,7 @@ public class RuntimeCard
         canAttack = false;
     }
 
-    public bool TakeDamage(int amount)
+    public bool TakeDamage(int amount, RuntimeCard damageSource = null)
     {
         if (amount <= 0)
             return false;
@@ -170,7 +184,12 @@ public class RuntimeCard
             }
         }
 
-        damageTaken += amount;
+        if (actualDamage <= 0) return false;
+        LethalStatSnapshot = null;
+        if (actualDamage >= currentHealth)
+            LethalStatSnapshot = new RuntimeModifier(GetAttack(), GetMaxHealth(), false);
+        LastDamageSource = damageSource;
+        damageTaken += actualDamage;
 
         currentHealth -= actualDamage;
 
@@ -178,6 +197,8 @@ public class RuntimeCard
         {
             currentHealth = 0;
         }
+        PublishTrigger(CardTriggerType.DamageTaken, damageSource, this);
+        if (damageSource != null) PublishTrigger(CardTriggerType.DamageDealt, damageSource, this);
         return true;
     }
     public void Heal(int amount)
@@ -528,12 +549,17 @@ public bool UnequipArtifact(RuntimeCard artifact)
     }
 }
 
-public void Kill()
+public void Kill(RuntimeCard source = null)
 {
+    LethalStatSnapshot = new RuntimeModifier(GetAttack(), GetMaxHealth(), false);
+    LastDamageSource = source;
     currentHealth = 0;
 }
 public void ResetAfterBounce()
 {
+    triggerCounts.Clear();
+    LastDamageSource = null;
+    LethalStatSnapshot = null;
     modifiers.Clear();
 
     ClearPassiveBaseStatOverride();
@@ -564,9 +590,14 @@ public bool TransformInto(CardData newData)
         return false;
     }
 
+    bool previousCanAttack = canAttack;
+    bool previousHeroRestriction = cannotAttackHero;
     Data = newData;
 
     // Clear temporary battlefield modifications.
+    triggerCounts.Clear();
+    LastDamageSource = null;
+    LethalStatSnapshot = null;
     modifiers.Clear();
 
     ClearPassiveBaseStatOverride();
@@ -578,6 +609,8 @@ public bool TransformInto(CardData newData)
 
     // Initialize using the NEW card's stats.
     InitializeCombatStats();
+    canAttack = previousCanAttack;
+    cannotAttackHero = previousHeroRestriction;
 
     return true;
 }

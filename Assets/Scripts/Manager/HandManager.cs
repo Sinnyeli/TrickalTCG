@@ -519,6 +519,7 @@ private bool PlaySpellFromHand(RuntimeCard card)
         switch (effect.TargetType)
         {
             case EffectTargetType.EnemyUnit:
+            case EffectTargetType.EnemyTarget:
             case EffectTargetType.FriendlyUnit:
             case EffectTargetType.AnyUnit:
             case EffectTargetType.AnyTarget:
@@ -577,6 +578,7 @@ private void CompleteSpellCast(
     if (turnManager == null)
         return;
 
+    RuntimeCard.PublishTrigger(CardTriggerType.SpellCast, card, card);
     Debug.Log(
         $"{card.Data.cardName} finished casting."
     );
@@ -644,6 +646,7 @@ public bool PlayTargetedSpellFromHand(
         switch (effect.TargetType)
         {
             case EffectTargetType.EnemyUnit:
+            case EffectTargetType.EnemyTarget:
 
                 hasUnitTargetEffect = true;
 
@@ -734,6 +737,7 @@ public bool PlayTargetedSpellFromHand(
         {
             // These use the manually selected unit.
             case EffectTargetType.EnemyUnit:
+            case EffectTargetType.EnemyTarget:
             case EffectTargetType.FriendlyUnit:
             case EffectTargetType.AnyUnit:
             case EffectTargetType.AnyTarget:
@@ -812,6 +816,7 @@ public bool PlayTargetedSpellFromHand(
         switch (effect.TargetType)
         {
             case EffectTargetType.EnemyHero:
+            case EffectTargetType.EnemyTarget:
 
                 hasHeroTargetEffect = true;
 
@@ -861,6 +866,7 @@ public bool PlayTargetedSpellFromHand(
         switch (effect.TargetType)
         {
             case EffectTargetType.EnemyHero:
+            case EffectTargetType.EnemyTarget:
             case EffectTargetType.FriendlyHero:
             case EffectTargetType.AnyTarget:
 

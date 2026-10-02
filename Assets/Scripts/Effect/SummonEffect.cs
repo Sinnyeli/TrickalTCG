@@ -35,7 +35,7 @@ public class SummonEffect : CardEffect
     private int amount = 1;
 
     [Tooltip(
-        "Selected summons cards from the list in order. " +
+        "Selected cycles through the list until Amount is reached. " +
         "Random chooses randomly from the list."
     )]
     [SerializeField]
@@ -118,16 +118,12 @@ public class SummonEffect : CardEffect
         BattlefieldManager battlefield,
         PlayerSide summonSide)
     {
-        int summonCount =
-            Mathf.Min(
-                amount,
-                summonPool.Count
-            );
+        int summonCount = Mathf.Max(0, amount);
 
         for (int i = 0; i < summonCount; i++)
         {
             CardData cardData =
-                summonPool[i];
+                summonPool[i % summonPool.Count];
 
             SummonCard(
                 source,

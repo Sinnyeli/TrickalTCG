@@ -22,6 +22,20 @@ public class TriggeredEffect : CardEffect
         new List<CardEffect>();
 
 
+    public enum EventRole { Subject, Actor }
+    [Header("Extended event matching")]
+    [SerializeField] private EventRole matchRole = EventRole.Subject;
+    [SerializeField] private bool actorMustBeSelf;
+    [SerializeField, Min(1)] private int requiredOccurrences = 1;
+    [SerializeField] private bool repeatAfterThreshold = true;
+    private readonly HashSet<RuntimeCard> resolvingSources = new HashSet<RuntimeCard>();
+
+    public void ResolveGameplayTrigger(RuntimeCard source, RuntimeCard actor, RuntimeCard subject, RuntimeModifier snapshot)
+    {
+        if (actorMustBeSelf && actor != source) return;
+        ResolveTrigger(source, matchRole == EventRole.Actor ? actor : subject, snapshot);
+    }
+
     public CardTriggerType TriggerType =>
         triggerType;
 
@@ -49,7 +63,7 @@ public class TriggeredEffect : CardEffect
         RuntimeCard triggerCard,
         RuntimeModifier modifier = null)
     {
-        if (source == null)
+        if (source == null || source.IsSilenced || resolvingSources.Contains(source))
             return;
 
 
@@ -73,6 +87,13 @@ public class TriggeredEffect : CardEffect
         }
 
 
+        int count = source.CountTrigger(this);
+        if (count < Mathf.Max(1, requiredOccurrences)) return;
+        if (!repeatAfterThreshold && count > Mathf.Max(1, requiredOccurrences)) return;
+        if (repeatAfterThreshold) source.ResetTriggerCount(this);
+        if (!resolvingSources.Add(source)) return;
+        try
+        {
         // =====================================================
         // RESOLVE CHILD EFFECTS
         // =====================================================
@@ -114,10 +135,9 @@ public class TriggeredEffect : CardEffect
                     };
 
 
-                effect.Resolve(
-                    source,
-                    triggerTargets
-                );
+                if (effect is GainDefeatedStatsEffect gain)
+                    gain.ResolveSnapshot(source, modifier);
+                else effect.Resolve(source, triggerTargets);
 
                 continue;
             }
@@ -155,5 +175,7 @@ public class TriggeredEffect : CardEffect
                     effect
                 );
         }
+        }
+        finally { resolvingSources.Remove(source); }
     }
 }

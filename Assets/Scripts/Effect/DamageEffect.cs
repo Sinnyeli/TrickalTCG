@@ -22,7 +22,7 @@ public class DamageEffect : CardEffect
                 continue;
 
             bool tookDamage =
-                target.TakeDamage(amount);
+                target.TakeDamage(amount, source);
 
             Debug.Log(
                 $"{source.Data.cardName} dealt {amount} damage to " +

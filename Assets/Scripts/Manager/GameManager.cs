@@ -12,6 +12,16 @@ public enum GameState
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    private readonly Dictionary<PlayerSide, int> permanentSpellDiscounts = new Dictionary<PlayerSide, int>();
+    private readonly HashSet<string> claimedSpellRewards = new HashSet<string>();
+    public int GetPermanentSpellDiscount(PlayerSide side)
+        => permanentSpellDiscounts.TryGetValue(side, out int amount) ? amount : 0;
+    public void GrantPermanentSpellDiscount(PlayerSide side, int amount, string rewardID)
+    {
+        if (amount <= 0 || !claimedSpellRewards.Add(side + ":" + rewardID)) return;
+        permanentSpellDiscounts[side] = GetPermanentSpellDiscount(side) + amount;
+        GetHandManager(side)?.RefreshAllCardViews();
+    }
 
     [Header("Game Systems")]
     [SerializeField] private DeckManager deckManager;

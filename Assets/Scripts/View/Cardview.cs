@@ -116,6 +116,7 @@ if (runtimeCard.Data is SpellData spellData)
                 break;
 
             case EffectTargetType.AnyTarget:
+            case EffectTargetType.EnemyTarget:
                 canTargetUnit = true;
                 canTargetHero = true;
                 break;

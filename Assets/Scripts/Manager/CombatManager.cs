@@ -96,6 +96,7 @@ public bool Attack(RuntimeCard defender)
 
     attacker.RemoveStealth();
 
+    RuntimeCard.PublishTrigger(CardTriggerType.AttackStarted, attacker, defender);
     GameManager.Instance.EffectManager.ResolveOnAttack(attacker);
 
     int attackerDamage = attacker.GetAttack();
@@ -108,7 +109,7 @@ public bool Attack(RuntimeCard defender)
     {
         // Attacker strikes first.
         bool defenderTookDamage =
-            defender.TakeDamage(attackerDamage);
+            defender.TakeDamage(attackerDamage, attacker);
             
 
         TriggerOnDamageTaken(
@@ -119,14 +120,14 @@ public bool Attack(RuntimeCard defender)
         // Shock from attacker.
         if (attacker.HasKeyword(CardKeyword.Shock))
         {
-            defender.Kill();
+            defender.Kill(attacker);
         }
 
         // Defender only retaliates if still alive.
         if (defender.CurrentHealth > 0)
         {
             bool attackerTookDamage =
-                attacker.TakeDamage(defenderDamage);
+                attacker.TakeDamage(defenderDamage, defender);
 
             TriggerOnDamageTaken(
                 attacker,
@@ -136,7 +137,7 @@ public bool Attack(RuntimeCard defender)
             // Shock from defender.
             if (defender.HasKeyword(CardKeyword.Shock))
             {
-                attacker.Kill();
+                attacker.Kill(defender);
             }
         }
     }
@@ -144,10 +145,10 @@ public bool Attack(RuntimeCard defender)
     {
         // Normal simultaneous combat.
         bool defenderTookDamage =
-            defender.TakeDamage(attackerDamage);
+            defender.TakeDamage(attackerDamage, attacker);
 
         bool attackerTookDamage =
-            attacker.TakeDamage(defenderDamage);
+            attacker.TakeDamage(defenderDamage, defender);
 
         TriggerOnDamageTaken(
             defender,
@@ -162,13 +163,13 @@ public bool Attack(RuntimeCard defender)
         // Shock from attacker.
         if (attacker.HasKeyword(CardKeyword.Shock))
         {
-            defender.Kill();
+            defender.Kill(attacker);
         }
 
         // Shock from defender.
         if (defender.HasKeyword(CardKeyword.Shock))
         {
-            attacker.Kill();
+            attacker.Kill(defender);
         }
     }
 
@@ -193,13 +194,6 @@ public bool Attack(RuntimeCard defender)
 
 public bool Attack(PlayerView defender)
 {
-        Debug.LogError(
-        $"=== ATTACK PLAYER CALLED ===\n" +
-        $"Frame: {Time.frameCount}\n" +
-        $"Attacker: {selectedAttacker?.Data?.cardName}\n" +
-        $"Target: {defender?.Side}\n" +
-        $"Stack:\n{System.Environment.StackTrace}"
-    );
     if (selectedAttacker == null)
     {
         Debug.Log("No attacker selected.");
@@ -244,6 +238,7 @@ public bool Attack(PlayerView defender)
 
 
 
+    RuntimeCard.PublishTrigger(CardTriggerType.AttackStarted, attacker, null);
     GameManager.Instance.EffectManager.ResolveOnAttack(attacker);
 
     int attackerDamage = attacker.GetAttack();
@@ -255,7 +250,14 @@ public bool Attack(PlayerView defender)
 
     defender.TakeDamage(attackerDamage);
     attacker.DisableAttack();
-
+    Debug.Log(
+    $"HERO ATTACK TARGET | " +
+    $"Object={defender.gameObject.name} | " +
+    $"InstanceID={defender.GetInstanceID()} | " +
+    $"Side={defender.Side} | " +
+    $"HP={defender.CurrentHealth}/{defender.MaxHealth} | " +
+    $"Damage={attackerDamage}"
+    );
 
     ClearSelection();
 

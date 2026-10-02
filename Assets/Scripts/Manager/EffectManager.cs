@@ -170,6 +170,7 @@ public void ResolveDeathrattle(RuntimeCard source)
         case EffectTargetType.FriendlyUnit:
         case EffectTargetType.AnyUnit:
         case EffectTargetType.AnyTarget:
+        case EffectTargetType.EnemyTarget:
         
 
             if (!EffectTargetManager.Instance.HasValidTarget(

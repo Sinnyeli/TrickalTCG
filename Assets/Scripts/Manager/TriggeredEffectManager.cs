@@ -9,6 +9,7 @@ public class TriggeredEffectManager : MonoBehaviour
 
     private void OnEnable()
     {
+        RuntimeCard.OnGameplayTrigger += HandleGameplayTrigger;
         RuntimeCard.OnStatsGained +=
             HandleStatsGained;
 
@@ -23,6 +24,7 @@ public class TriggeredEffectManager : MonoBehaviour
 
     private void OnDisable()
     {
+        RuntimeCard.OnGameplayTrigger -= HandleGameplayTrigger;
         RuntimeCard.OnStatsGained -=
             HandleStatsGained;
 
@@ -30,6 +32,39 @@ public class TriggeredEffectManager : MonoBehaviour
             HandleUnitSummoned;
     }
 
+
+    private int triggerDepth;
+    private int triggerBudget;
+
+    private void HandleGameplayTrigger(CardTriggerType type, RuntimeCard actor, RuntimeCard subject, RuntimeModifier snapshot)
+    {
+        if (triggerDepth == 0) triggerBudget = 256;
+        if (triggerDepth >= 32 || --triggerBudget < 0)
+        {
+            Debug.LogError("Trigger chain exceeded its safety limit; remaining event skipped.");
+            return;
+        }
+        triggerDepth++;
+        try
+        {
+            DispatchSide(PlayerSide.Player, type, actor, subject, snapshot);
+            DispatchSide(PlayerSide.Opponent, type, actor, subject, snapshot);
+        }
+        finally { triggerDepth--; }
+    }
+
+    private void DispatchSide(PlayerSide side, CardTriggerType type, RuntimeCard actor, RuntimeCard subject, RuntimeModifier snapshot)
+    {
+        var field = GameManager.Instance?.GetBattlefield(side);
+        if (field == null) return;
+        foreach (var source in new List<RuntimeCard>(field.Minions))
+        {
+            if (source == null || source.Zone != CardZone.Field || source.CurrentHealth <= 0 || source.IsSilenced || !(source.Data is MinionData data)) continue;
+            foreach (var passive in new List<CardEffect>(data.Passives))
+                if (passive is TriggeredEffect effect && effect.TriggerType == type)
+                    effect.ResolveGameplayTrigger(source, actor, subject, snapshot);
+        }
+    }
 
     // =========================================================
     // UNIT SUMMONED
@@ -120,7 +155,7 @@ public class TriggeredEffectManager : MonoBehaviour
 
         foreach (RuntimeCard source in cards)
         {
-            if (source == null)
+            if (source == null || source.Zone != CardZone.Field || source.CurrentHealth <= 0)
                 continue;
 
             if (source.IsSilenced)
@@ -142,44 +177,14 @@ public class TriggeredEffectManager : MonoBehaviour
             // GET PASSIVE
             // =========================================
 
-            CardEffect passive =
-                minionData.Passive;
-
-            if (passive == null)
-                continue;
-
-
-            // =========================================
-            // MUST BE A TRIGGERED EFFECT
-            // =========================================
-
-            if (!(passive
-                is TriggeredEffect triggered))
+            foreach (CardEffect passive in minionData.Passives)
             {
-                continue;
+                if (!(passive is TriggeredEffect triggered) ||
+                    triggered.TriggerType != triggerType)
+                    continue;
+
+                triggered.ResolveTrigger(source, triggerCard, modifier);
             }
-
-
-            // =========================================
-            // CORRECT TRIGGER?
-            // =========================================
-
-            if (triggered.TriggerType !=
-                triggerType)
-            {
-                continue;
-            }
-
-
-            // =========================================
-            // RESOLVE
-            // =========================================
-
-            triggered.ResolveTrigger(
-                source,
-                triggerCard,
-                modifier
-            );
         }
     }
 }

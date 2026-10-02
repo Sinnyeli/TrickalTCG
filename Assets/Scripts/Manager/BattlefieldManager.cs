@@ -202,10 +202,15 @@ public static event System.Action<RuntimeCard> OnUnitSummoned;
             }
         }
 
+        RuntimeCard killer = card.LethalStatSnapshot != null ? card.LastDamageSource : null;
+        RuntimeModifier defeatedStats = card.LethalStatSnapshot ?? new RuntimeModifier(card.GetAttack(), card.GetMaxHealth(), false);
         minions.Remove(card);
         card.ChangeZone(CardZone.Graveyard);
 
         RemoveMinionView(card);
+        RuntimeCard.PublishTrigger(CardTriggerType.UnitDied, killer, card, defeatedStats);
+        if (killer != null && killer.Owner != card.Owner)
+            RuntimeCard.PublishTrigger(CardTriggerType.UnitKilled, killer, card, defeatedStats);
 
         RefreshPassives();
         RefreshArtifactEffects();
@@ -236,60 +241,33 @@ public static event System.Action<RuntimeCard> OnUnitSummoned;
 }
   public void RefreshPassives()
 {
-    // Remove all existing passive effects first.
-    foreach (RuntimeCard minion in minions)
+    var all = new List<RuntimeCard>();
+    foreach (PlayerSide side in new[] { PlayerSide.Player, PlayerSide.Opponent })
     {
-        minion.RemovePassiveModifiers();
-        minion.ClearPassiveBaseStatOverride();
+        var field = GameManager.Instance.GetBattlefield(side);
+        if (field != null) all.AddRange(field.Minions);
     }
-
-    // Recalculate all active passives.
-    foreach (RuntimeCard source in minions)
+    foreach (var unit in all)
     {
-        if (!(source.Data is MinionData minionData))
-            continue;
-
-        if (source.IsSilenced)
-            continue;
-
-        CardEffect effect =
-            minionData.Passive;
-
-        if (effect == null)
-            continue;
-
-        List<RuntimeCard> targets =
-            new List<RuntimeCard>();
-
-        foreach (RuntimeCard target in minions)
+        unit.RemovePassiveModifiers();
+        unit.ClearPassiveBaseStatOverride();
+    }
+    foreach (var source in all)
+    {
+        if (source.IsSilenced || !(source.Data is MinionData data)) continue;
+        foreach (var effect in data.Passives)
         {
-            if (effect.MatchesTargetFilter(target))
-            {
-                targets.Add(target);
-            }
-        }
-
-        source.SetResolvingPassive(true);
-
-        try
-        {
-            effect.Resolve(
-                source,
-                targets
-            );
-        }
-        finally
-        {
-            source.SetResolvingPassive(false);
+            if (effect is TriggeredEffect) continue;
+            var targets = all.FindAll(unit => unit.Owner == source.Owner && effect.MatchesTargetFilter(unit));
+            source.SetResolvingPassive(true);
+            try { effect.Resolve(source, targets); }
+            finally { source.SetResolvingPassive(false); }
         }
     }
-
-    // Refresh visuals after all passive
-    // calculations are finished.
-    foreach (RuntimeCard minion in minions)
+    foreach (var unit in all)
     {
-        minion.RecalculateCurrentHealth();
-        RefreshMinionView(minion);
+        unit.RecalculateCurrentHealth();
+        GameManager.Instance.GetBattlefield(unit.Owner)?.RefreshMinionView(unit);
     }
 }
 public bool BounceCard(RuntimeCard card)
@@ -548,4 +526,3 @@ private void RefreshTransformedMinionView(
 
 
 }
-
