@@ -1,0 +1,23 @@
+Random Coin — batch 1
+
+Replace the matching files under Assets; add RestoreManaEffect.cs and its .meta.
+This package uses the script snapshot saved in this workspace. If your Unity copy
+has newer edits, merge the RestoreMana, spell-payment, and initializer changes
+rather than replacing whole files blindly.
+
+Run Tools > Cards > Initialize Random Coin outside Play Mode.
+This replaces S_COIN spell effects and English/Korean description with restore
+0–2 available mana. Existing cost, art and CardID remain intact.
+The existing Initialize Reference Cards and Basic Effects menu also calls it.
+No other audited card is completed by this batch.
+
+Play Mode checks:
+- Pay a spell's cost before resolving any effect, with no second payment.
+- At 1/3 mana, Coin can produce 1, 2 or 3 mana; maximum remains 3.
+- At full mana, Coin never exceeds the maximum.
+- Verify the opponent side and invalid-target spells (no payment).
+- Rerun initialization: one reused effect asset, one S_COIN binding.
+
+Static checks passed (payment placement and capped restoration arithmetic).
+Unity compilation and Play Mode could not be run here.
+Next batch: 농사짓기 random Vegetable summon.

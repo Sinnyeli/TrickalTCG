@@ -18,10 +18,10 @@ MonoBehaviour:
   cardType: 0
   specificCard: {fileID: 0}
   cardPool:
+  - {fileID: 11400000, guid: 3370a1cd58d0c2a71b51dc48f0df7a9d, type: 2}
   - {fileID: 11400000, guid: aa23d8e1c204688d08768496a4a7479f, type: 2}
   - {fileID: 11400000, guid: 1f7513f928221c081b0f84a11f714629, type: 2}
   - {fileID: 11400000, guid: 64520a420a00b9d429057408529a7e7a, type: 2}
   - {fileID: 11400000, guid: 9a352e3b83af38be0bd395b120d64db5, type: 2}
   - {fileID: 11400000, guid: 16438fd22618dd52ca96430fceb57bba, type: 2}
-  - {fileID: 11400000, guid: 3370a1cd58d0c2a71b51dc48f0df7a9d, type: 2}
   amount: 1

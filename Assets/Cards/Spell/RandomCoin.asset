@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: S_COIN
   cardName: RandomCoin
-  description: Increase Max Mana by 1
+  description: "Restore 0\u20132 available mana at random."
   manaCost: 2
   artwork: {fileID: 21300000, guid: 0ef45d2bab742af14b873d32b55d0c98, type: 3}
   onDrawEffects: []
   collectible: 1
   unlimitedCopies: 0
   spellEffects:
-  - {fileID: 11400000, guid: 3ea7d9ef6053db146a0d082e8644951a, type: 2}
+  - {fileID: 11400000, guid: 150f911a8ebb1e2439426a16bb68e70c, type: 2}

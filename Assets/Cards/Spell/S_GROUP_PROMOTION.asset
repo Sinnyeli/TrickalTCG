@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: S_GROUP_PROMOTION
   cardName: "\uB2E8\uCCB4 \uC6D4\uBC18"
-  description: 
+  description: Summon 3 random units from your deck.
   manaCost: 5
   artwork: {fileID: 0}
   onDrawEffects: []
   collectible: 1
   unlimitedCopies: 0
-  spellEffects: []
+  spellEffects:
+  - {fileID: 11400000, guid: bd6506c7ff70aef8eae7607835b11f54, type: 2}

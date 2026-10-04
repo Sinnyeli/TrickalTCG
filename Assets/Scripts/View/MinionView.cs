@@ -152,7 +152,7 @@ public bool TryEquipArtifact(RuntimeCard artifact)
         return false;
     }
 
-    int cost = artifact.Data.manaCost;
+    int cost = artifact.GetManaCost();
 
     if (!turnManager.CanSpendMana(artifact.Owner, cost))
     {
@@ -163,15 +163,19 @@ public bool TryEquipArtifact(RuntimeCard artifact)
         return false;
     }
 
+    int usedDiscount = GameManager.Instance.ConsumeNextCardDiscount(artifact.Owner);
     bool equipped =
         runtimeCard.EquipArtifact(artifact);
 
     if (!equipped)
+    {
+        GameManager.Instance.AddNextCardDiscount(artifact.Owner, usedDiscount);
         return false;
+    }
 
     turnManager.SpendMana(artifact.Owner, cost);
 
-    GameManager.Instance.HandManager.RemoveCardFromHand(artifact);
+    GameManager.Instance.GetHandManager(artifact.Owner)?.RemoveCardFromHand(artifact);
 
     GameManager.Instance
         .GetBattlefield(runtimeCard.Owner)

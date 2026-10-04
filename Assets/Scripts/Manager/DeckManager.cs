@@ -116,6 +116,31 @@ public class DeckManager : MonoBehaviour
     return card;
 }
 
+    public RuntimeCard DestroyTopCard()
+    {
+        if (drawPile.Count == 0) return null;
+        var card = drawPile[0]; drawPile.RemoveAt(0);
+        if (card != null) Discard(card); // No draw event or on-draw effect.
+        return card;
+    }
+
+    public List<RuntimeCard> GetDrawPileSnapshot() => new List<RuntimeCard>(drawPile);
+
+    public bool TryDrawRuntimeCard(RuntimeCard card)
+    {
+        if (card == null || card.Owner != owner || card.Zone != CardZone.Deck || !drawPile.Remove(card)) return false;
+        card.ChangeZone(CardZone.Hand);
+        return true;
+    }
+
+    // Restore the same runtime card if a deck summon could not commit.
+    public void ReturnDrawnCardToDeck(RuntimeCard card)
+    {
+        if (card == null || card.Owner != owner || card.Zone != CardZone.Hand || drawPile.Contains(card)) return;
+        card.ChangeZone(CardZone.Deck);
+        drawPile.Add(card);
+    }
+
     // =========================================
     // ADD CARD TO DECK
     // =========================================

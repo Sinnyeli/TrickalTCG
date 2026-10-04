@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: S_FARM
   cardName: Farm
-  description: 
+  description: Summon a random Vegetable Monster.
   manaCost: 1
   artwork: {fileID: 0}
   onDrawEffects: []
   collectible: 1
   unlimitedCopies: 0
-  spellEffects: []
+  spellEffects:
+  - {fileID: 11400000, guid: 45ba0423277b12b2e9e324d7971b8c26, type: 2}

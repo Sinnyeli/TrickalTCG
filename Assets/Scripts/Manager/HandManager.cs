@@ -346,16 +346,24 @@ public bool PlayCardFromHand(RuntimeCard card)
     if (battlefield == null)
         return false;
 
+    if (!battlefield.HasAvailableMinionSlot) return false;
+    if (card.Data is ApostleData playData && playData.PlayRule != null &&
+        !playData.PlayRule.ApplyBeforeHandPlay(card)) return false;
+    int usedDiscount = GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
     bool success =
         battlefield.PlayCard(card);
 
     if (!success)
+    {
+        GameManager.Instance.AddNextCardDiscount(card.Owner, usedDiscount);
         return false;
+    }
    // Only spend mana after the card successfully enters the field.
         turnManager.SpendMana(
             card.Owner,
             cost
         );
+    SparrotDeckAbility.NotifyApostlePlayed(card);
 
     return true;
 }
@@ -414,13 +422,21 @@ public bool PlayCardFromHand(RuntimeCard card)
             return false;
         }
 
+        if (!battlefield.HasAvailableMinionSlot) return false;
+        if (card.Data is ApostleData playData && playData.PlayRule != null &&
+            !playData.PlayRule.ApplyBeforeHandPlay(card)) return false;
+        int usedDiscount = GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
         bool success =
             battlefield.PlayCard(card);
 
         if (!success)
+        {
+            GameManager.Instance.AddNextCardDiscount(card.Owner, usedDiscount);
             return false;
+        }
     // Only spend mana after the card successfully enters the field.
         turnManager.SpendMana(card.Owner, cost);
+        SparrotDeckAbility.NotifyApostlePlayed(card);
 
         return true;
     }
@@ -536,6 +552,9 @@ private bool PlaySpellFromHand(RuntimeCard card)
 
     // The spell leaves the hand BEFORE
     // its effects resolve.
+    if (!turnManager.SpendMana(card.Owner, cost))
+        return false;
+    GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
     RemoveCardFromHand(card);
 
     GameManager.Instance
@@ -578,6 +597,7 @@ private void CompleteSpellCast(
     if (turnManager == null)
         return;
 
+    RuntimeCard.PublishTrigger(CardTriggerType.SpellCast, card, card);
     Debug.Log(
         $"{card.Data.cardName} finished casting."
     );
@@ -585,12 +605,6 @@ private void CompleteSpellCast(
     GameManager.Instance
         .EffectManager
         .TriggerResonance(card.Owner);
-
-    turnManager.SpendMana(
-        card.Owner,
-        cost
-    );
-    RuntimeCard.PublishTrigger(CardTriggerType.SpellCast, card, card);
 
     DeckManager deck =
         GameManager.Instance.GetDeck(card.Owner);
@@ -715,6 +729,9 @@ public bool PlayTargetedSpellFromHand(
 
     // All validation succeeded.
     // The spell leaves the hand before resolving.
+    if (!turnManager.SpendMana(card.Owner, cost))
+        return false;
+    GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
     RemoveCardFromHand(card);
 
     List<RuntimeCard> targets =
@@ -851,6 +868,9 @@ public bool PlayTargetedSpellFromHand(
     );
 
     // Spell is now committed.
+    if (!turnManager.SpendMana(card.Owner, cost))
+        return false;
+    GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
     RemoveCardFromHand(card);
 
     // =========================================

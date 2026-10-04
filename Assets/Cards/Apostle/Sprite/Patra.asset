@@ -23,6 +23,7 @@ MonoBehaviour:
   attack: 3
   health: 2
   cardRace: 0
+  additionalRaces: 
   keywords: 
   battlecry: {fileID: 11400000, guid: 7bf7e3c50d8c78c7dac7bd32be144027, type: 2}
   deathrattle: {fileID: 0}
@@ -33,5 +34,6 @@ MonoBehaviour:
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
   maxEquipment: 3

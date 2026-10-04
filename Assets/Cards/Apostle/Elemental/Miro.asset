@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_MIRO
   cardName: Miro
-  description: 'Battlecry: Choose a unit. Shuffle a copy of it into your deck.'
+  description: 'Battlecry: Shuffle 4 copies of a chosen unit into your deck.'
   manaCost: 4
   artwork: {fileID: 21300000, guid: 5caddbe8796ab7fff82d7f78088ff5bc, type: 3}
   onDrawEffects: []
@@ -23,14 +23,17 @@ MonoBehaviour:
   attack: 3
   health: 4
   cardRace: 5
+  additionalRaces: 
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: f61ef06043d0a56ef91c407486de1f75, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: 13360f28d36dbb549b49cec9253544ac, type: 3}
   maxEquipment: 3

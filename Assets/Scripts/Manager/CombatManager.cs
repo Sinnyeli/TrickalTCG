@@ -5,6 +5,7 @@ using UnityEngine;
 public class CombatManager : MonoBehaviour
 {
         private RuntimeCard selectedAttacker;
+    private bool allowForcedFriendlyFire;
 
     public RuntimeCard SelectedAttacker =>
         selectedAttacker;
@@ -47,11 +48,29 @@ public class CombatManager : MonoBehaviour
 
         return true;
     }
+public bool ForceUnitAttack(RuntimeCard attacker, RuntimeCard defender, bool allowFriendlyFire = false)
+{
+    if (attacker == null || defender == null || attacker == defender || attacker.IsFrozen || attacker.Zone != CardZone.Field ||
+        defender.Zone != CardZone.Field || attacker.CurrentHealth <= 0 || defender.CurrentHealth <= 0 ||
+        (!allowFriendlyFire && attacker.Owner == defender.Owner)) return false;
+    var oldSelection = selectedAttacker;
+    bool wasReady = attacker.CanAttack, oldFriendlyFire = allowForcedFriendlyFire;
+    bool success = false;
+    attacker.EnableAttack(); selectedAttacker = attacker; allowForcedFriendlyFire = allowFriendlyFire;
+    try { success = Attack(defender); return success; }
+    finally
+    {
+        if (!success && !wasReady) attacker.DisableAttack();
+        allowForcedFriendlyFire = oldFriendlyFire;
+        selectedAttacker = oldSelection != null && oldSelection.Zone == CardZone.Field && oldSelection.CanAttack ? oldSelection : null;
+    }
+}
+
 public bool Attack(RuntimeCard defender)
 {
     RuntimeCard attacker = selectedAttacker;
 
-    if (selectedAttacker == null)
+    if (selectedAttacker == null || !selectedAttacker.CanAttack || selectedAttacker.Zone != CardZone.Field || selectedAttacker.CurrentHealth <= 0)
     {
         return false;
     }
@@ -64,7 +83,7 @@ public bool Attack(RuntimeCard defender)
     }
 
     // Cannot attack own minion.
-    if (selectedAttacker.Owner == defender.Owner)
+    if (!allowForcedFriendlyFire && selectedAttacker.Owner == defender.Owner)
     {
         Debug.Log("Cannot attack your own minion.");
         return false;
@@ -77,7 +96,7 @@ public bool Attack(RuntimeCard defender)
     PlayerSide defendingSide =
         defender.Owner;
 
-    if (HasTaunt(defendingSide) &&
+    if (attacker.Owner != defender.Owner && HasTaunt(defendingSide) &&
         !defender.HasKeyword(CardKeyword.Taunt))
     {
         Debug.Log(
@@ -94,13 +113,20 @@ public bool Attack(RuntimeCard defender)
         $"{defender.Data.cardName}"
     );
 
+    attacker.MarkAttacked();
     attacker.RemoveStealth();
 
+    defender.ResolveBeforeDefending();
+    if (defender.Zone != CardZone.Field || defender.CurrentHealth <= 0)
+    {
+        attacker.DisableAttack(); selectedAttacker = null; return true;
+    }
     RuntimeCard.PublishTrigger(CardTriggerType.AttackStarted, attacker, defender);
     GameManager.Instance.EffectManager.ResolveOnAttack(attacker);
+    attacker.ResolveMayoAttack(defender);
 
-    int attackerDamage = attacker.GetAttack();
-    int defenderDamage = defender.GetAttack();
+    int attackerDamage = attacker.GetCombatDamage();
+    int defenderDamage = defender.GetCombatDamage();
 
     bool attackerHasFirstStrike =
         attacker.HasKeyword(CardKeyword.FirstStrike);
@@ -194,7 +220,7 @@ public bool Attack(RuntimeCard defender)
 
 public bool Attack(PlayerView defender)
 {
-    if (selectedAttacker == null)
+    if (selectedAttacker == null || !selectedAttacker.CanAttack || selectedAttacker.Zone != CardZone.Field || selectedAttacker.CurrentHealth <= 0)
     {
         Debug.Log("No attacker selected.");
         return false;
@@ -234,6 +260,7 @@ public bool Attack(PlayerView defender)
 
         return false;
     }
+    attacker.MarkAttacked();
     attacker.RemoveStealth();
 
 
@@ -241,7 +268,7 @@ public bool Attack(PlayerView defender)
     RuntimeCard.PublishTrigger(CardTriggerType.AttackStarted, attacker, null);
     GameManager.Instance.EffectManager.ResolveOnAttack(attacker);
 
-    int attackerDamage = attacker.GetAttack();
+    int attackerDamage = attacker.GetCombatDamage();
     
     Debug.Log(
         $"{attacker.Data.cardName} attacks " +

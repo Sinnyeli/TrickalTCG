@@ -42,4 +42,12 @@ public class ArtifactData : CardData
         return grantedKeywords != null &&
                grantedKeywords.Contains(keyword);
     }
+    public ArtifactData CreateFusionCopy()
+    {
+        var copy = Instantiate(this);
+        copy.attackBonus = copy.healthBonus = 0; // Already included in captured totals.
+        if (artifactEffect != null) copy.artifactEffect = Instantiate(artifactEffect);
+        if (deathrattle != null) copy.deathrattle = Instantiate(deathrattle);
+        return copy;
+    }
 }

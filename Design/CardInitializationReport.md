@@ -1,7 +1,5 @@
 # Initialization report
 
-- Created non-collectible token M_CARROT.
-- Created non-collectible token AR_TOKEN_BUFF11.
 - Carrot and Small Charm use provisional cost 1. Existing token stats are preserved.
 - S_BREAD / spellEffects → FX_BuffAny11
 - S_SELF_IMPROVEMENT / spellEffects → FX_BuffFriendly11

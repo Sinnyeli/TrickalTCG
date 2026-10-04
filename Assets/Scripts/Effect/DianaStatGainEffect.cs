@@ -65,15 +65,13 @@ public class DianaStatGainEffect : CardEffect
             is ApostleData apostle)
         {
             isBeastfolk =
-                apostle.cardRace ==
-                CardRace.Beastfolk;
+                apostle.HasRace(CardRace.Beastfolk);
         }
         else if (buffedCard.Data
                  is MonsterData monster)
         {
             isBeastfolk =
-                monster.cardRace ==
-                CardRace.Beastfolk;
+                monster.HasRace(CardRace.Beastfolk);
         }
 
 

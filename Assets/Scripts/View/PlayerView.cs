@@ -117,6 +117,13 @@ private void Awake()
         RefreshHealth();
     }
 
+    public void IncreaseMaximumHealth(int amount)
+    {
+        if (amount <= 0) return;
+        maxHealth = (int)System.Math.Min(int.MaxValue, (long)maxHealth + amount);
+        RefreshHealth();
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log(

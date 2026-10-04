@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_ELENA
   cardName: Elena
-  description: 'Battlecry: Create M.E.O.W.'
+  description: 'Battlecry: Destroy your Machines, then summon M.E.O.W. with their
+    combined current Attack, Health, keywords and abilities, including equipment.
+    Elena is not consumed.'
   manaCost: 6
   artwork: {fileID: 21300000, guid: 3ae99bb4e26da00fbaab27c1248e8821, type: 3}
   onDrawEffects: []
@@ -23,14 +25,17 @@ MonoBehaviour:
   attack: 4
   health: 6
   cardRace: 4
+  additionalRaces: 
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: 6f70d5f6f0344ee7b9a6495ea672c512, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: 0c84cabc6b56d30549e7888a4567eb04, type: 3}
   maxEquipment: 3

@@ -154,7 +154,7 @@ public void SelectHeroTarget(PlayerView target)
                 return false;
 
 
-            return currentEffect.MatchesTargetFilter(target);
+            return currentEffect.CanTarget(sourceCard, target);
         }
 
         private bool IsValidHeroTarget(PlayerView target)
@@ -212,10 +212,10 @@ public bool HasValidTarget(
             return HasFriendlyUnit(source, effect);
 
         case EffectTargetType.AnyUnit:
-            return HasAnyUnit(effect);
+            return HasAnyUnit(source, effect);
 
         case EffectTargetType.AnyTarget:
-            return HasAnyTarget(effect);
+            return HasAnyTarget(source, effect);
 
         default:
             return true;
@@ -243,7 +243,7 @@ private bool HasEnemyUnit(
         if (minion.IsStealthed)
             continue;
 
-        if (effect.MatchesTargetFilter(minion))
+        if (effect.CanTarget(source, minion))
         {
             return true;
         }
@@ -272,7 +272,7 @@ private bool HasFriendlyUnit(
         if (minion.IsStealthed)
             continue;
 
-        if (effect.MatchesTargetFilter(minion))
+        if (effect.CanTarget(source, minion))
         {
             return true;
         }
@@ -286,7 +286,7 @@ private bool HasFriendlyUnit(
 /// //////////////
 
 private bool HasAnyUnit(
-    CardEffect effect)
+    RuntimeCard source, CardEffect effect)
 {
     BattlefieldManager playerBattlefield =
         GameManager.Instance.GetBattlefield(
@@ -305,7 +305,7 @@ private bool HasAnyUnit(
             if (minion.IsStealthed)
                 continue;
 
-            if (effect.MatchesTargetFilter(minion))
+            if (effect.CanTarget(source, minion))
             {
                 return true;
             }
@@ -319,7 +319,7 @@ private bool HasAnyUnit(
             if (minion.IsStealthed)
                 continue;
 
-            if (effect.MatchesTargetFilter(minion))
+            if (effect.CanTarget(source, minion))
             {
                 return true;
             }
@@ -346,7 +346,7 @@ private PlayerSide GetOpposingSide(PlayerSide side)
 /// //////////////
 
 private bool HasAnyTarget(
-    CardEffect effect)
+    RuntimeCard source, CardEffect effect)
 {
     BattlefieldManager playerBattlefield =
         GameManager.Instance.GetBattlefield(
@@ -364,7 +364,7 @@ private bool HasAnyTarget(
         {
             foreach (RuntimeCard minion in playerBattlefield.Minions)
             {
-                if (effect.MatchesTargetFilter(minion))
+                if (effect.CanTarget(source, minion))
                 {
                     return true;
                 }
@@ -375,7 +375,7 @@ private bool HasAnyTarget(
         {
             foreach (RuntimeCard minion in opponentBattlefield.Minions)
             {
-                if (effect.MatchesTargetFilter(minion))
+                if (effect.CanTarget(source, minion))
                 {
                     return true;
                 }

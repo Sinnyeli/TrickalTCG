@@ -4,20 +4,48 @@ using Unity.Mathematics;
 
 public class RuntimeCard
 {
+    public bool IsFusionSummon { get; private set; }
+    public bool SuppressSummonBattlecry { get; private set; }
+    private bool immuneUntilTurnEnd;
+    private int skippedAttackTurns;
+    private bool restingThisTurn;
+    private readonly HashSet<CardEffect> completedAbilities = new HashSet<CardEffect>();
+    public bool TryCompleteAbility(CardEffect effect) => completedAbilities.Add(effect);
+    private readonly Dictionary<CardEffect, int> abilityCounts = new Dictionary<CardEffect, int>();
+    public int AdvanceAbilityCounter(CardEffect effect)
+    {
+        abilityCounts.TryGetValue(effect, out int value);
+        abilityCounts[effect] = ++value;
+        return value;
+    }
+    public void ProtectUntilTurnEnd() => immuneUntilTurnEnd = true;
+    public void SkipNextAttackTurn() => skippedAttackTurns = 1;
+    public void PrepareFusion(List<RuntimeCard> inheritedArtifacts, int attack, int health)
+    {
+        IsFusionSummon = SuppressSummonBattlecry = true;
+        // Bypass equipment capacity and on-equip rolls; each absorbed artifact keeps its abilities.
+        foreach (var original in inheritedArtifacts)
+        {
+            if (!(original.Data is ArtifactData data)) continue;
+            var artifact = new RuntimeCard(data.CreateFusionCopy());
+            artifact.SetOwner(Owner); artifact.ChangeZone(CardZone.Field);
+            equippedArtifacts.Add(artifact);
+        }
+        modifiers.Add(new RuntimeModifier(attack - 1, health - 1, true, this));
+    }
+    public void CompleteFusion(int attack, int health)
+    {
+        // Account for inherited auras already reapplied by PlayCard, without firing stat-gain triggers.
+        modifiers.Add(new RuntimeModifier(attack - GetAttack(), health - GetMaxHealth(), true, this));
+        damageTaken = 0; currentHealth = GetMaxHealth();
+        SuppressSummonBattlecry = false;
+    }
     public static event System.Action<CardTriggerType, RuntimeCard, RuntimeCard, RuntimeModifier> OnGameplayTrigger;
     private readonly Dictionary<TriggeredEffect, int> triggerCounts = new Dictionary<TriggeredEffect, int>();
-    private readonly Dictionary<TriggeredEffect, int> triggerTurns = new Dictionary<TriggeredEffect, int>();
     public RuntimeCard LastDamageSource { get; private set; }
     public RuntimeModifier LethalStatSnapshot { get; private set; }
     public int CountTrigger(TriggeredEffect effect)
     {
-        if (effect.ResetEachTurn && GameManager.Instance != null && GameManager.Instance.TurnManager != null)
-        {
-            int turn = GameManager.Instance.TurnManager.TurnNumber;
-            if (!triggerTurns.TryGetValue(effect, out int previousTurn) || previousTurn != turn)
-                triggerCounts.Remove(effect);
-            triggerTurns[effect] = turn;
-        }
         triggerCounts.TryGetValue(effect, out int count);
         triggerCounts[effect] = ++count;
         return count;
@@ -30,7 +58,7 @@ public class RuntimeCard
     public int CurrentHealth => currentHealth;
     private int damageTaken;
     public int DamageTaken => damageTaken;
-    public bool CanAttack => canAttack;
+    public bool CanAttack => canAttack && !IsFrozen && !restingThisTurn;
     private bool cannotAttackHero;
     public bool CannotAttackHero => cannotAttackHero;
     private bool isSilenced;
@@ -45,9 +73,13 @@ public class RuntimeCard
     if (Data == null)
         return 0;
 
+    int baseCost = Data.manaCost;
+    if (Zone == CardZone.Hand && Data is ApostleData apostle && apostle.PlayRule != null)
+        baseCost = apostle.PlayRule.GetBaseCost(this);
     return Mathf.Max(
         0,
-        Data.manaCost + manaCostModifier -
+        baseCost + manaCostModifier -
+        (Zone == CardZone.Hand && GameManager.Instance != null ? GameManager.Instance.GetNextCardDiscount(Owner) : 0) -
         (Data is SpellData && GameManager.Instance != null ? GameManager.Instance.GetPermanentSpellDiscount(Owner) : 0)
     );
 }
@@ -77,6 +109,59 @@ public class RuntimeCard
     public bool IsCommander { get; private set; }
 
     public CardZone Zone { get; private set; }
+
+    private bool frozen;
+    private bool freezeReachedOwnTurn;
+    public bool IsFrozen => frozen;
+    private sealed class KeywordGrant
+    {
+        public CardKeyword Keyword;
+        public int TurnEnds;
+    }
+    private readonly List<KeywordGrant> runtimeKeywords = new List<KeywordGrant>();
+    private readonly Dictionary<RuntimeModifier, int> timedModifiers = new Dictionary<RuntimeModifier, int>();
+
+    public void ApplyFreeze()
+    {
+        frozen = true;
+        freezeReachedOwnTurn = false;
+    }
+    public void GrantRuntimeKeyword(CardKeyword keyword, int turnEnds)
+    {
+        runtimeKeywords.Add(new KeywordGrant { Keyword = keyword, TurnEnds = turnEnds });
+        if (keyword == CardKeyword.Stealth) ActivateStealth();
+        if (keyword == CardKeyword.Rush && !hasAttackedThisTurn) EnableAttack();
+    }
+    public void AddTimedModifier(RuntimeModifier modifier, int turnEnds)
+    {
+        timedModifiers[modifier] = Mathf.Max(1, turnEnds);
+        AddModifier(modifier);
+        RecalculateCurrentHealth();
+    }
+    public void FinishAbilityTurn(PlayerSide endingSide)
+    {
+        immuneUntilTurnEnd = false;
+        if (endingSide == Owner) restingThisTurn = false;
+        foreach (var modifier in new List<RuntimeModifier>(timedModifiers.Keys))
+        {
+            int remaining = timedModifiers[modifier] - 1;
+            if (remaining <= 0) { modifiers.Remove(modifier); timedModifiers.Remove(modifier); }
+            else timedModifiers[modifier] = remaining;
+        }
+        for (int i = runtimeKeywords.Count - 1; i >= 0; i--)
+        {
+            var grant = runtimeKeywords[i];
+            if (grant.TurnEnds == 0) continue;
+            if (--grant.TurnEnds <= 0) runtimeKeywords.RemoveAt(i);
+        }
+        if (!HasKeyword(CardKeyword.Stealth)) RemoveStealth();
+        if (endingSide == Owner && freezeReachedOwnTurn)
+        {
+            frozen = false;
+            freezeReachedOwnTurn = false;
+        }
+        RecalculateCurrentHealth();
+    }
 
     public PlayerSide Owner { get; private set; }
     private List<RuntimeModifier> modifiers = new List<RuntimeModifier>();
@@ -109,6 +194,13 @@ public class RuntimeCard
 
     public void ChangeZone(CardZone newZone)
     {
+        if (Zone == CardZone.Field && newZone != CardZone.Field)
+        {
+            frozen = false; freezeReachedOwnTurn = false;
+            runtimeKeywords.Clear();
+            foreach (var modifier in timedModifiers.Keys) modifiers.Remove(modifier);
+            timedModifiers.Clear();
+        }
         Zone = newZone;
     }
 
@@ -144,8 +236,9 @@ public class RuntimeCard
     public bool HasKeyword(
         CardKeyword keyword)
     {
+        if (runtimeKeywords.Exists(grant => grant.Keyword == keyword)) return true;
         // Intrinsic minion keyword
-        if (Data is MinionData minionData &&
+        if (!isSilenced && Data is MinionData minionData &&
             minionData.HasKeyword(keyword))
         {
             return true;
@@ -176,13 +269,48 @@ public class RuntimeCard
     }
 
     public bool TakeDamage(int amount, RuntimeCard damageSource = null)
+        => TakeDamageInternal(amount, damageSource, true);
+
+    private bool TakeDamageInternal(int amount, RuntimeCard damageSource, bool allowRedirect)
     {
+        if (immuneUntilTurnEnd && amount > 0) return false;
         if (amount <= 0)
             return false;
 
-        int actualDamage = amount;
+        var game = GameManager.Instance;
+        if (allowRedirect && Zone == CardZone.Field && game != null)
+        {
+            var field = game.GetBattlefield(Owner);
+            if (field != null)
+            {
+                // Snapshot: damage events can change the battlefield during resolution.
+                foreach (var protector in new List<RuntimeCard>(field.Minions))
+                {
+                    if (protector == null || !(protector.Data is MinionData data)) continue;
+                    foreach (var passive in data.Passives)
+                    {
+                        if (!(passive is DamageRedirectEffect redirect) ||
+                            !redirect.Protects(protector, this)) continue;
+                        // No redirection chains: the receiving unit applies its own mitigation.
+                        bool received = protector.TakeDamageInternal(amount, damageSource, false);
+                        if (received && protector.CurrentHealth > 0)
+                            game.EffectManager.ResolveOnDamageTaken(protector);
+                        field.RefreshMinionView(protector);
+                        game.CombatManager.CheckDeath(protector);
+                        // The original target took no damage: do not fire its damage reactions.
+                        return false;
+                    }
+                }
+            }
+        }
 
-        if (HasKeyword(CardKeyword.Endure))
+        int actualDamage = amount;
+        if (!IsSilenced && Data is MinionData penaltyData)
+            foreach (var passive in penaltyData.Passives)
+                if (passive is OpalDamagePenaltyEffect penalty) actualDamage += penalty.ExtraDamage;
+
+        if (HasKeyword(CardKeyword.Endure) &&
+            (damageSource == null || !damageSource.HasMayoEquipment(MayoEquipmentEffect.Ability.IgnoreEndure)))
         {
             actualDamage -= 1;
 
@@ -214,12 +342,9 @@ public class RuntimeCard
         if (amount <= 0)
             return;
 
-        currentHealth += amount;
-
-        int maxHealth = GetMaxHealth();
-
-        if (currentHealth > maxHealth)
-            currentHealth = maxHealth;
+        int before = currentHealth;
+        currentHealth = Mathf.Min(currentHealth + amount, GetMaxHealth());
+        damageTaken = Mathf.Max(0, damageTaken - Mathf.Max(0, currentHealth - before));
     }
 
    private int GetBaseAttack()
@@ -293,8 +418,51 @@ private int GetBaseHealth()
 );
     }
 
+    public bool HasActiveAbility<T>() where T : CardEffect
+    {
+        if (IsSilenced || !(Data is MinionData minion)) return false;
+        foreach (var effect in minion.Passives) if (effect is T) return true;
+        return false;
+    }
+    private bool applyingRuddBonus;
+    public bool HasMayoEquipment(MayoEquipmentEffect.Ability kind)
+    {
+        if (IsSilenced) return false;
+        foreach (var artifact in equippedArtifacts)
+            if (artifact.Data is ArtifactData data && data.ArtifactEffect is MayoEquipmentEffect effect && effect.Kind == kind) return true;
+        return false;
+    }
+    public void ResolveMayoAttack(RuntimeCard defender)
+    {
+        if (defender != null && defender.Zone == CardZone.Field && defender.CurrentHealth > 0 &&
+            HasMayoEquipment(MayoEquipmentEffect.Ability.FreezeOnAttack)) defender.ApplyFreeze();
+    }
+    public void CopyEquipmentStats(int attack, int health, RuntimeCard artifact)
+    {
+        if (HasActiveAbility<SylphyrFixedStatsEffect>()) return;
+        AddModifier(new RuntimeModifier(attack - GetAttack(), health - GetMaxHealth(), true, artifact));
+        damageTaken = 0;
+        currentHealth = Mathf.Max(0, GetMaxHealth());
+    }
+    public int GetCombatDamage()
+    {
+        var field = GameManager.Instance?.GetBattlefield(Owner);
+        if (field != null)
+            foreach (var ally in field.Minions)
+                if (ally != null && ally.CurrentHealth > 0 && ally.HasActiveAbility<ViviHealthCombatEffect>())
+                    return Mathf.Max(0, CurrentHealth);
+        return GetAttack();
+    }
+    public void ResolveBeforeDefending()
+    {
+        if (IsSilenced || !(Data is MinionData minion)) return;
+        foreach (var effect in minion.Passives)
+            if (effect is RitzDefendSwapEffect swap) { swap.SwapBeforeDefense(this); break; }
+    }
+
         public int GetAttack()
         {
+            if (HasActiveAbility<SylphyrFixedStatsEffect>()) return 3;
             int attack = GetBaseAttack();
 
             foreach (RuntimeModifier modifier in modifiers)
@@ -309,11 +477,16 @@ private int GetBaseHealth()
                     attack += artifactData.AttackBonus;
             }
 
-            return attack;
+            if (!IsSilenced && Data is MinionData minion)
+                foreach (var passive in minion.Passives)
+                    if (passive is ConditionalStatEffect conditional)
+                        attack += conditional.GetAttackContribution(this);
+            return Mathf.Max(0, attack);
         }
 
        public int GetMaxHealth()
         {
+            if (HasActiveAbility<SylphyrFixedStatsEffect>()) return 3;
             int health = GetBaseHealth();
 
             foreach (RuntimeModifier modifier in modifiers)
@@ -338,6 +511,7 @@ public void AddModifier(
     if (modifier == null)
         return;
 
+    if (HasActiveAbility<SylphyrFixedStatsEffect>()) return;
     modifiers.Add(
         modifier
     );
@@ -365,6 +539,13 @@ public void AddModifier(
             this,
             modifier
         );
+        if (!applyingRuddBonus && HasActiveAbility<RuddStatGainEffect>())
+        {
+            applyingRuddBonus = true;
+            try { AddModifier(new RuntimeModifier(1, 1, true, this)); }
+            finally { applyingRuddBonus = false; }
+        }
+
     }
 }
 
@@ -399,7 +580,10 @@ public void AddModifier(
 
     public void ResetForTurn()
     {
-        canAttack = true;
+        if (frozen) freezeReachedOwnTurn = true;
+        restingThisTurn = skippedAttackTurns > 0;
+        canAttack = !restingThisTurn;
+        if (skippedAttackTurns > 0) skippedAttackTurns--;
         cannotAttackHero = false;
          hasAttackedThisTurn = false;
 
@@ -439,6 +623,18 @@ public void RecalculateCurrentHealth()
     public void Silence()
     {
         isSilenced = true;
+        frozen = false; freezeReachedOwnTurn = false;
+        runtimeKeywords.Clear();
+        RemoveStealth();
+        RemoveSilenceableModifiers();
+        timedModifiers.Clear();
+        immuneUntilTurnEnd = false; skippedAttackTurns = 0; restingThisTurn = false;
+        if (IsFusionSummon)
+        {
+            equippedArtifacts.Clear();
+            modifiers.Clear(); ClearPassiveBaseStatOverride();
+            damageTaken = 0; currentHealth = 1;
+        }
     }
     public void ActivateStealth()
         {
@@ -493,7 +689,7 @@ public void RecalculateCurrentHealth()
 
         if (artifact.Data is ArtifactData artifactData)
         {
-            currentHealth += artifactData.HealthBonus;
+            if (!HasActiveAbility<SylphyrFixedStatsEffect>()) currentHealth += artifactData.HealthBonus;
 
             if (artifactData.ArtifactEffect != null)
             {
@@ -566,10 +762,12 @@ public void Kill(RuntimeCard source = null)
 public void ResetAfterBounce()
 {
     triggerCounts.Clear();
-    triggerTurns.Clear();
+    abilityCounts.Clear(); immuneUntilTurnEnd = false; skippedAttackTurns = 0; restingThisTurn = false;
     LastDamageSource = null;
     LethalStatSnapshot = null;
     modifiers.Clear();
+    timedModifiers.Clear(); runtimeKeywords.Clear();
+    frozen = false; freezeReachedOwnTurn = false;
 
     ClearPassiveBaseStatOverride();
 
@@ -602,13 +800,16 @@ public bool TransformInto(CardData newData)
     bool previousCanAttack = canAttack;
     bool previousHeroRestriction = cannotAttackHero;
     Data = newData;
+    IsFusionSummon = SuppressSummonBattlecry = false;
 
     // Clear temporary battlefield modifications.
     triggerCounts.Clear();
-    triggerTurns.Clear();
+    abilityCounts.Clear(); immuneUntilTurnEnd = false; skippedAttackTurns = 0; restingThisTurn = false;
     LastDamageSource = null;
     LethalStatSnapshot = null;
     modifiers.Clear();
+    timedModifiers.Clear(); runtimeKeywords.Clear();
+    frozen = false; freezeReachedOwnTurn = false;
 
     ClearPassiveBaseStatOverride();
 

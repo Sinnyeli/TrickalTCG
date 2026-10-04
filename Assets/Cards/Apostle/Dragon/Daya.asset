@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_DAYA
   cardName: Daya
-  description: If you have at least 9 Mana when playing Daya, spend 9 instead and
-    transform her into Daya (Pure Shine).
-  manaCost: 9
+  description: Costs 6. With 9 or more available mana, costs 9 and enters as Pure
+    Shine.
+  manaCost: 6
   artwork: {fileID: 21300000, guid: e4636f36e0705a4b898ae9dceaae931d, type: 3}
   onDrawEffects: []
   collectible: 1
@@ -24,14 +24,17 @@ MonoBehaviour:
   attack: 7
   health: 8
   cardRace: 2
+  additionalRaces: 
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 11400000, guid: 222f60aaa03c3edfb8103d834d55f307, type: 2}
   typeIcon: {fileID: 21300000, guid: 999a687ab71f708f7bc7d62bcdac8a01, type: 3}
   maxEquipment: 3

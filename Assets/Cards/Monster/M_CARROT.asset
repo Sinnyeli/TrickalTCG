@@ -23,6 +23,7 @@ MonoBehaviour:
   attack: 1
   health: 1
   cardRace: 8
+  additionalRaces: 
   keywords: 02000000
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}

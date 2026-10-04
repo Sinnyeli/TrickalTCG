@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_RITZ
   cardName: Ritz
-  description: 'When attacked, swap Ritz''s Attack and Health before combat. '
+  description: When attacked, swap Attack and maximum Health before combat.
   manaCost: 5
   artwork: {fileID: 21300000, guid: 40798cca0360d1cf8812af14c6c11659, type: 3}
   onDrawEffects: []
@@ -23,14 +23,17 @@ MonoBehaviour:
   attack: 4
   health: 7
   cardRace: 2
+  additionalRaces: 
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
-  passive: {fileID: 0}
+  passive: {fileID: 11400000, guid: 8cf6a4f33f88c3a30ab05753b054b528, type: 2}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: 999a687ab71f708f7bc7d62bcdac8a01, type: 3}
   maxEquipment: 3

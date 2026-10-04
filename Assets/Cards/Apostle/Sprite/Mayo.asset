@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_MAYO
   cardName: Mayo
-  description: 'Battlecry: Create a random Artifact in your hand. '
+  description: 'Battlecry: Create a random non-collectible merchandise Artifact.'
   manaCost: 3
   artwork: {fileID: 0}
   onDrawEffects: []
@@ -23,14 +23,17 @@ MonoBehaviour:
   attack: 2
   health: 4
   cardRace: 0
+  additionalRaces: 
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: 6ca074778da877d23ba15c48bfcaa5e5, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
   maxEquipment: 3

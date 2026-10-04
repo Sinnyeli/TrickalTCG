@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a4b94dda4804a418dfd6499921160d0, type: 3}
+  m_Name: FX_MayoCreateMerchandise
+  m_EditorClassIdentifier: 
+  targetType: 0
+  targetFilter: 0
+  cardRace: 0
+  cardType: 0
+  specificCard: {fileID: 0}
+  merchandisePool:
+  - {fileID: 11400000, guid: e7bf760d1616d7fe38f735ad650e9074, type: 2}
+  - {fileID: 11400000, guid: a20e3d3e2d69ba5268f3d846ab89912c, type: 2}
+  - {fileID: 11400000, guid: 4e693929c024ae7e1ab30623c723dae7, type: 2}

@@ -436,8 +436,7 @@ private void Start()
             (CardRace)raceIndex;
 
 
-        return minion.cardRace ==
-               selectedRace;
+        return minion.HasRace(selectedRace);
     }
 
 

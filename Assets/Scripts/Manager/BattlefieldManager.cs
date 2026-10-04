@@ -5,6 +5,7 @@ public class BattlefieldManager : MonoBehaviour
 {
     [Header("Field Settings")]
     [SerializeField] private int maxMinions = 6;
+    public bool HasAvailableMinionSlot => minions.Count < maxMinions;
 
     [Header("UI")]
     [SerializeField] private Transform minionContainer;
@@ -383,6 +384,7 @@ public bool BounceCard(RuntimeCard card)
             if (artifact == null)
                 continue;
 
+            if (artifact.Data is ArtifactData merchandise && merchandise.ArtifactEffect is MayoEquipmentEffect) continue;
             minion.RemoveModifiersFromSource(artifact);
         }
     }
@@ -398,6 +400,7 @@ public bool BounceCard(RuntimeCard card)
             if (!(artifact.Data is ArtifactData artifactData))
                 continue;
 
+            if (artifactData.ArtifactEffect is MayoEquipmentEffect) continue; // Equipment activation is not an aura refresh.
             if (artifactData.ArtifactEffect == null)
                 continue;
 

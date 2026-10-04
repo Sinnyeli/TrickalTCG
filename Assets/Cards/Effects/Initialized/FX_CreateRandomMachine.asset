@@ -18,6 +18,7 @@ MonoBehaviour:
   cardType: 0
   specificCard: {fileID: 0}
   cardPool:
+  - {fileID: 11400000, guid: 2bcf42f6d433212c88f4902d08183460, type: 2}
   - {fileID: 11400000, guid: fba497312152a540fae540a3cad1292c, type: 2}
   - {fileID: 11400000, guid: c14301e0734ac96cc9a5d196633e956f, type: 2}
   - {fileID: 11400000, guid: 9556caed22f94ba7795f4b253e97b140, type: 2}

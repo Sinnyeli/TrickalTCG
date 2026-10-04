@@ -6,6 +6,8 @@ using UnityEngine;
 )]
 public class ApostleData : MinionData
 {
+    [SerializeField] private DayaPlayRuleEffect playRule;
+    public DayaPlayRuleEffect PlayRule => playRule;
 
      [Header("Apostle Visual")]
     [SerializeField]private Sprite typeIcon;

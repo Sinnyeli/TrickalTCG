@@ -31,6 +31,8 @@ public abstract class CardEffect : ScriptableObject
         List<RuntimeCard> targets
     );
 
+    public virtual bool CanTarget(RuntimeCard source, RuntimeCard target) => MatchesTargetFilter(target);
+
     public bool MatchesTargetFilter(RuntimeCard target)
 {
     if (target == null)
@@ -46,10 +48,10 @@ public abstract class CardEffect : ScriptableObject
 
         case EffectTargetFilter.CardRace:
             if (target.Data is MonsterData monster)
-                return monster.cardRace == cardRace;
+                return monster.HasRace(cardRace);
 
             if (target.Data is ApostleData apostle)
-                return apostle.cardRace == cardRace;
+                return apostle.HasRace(cardRace);
 
             return false;
 

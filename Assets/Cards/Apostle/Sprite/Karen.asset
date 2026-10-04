@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_KAREN
   cardName: Karen
-  description: 'On Damage Taken: Summon a Carrot'
+  description: After taking damage and surviving, summon a Carrot.
   manaCost: 3
   artwork: {fileID: 21300000, guid: c1c152dd1a7a8056489cac32ae3b1b32, type: 3}
   onDrawEffects: []
@@ -23,14 +23,17 @@ MonoBehaviour:
   attack: 2
   health: 4
   cardRace: 0
+  additionalRaces: 
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
-  onDamageTaken: {fileID: 0}
+  onDamageTaken: {fileID: 11400000, guid: 615b0026fad5bdb0babe63fed6a32c40, type: 2}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: d6df06d0ae230ffe59c81eb4fc9ef62a, type: 3}
   maxEquipment: 3

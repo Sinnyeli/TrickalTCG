@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb81c67148c948b6859256266c1a4772, type: 3}
+  m_Name: FX_DayaPaymentForm
+  m_EditorClassIdentifier: 
+  baseForm: {fileID: 11400000, guid: 4e368f6cea11833afa7c0a034f24b707, type: 2}
+  pureShine: {fileID: 11400000, guid: a62e1a240cc4b6b19986b7488cc789b1, type: 2}

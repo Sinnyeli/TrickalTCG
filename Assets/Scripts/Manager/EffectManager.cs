@@ -10,6 +10,7 @@ public class EffectManager : MonoBehaviour
 
     public void ResolveBattlecry(RuntimeCard source)
     {
+        if (source != null && source.SuppressSummonBattlecry) return;
         if (source == null || source.Data == null)
             return;
 
@@ -801,4 +802,25 @@ public void ResolveOnDraw(RuntimeCard source)
 }
 
 
+    private readonly Queue<System.Action> fusionEffects = new Queue<System.Action>();
+    private bool resolvingFusionEffects;
+    public void ResolveFusionSequence(RuntimeCard source, IReadOnlyList<CardEffect> effects)
+    {
+        foreach (var effect in effects)
+        {
+            var child = effect;
+            fusionEffects.Enqueue(() => { if (source != null && !source.IsSilenced) ResolveCardEffect(source, child); });
+        }
+        if (!resolvingFusionEffects) StartCoroutine(DrainFusionEffects());
+    }
+    private System.Collections.IEnumerator DrainFusionEffects()
+    {
+        resolvingFusionEffects = true;
+        while (fusionEffects.Count > 0)
+        {
+            while (EffectTargetManager.Instance != null && EffectTargetManager.Instance.IsSelectingTarget) yield return null;
+            fusionEffects.Dequeue()();
+        }
+        resolvingFusionEffects = false;
+    }
 }

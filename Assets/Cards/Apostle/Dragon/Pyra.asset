@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_PYRA
   cardName: Pyra
-  description: 'Battlecry: Your next card costs 2 less'
+  description: 'Battlecry: Your next card costs 2 less.'
   manaCost: 3
   artwork: {fileID: 21300000, guid: cc70b28ed76350349b72559e56b5e3e8, type: 3}
   onDrawEffects: []
@@ -23,14 +23,17 @@ MonoBehaviour:
   attack: 2
   health: 3
   cardRace: 2
+  additionalRaces: 
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: df0b61df13a9c69989c88e6d1ddad7c3, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: 999a687ab71f708f7bc7d62bcdac8a01, type: 3}
   maxEquipment: 3

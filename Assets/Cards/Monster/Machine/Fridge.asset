@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: M_FRIDGE
   cardName: Frostnova Fridge Unit
-  description: 
+  description: Freeze units this damages.
   manaCost: 3
   artwork: {fileID: 0}
   onDrawEffects: []
@@ -23,10 +23,13 @@ MonoBehaviour:
   attack: 1
   health: 5
   cardRace: 0
+  additionalRaces: 
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives:
+  - {fileID: 11400000, guid: 473cf31681c7dd026b17eb17b9aca0da, type: 2}
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}

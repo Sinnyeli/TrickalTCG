@@ -99,6 +99,18 @@ public void StartTurn()
 
         GameManager.Instance.EffectManager.TriggerTurnEnd(currentSide);
 
+        foreach (PlayerSide side in new[] { PlayerSide.Player, PlayerSide.Opponent })
+        {
+            var field = GameManager.Instance.GetBattlefield(side);
+            if (field == null) continue;
+            foreach (var unit in new System.Collections.Generic.List<RuntimeCard>(field.Minions))
+            {
+                unit.FinishAbilityTurn(currentSide);
+                field.RefreshMinionView(unit);
+                GameManager.Instance.CombatManager.CheckDeath(unit);
+            }
+        }
+
         if (GameManager.Instance.IsGameOver)
             return;
 
@@ -179,6 +191,17 @@ public void StartTurn()
 
         return opponentMana;
     }
+
+/// <summary>Restores available mana, capped at this side's current maximum.</summary>
+public int RestoreMana(PlayerSide side, int amount)
+{
+    if (amount <= 0) return 0;
+    int before = GetMana(side);
+    int restored = Mathf.Min(amount, Mathf.Max(0, GetMaxMana(side) - before));
+    if (side == PlayerSide.Player) playerMana += restored;
+    else opponentMana += restored;
+    return restored;
+}
 
 public void IncreaseMaxMana(
     PlayerSide side,

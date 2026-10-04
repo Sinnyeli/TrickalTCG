@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_RUDD
   cardName: Rudd
-  description: Whenever Rudd gains stats, gain an additional +1/+1.
+  description: After gaining stats, gain an additional +1/+1. This bonus does not
+    retrigger itself.
   manaCost: 7
   artwork: {fileID: 21300000, guid: f6c6236a10ef4b16ab18585080d9b044, type: 3}
   onDrawEffects: []
@@ -23,14 +24,17 @@ MonoBehaviour:
   attack: 8
   health: 8
   cardRace: 2
+  additionalRaces: 
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
-  passive: {fileID: 0}
+  passive: {fileID: 11400000, guid: b7aa57655caa21c1daeb872229a15290, type: 2}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: 999a687ab71f708f7bc7d62bcdac8a01, type: 3}
   maxEquipment: 3

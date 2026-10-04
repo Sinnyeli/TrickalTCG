@@ -27,16 +27,14 @@ public class RaceTriggerCondition
         if (triggerCard.Data
             is ApostleData apostle)
         {
-            return apostle.cardRace ==
-                   requiredRace;
+            return apostle.HasRace(requiredRace);
         }
 
 
         if (triggerCard.Data
             is MonsterData monster)
         {
-            return monster.cardRace ==
-                   requiredRace;
+            return monster.HasRace(requiredRace);
         }
 
 

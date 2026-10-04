@@ -24,6 +24,7 @@ MonoBehaviour:
   attack: 2
   health: 3
   cardRace: 0
+  additionalRaces: 
   keywords: 
   battlecry: {fileID: 11400000, guid: ae93bf398fa1feea393316eb78a68e11, type: 2}
   deathrattle: {fileID: 0}

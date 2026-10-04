@@ -47,8 +47,7 @@ public class LupoBuffEffect : CardEffect
             if (target.Data is MinionData minion)
             {
                 isBeastfolk =
-                    minion.cardRace ==
-                    CardRace.Beastfolk;
+                    minion.HasRace(CardRace.Beastfolk);
             }
 
             if (!isBeastfolk)
