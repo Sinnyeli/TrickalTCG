@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: S_MOW
   cardName: Master of Weapon
-  description: Master of Weapon
+  description: "\uc544\uad70 \uc720\ub2db \ud558\ub098\uc5d0\uac8c \"\uacf5\uaca9\ud560 \ub54c\ub9c8\ub2e4 +1/+1\uc744 \uc5bb\uc2b5\ub2c8\ub2e4.\"\ub97c \ubd80\uc5ec\ud569\ub2c8\ub2e4."
   manaCost: 1
   artwork: {fileID: 21300000, guid: c6526623a925a8c81851f40b5488130b, type: 3}
   onDrawEffects: []
   collectible: 1
   unlimitedCopies: 0
-  spellEffects: []
+  spellEffects:
+  - {fileID: 11400000, guid: 86f0f5c689d448219a2098338c9a1bb5, type: 2}

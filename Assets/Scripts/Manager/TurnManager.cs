@@ -85,6 +85,7 @@ public void StartTurn()
 {
      if (GameManager.Instance.IsGameOver)
         return;
+    DescribedSpellState.StartTurn(currentSide);
     if (currentSide == PlayerSide.Player)
     {
         playerMaxMana = Mathf.Min(
@@ -138,6 +139,7 @@ public void StartTurn()
             );
 
             GameManager.Instance.EffectManager.TriggerTurnEnd(currentSide);
+            GameManager.Instance.ExpireTemporaryNextCardDiscount(currentSide);
 
             foreach (PlayerSide side in new[] { PlayerSide.Player, PlayerSide.Opponent })
             {

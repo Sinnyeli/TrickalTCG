@@ -22,4 +22,5 @@ MonoBehaviour:
   onDrawEffects: []
   collectible: 1
   unlimitedCopies: 0
-  spellEffects: []
+  spellEffects:
+  - {fileID: 11400000, guid: 3f97d14ac40c4b8582f6f9b544234cd0, type: 2}

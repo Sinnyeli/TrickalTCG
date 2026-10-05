@@ -83,7 +83,7 @@ public class RuntimeCard
     public int CurrentHealth => currentHealth;
     private int damageTaken;
     public int DamageTaken => damageTaken;
-    public bool CanAttack => canAttack && !IsFrozen && !restingThisTurn;
+    public bool CanAttack => !DescribedSpellState.AttacksBlocked && canAttack && !IsFrozen && !restingThisTurn;
     private bool cannotAttackHero;
     public bool CannotAttackHero => cannotAttackHero;
     private bool isSilenced;
@@ -226,6 +226,7 @@ public class RuntimeCard
     {
         if (Zone == CardZone.Field && newZone != CardZone.Field)
         {
+            DescribedSpellState.ClearUnit(this);
             ClearScheduledDeath();
             frozen = false; freezeReachedOwnTurn = false;
             runtimeKeywords.Clear();
@@ -654,6 +655,7 @@ public void RecalculateCurrentHealth()
     public void Silence()
     {
         isSilenced = true;
+        DescribedSpellState.ClearUnit(this);
         deathMarks.Clear(); turnAbilityCounts.Clear(); ClearScheduledDeath();
         frozen = false; freezeReachedOwnTurn = false;
         runtimeKeywords.Clear();

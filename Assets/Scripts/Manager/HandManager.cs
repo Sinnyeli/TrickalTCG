@@ -549,6 +549,9 @@ private bool PlaySpellFromHand(RuntimeCard card)
         $"{card.Owner} casts {card.Data.cardName}!"
     );
 
+    foreach (var effect in spellData.SpellEffects)
+        if (effect is DescribedSpellEffect described && !described.CanPlay(card)) return false;
+
     // The spell leaves the hand BEFORE
     // its effects resolve.
     if (!turnManager.SpendMana(card.Owner, cost))
@@ -715,6 +718,12 @@ public bool PlayTargetedSpellFromHand(
                 break;
         }
     }
+
+    foreach (var effect in spellData.SpellEffects)
+        if (effect != null && (effect.TargetType == EffectTargetType.FriendlyUnit ||
+            effect.TargetType == EffectTargetType.EnemyUnit || effect.TargetType == EffectTargetType.AnyUnit ||
+            effect.TargetType == EffectTargetType.AnyTarget || effect.TargetType == EffectTargetType.EnemyTarget) &&
+            !effect.CanTarget(card, unitTarget)) return false;
 
     // This spell doesn't actually have an effect
     // that can target a unit.

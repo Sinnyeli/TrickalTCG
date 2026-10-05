@@ -35,9 +35,10 @@ public static class CardInitializationBuilder
         RunBatch("Ghost abilities and Alice prophecies", GhostAbilityInitializer.Build, failures, ref succeeded);
         RunBatch("Witch abilities", WitchAbilityInitializer.Build, failures, ref succeeded);
         RunBatch("Ignore the Weak", InitializeIgnoreWeak, failures, ref succeeded);
+        RunBatch("Missing spell effects", MissingSpellEffectsInitializer.Build, failures, ref succeeded);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        string summary = succeeded + "/16 initialization batches completed.";
+        string summary = succeeded + "/17 initialization batches completed.";
         if (failures.Count > 0)
             Debug.LogError(summary + " Failed batches: " + string.Join("; ", failures) +
                 ". Earlier successful changes remain saved; fix the missing requirements and rerun.");

@@ -13,15 +13,30 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     private readonly Dictionary<PlayerSide, int> nextCardDiscounts = new Dictionary<PlayerSide, int>();
-    public int GetNextCardDiscount(PlayerSide side) => nextCardDiscounts.TryGetValue(side, out int amount) ? amount : 0;
+    private readonly Dictionary<PlayerSide, int> temporaryNextCardDiscounts = new Dictionary<PlayerSide, int>();
+    public int GetNextCardDiscount(PlayerSide side) =>
+        (nextCardDiscounts.TryGetValue(side, out int amount) ? amount : 0) +
+        (temporaryNextCardDiscounts.TryGetValue(side, out int temporary) ? temporary : 0);
+    public void AddTemporaryNextCardDiscount(PlayerSide side, int amount)
+    {
+        temporaryNextCardDiscounts.TryGetValue(side, out int previous);
+        temporaryNextCardDiscounts[side] = previous + Mathf.Max(0, amount);
+        GetHandManager(side)?.RefreshAllCardViews();
+    }
+    public void ExpireTemporaryNextCardDiscount(PlayerSide side)
+    {
+        temporaryNextCardDiscounts.Remove(side);
+        GetHandManager(side)?.RefreshAllCardViews();
+    }
     public void AddNextCardDiscount(PlayerSide side, int amount)
     {
-        nextCardDiscounts[side] = GetNextCardDiscount(side) + Mathf.Max(0, amount);
+        nextCardDiscounts.TryGetValue(side, out int previous);
+        nextCardDiscounts[side] = previous + Mathf.Max(0, amount);
         GetHandManager(side)?.RefreshAllCardViews();
     }
     public int ConsumeNextCardDiscount(PlayerSide side)
     {
-        int amount = GetNextCardDiscount(side); nextCardDiscounts.Remove(side); return amount;
+        int amount = GetNextCardDiscount(side); nextCardDiscounts.Remove(side); temporaryNextCardDiscounts.Remove(side); return amount;
     }
 
     private readonly Dictionary<PlayerSide, int> permanentSpellDiscounts = new Dictionary<PlayerSide, int>();

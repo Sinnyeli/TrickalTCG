@@ -60,6 +60,12 @@ public class MinionView : MinionViewBase, IPointerClickHandler, IDropHandler, IP
             if (combat.SelectedAttacker == RuntimeCard) return;
             if (combat.SelectedAttacker == null)
             {
+                if (RuntimeCard.Owner != PlayerSide.Player)
+                {
+                    Debug.Log(CombatFailureUI.Message("ENEMY_UNIT"));
+                    CombatFailureUI.Show("ENEMY_UNIT");
+                    return;
+                }
                 combat.SelectAttacker(RuntimeCard);
             }
             else

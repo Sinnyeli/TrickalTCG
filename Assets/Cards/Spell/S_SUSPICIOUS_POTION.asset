@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: S_SUSPICIOUS_POTION
   cardName: "\uC218\uC0C1\uD55C \uBB3C\uC57D"
-  description: "\uBB34\uC791\uC704 \u300C\uC218\uC0C1\uD55C \uD3EC\uC158\u300D \uD558\uB098\uB97C
-    \uD328\uC5D0 \uC0DD\uC131\uD569\uB2C8\uB2E4."
+  description: "\ud3ec\uc154\uc758 \uc138 \uac00\uc9c0 \ud3ec\uc158 \uc911 \ubb34\uc791\uc704 \ud558\ub098\ub97c \ud328\uc5d0 \uc0dd\uc131\ud569\ub2c8\ub2e4."
   manaCost: 1
   artwork: {fileID: 0}
   onDrawEffects: []
   collectible: 1
   unlimitedCopies: 0
-  spellEffects: []
+  spellEffects:
+  - {fileID: 11400000, guid: 56ccea09ed47418da00396a6adfcbda8, type: 2}

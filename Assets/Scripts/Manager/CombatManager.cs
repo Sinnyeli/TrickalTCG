@@ -6,38 +6,38 @@ public class CombatManager : MonoBehaviour
 {
         private RuntimeCard selectedAttacker;
     private bool allowForcedFriendlyFire;
+    private int forcedAttackDepth;
+
+    private bool Fail(string reason, RuntimeCard attacker = null)
+    {
+        string message = CombatFailureUI.Message(reason);
+        Debug.Log(message);
+        // Automatic attacks and opponent AI keep diagnostic logs without player notices.
+        if (forcedAttackDepth == 0 && (attacker == null || attacker.Owner == PlayerSide.Player))
+            CombatFailureUI.Show(reason);
+        return false;
+    }
+
+    private bool FailNotReady(RuntimeCard attacker)
+    {
+        string reason = DescribedSpellState.AttacksBlocked ? "BLOCKED" :
+            attacker.IsFrozen ? "FROZEN" : attacker.HasAttackedThisTurn ? "ALREADY_ATTACKED" : "NOT_READY";
+        return Fail(reason, attacker);
+    }
+
 
     public RuntimeCard SelectedAttacker =>
         selectedAttacker;
 
     public bool SelectAttacker(RuntimeCard attacker)
     {
-        if (attacker == null || attacker.Zone != CardZone.Field || attacker.CurrentHealth <= 0 || GameManager.Instance.IsGameOver)
-            return false;
-
-        TurnManager turnManager =
-            GameManager.Instance.TurnManager;
-
-        if (turnManager == null)
-            return false;
-
-        if (!turnManager.IsMyTurn(attacker.Owner))
-        {
-            Debug.Log(
-                "This minion cannot attack right now."
-            );
-
-            return false;
-        }
-
-        if (!attacker.CanAttack)
-        {
-            Debug.Log(
-                $"{attacker.Data.cardName} cannot attack yet."
-            );
-
-            return false;
-        }
+        if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return false;
+        if (attacker == null || attacker.Zone != CardZone.Field || attacker.CurrentHealth <= 0)
+            return Fail("INVALID_UNIT", attacker);
+        var turnManager = GameManager.Instance.TurnManager;
+        if (turnManager == null) return false;
+        if (!turnManager.IsMyTurn(attacker.Owner)) return Fail("NOT_TURN", attacker);
+        if (!attacker.CanAttack) return FailNotReady(attacker);
 
         selectedAttacker = attacker;
 
@@ -57,9 +57,11 @@ public bool ForceUnitAttack(RuntimeCard attacker, RuntimeCard defender, bool all
     bool wasReady = attacker.CanAttack, oldFriendlyFire = allowForcedFriendlyFire;
     bool success = false;
     attacker.EnableAttack(); selectedAttacker = attacker; allowForcedFriendlyFire = allowFriendlyFire;
+    forcedAttackDepth++;
     try { success = Attack(defender); return success; }
     finally
     {
+        forcedAttackDepth--;
         if (!success && !wasReady) attacker.DisableAttack();
         allowForcedFriendlyFire = oldFriendlyFire;
         selectedAttacker = oldSelection != null && oldSelection.Zone == CardZone.Field && oldSelection.CanAttack ? oldSelection : null;
@@ -70,28 +72,15 @@ public bool Attack(RuntimeCard defender)
 {
     RuntimeCard attacker = selectedAttacker;
 
-    if (selectedAttacker == null || !selectedAttacker.CanAttack || selectedAttacker.Zone != CardZone.Field || selectedAttacker.CurrentHealth <= 0)
-    {
-        return false;
-    }
-
-    if (GameManager.Instance.IsGameOver ||
-        defender == null || defender.Zone != CardZone.Field || defender.CurrentHealth <= 0 || defender.IsStealthed)
-        return false;
-
-    // Didn't select anything.
-    if (defender == null)
-    {
-        Debug.Log("No defender selected.");
-        return false;
-    }
-
-    // Cannot attack own minion.
-    if (!allowForcedFriendlyFire && selectedAttacker.Owner == defender.Owner)
-    {
-        Debug.Log("Cannot attack your own minion.");
-        return false;
-    }
+    if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return false;
+    if (attacker == null) return Fail("NO_ATTACKER");
+    if (attacker.Zone != CardZone.Field || attacker.CurrentHealth <= 0) return Fail("INVALID_UNIT", attacker);
+    if (forcedAttackDepth == 0 && !GameManager.Instance.TurnManager.IsMyTurn(attacker.Owner)) return Fail("NOT_TURN", attacker);
+    if (!attacker.CanAttack) return FailNotReady(attacker);
+    if (defender == null) return Fail("NO_TARGET", attacker);
+    if (defender.Zone != CardZone.Field || defender.CurrentHealth <= 0) return Fail("INVALID_UNIT", attacker);
+    if (defender.IsStealthed) return Fail("STEALTH", attacker);
+    if (!allowForcedFriendlyFire && attacker.Owner == defender.Owner) return Fail("OWN_UNIT", attacker);
 
     // =========================================
 // TAUNT CHECK
@@ -103,12 +92,7 @@ public bool Attack(RuntimeCard defender)
     if (attacker.Owner != defender.Owner && HasTaunt(defendingSide) &&
         !defender.HasKeyword(CardKeyword.Taunt))
     {
-        Debug.Log(
-            "Cannot attack another unit while " +
-            "a Taunt unit is on the battlefield."
-        );
-
-        return false;
+        return Fail("TAUNT_UNIT", attacker);
     }
 
 
@@ -119,6 +103,7 @@ public bool Attack(RuntimeCard defender)
 
     MinionViewBase defenderView = CombatPresentation.FindView(defender);
     if (defenderView != null) CombatPresentation.Attack(attacker, defenderView.transform);
+    DescribedSpellState.BeforeAttack(attacker, defender);
     attacker.MarkAttacked();
     attacker.RemoveStealth();
 
@@ -214,6 +199,7 @@ public bool Attack(RuntimeCard defender)
         .RefreshMinionView(defender);
 
     attacker.DisableAttack();
+    DescribedSpellState.AfterAttack(attacker, defender);
 
     CheckDeath(attacker);
     CheckDeath(defender);
@@ -226,48 +212,19 @@ public bool Attack(RuntimeCard defender)
 
 public bool Attack(PlayerView defender)
 {
-    if (selectedAttacker == null || !selectedAttacker.CanAttack || selectedAttacker.Zone != CardZone.Field || selectedAttacker.CurrentHealth <= 0)
-    {
-        Debug.Log("No attacker selected.");
-        return false;
-    }
-
-    if (defender == null)
-    {
-        Debug.Log("No PlayerView selected.");
-        return false;
-    }
-
-    if (selectedAttacker.Owner == defender.Side)
-    {
-        Debug.Log("Cannot attack your own player.");
-        return false;
-    }
-
+    if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return false;
     RuntimeCard attacker = selectedAttacker;
-    if (GameManager.Instance.IsGameOver) return false;
-
-         // Rush restriction.
-    if (attacker.CannotAttackHero)
-    {
-        Debug.Log(
-            $"{attacker.Data.cardName} cannot attack the Hero this turn."
-        );
-
-        return false;
-    }
-
-    // Taunt restriction. Unless opponent has bypass.
-    if (HasTaunt(defender.Side) &&
-        !attacker.HasKeyword(CardKeyword.Bypass))
-    {
-        Debug.Log(
-            "Cannot attack the Hero while a Taunt minion remains."
-        );
-
-        return false;
-    }
+    if (attacker == null) return Fail("NO_ATTACKER");
+    if (attacker.Zone != CardZone.Field || attacker.CurrentHealth <= 0) return Fail("INVALID_UNIT", attacker);
+    if (!GameManager.Instance.TurnManager.IsMyTurn(attacker.Owner)) return Fail("NOT_TURN", attacker);
+    if (!attacker.CanAttack) return FailNotReady(attacker);
+    if (defender == null) return Fail("NO_TARGET", attacker);
+    if (attacker.Owner == defender.Side) return Fail("OWN_PLAYER", attacker);
+    if (attacker.CannotAttackHero) return Fail("RUSH", attacker);
+    if (HasTaunt(defender.Side) && !attacker.HasKeyword(CardKeyword.Bypass)) return Fail("TAUNT_HERO", attacker);
     CombatPresentation.Attack(attacker, defender.transform);
+    DescribedSpellState.BeforeAttack(attacker, null);
+    GameManager.Instance.GetBattlefield(attacker.Owner).RefreshMinionView(attacker);
     attacker.MarkAttacked();
     attacker.RemoveStealth();
 
