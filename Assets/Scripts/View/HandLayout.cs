@@ -86,6 +86,10 @@ public class HandLayout : MonoBehaviour
         // -----------------------------------------
 
         spacing *= scale;
+        // Overlap cards further when the hand reaches its minimum scale.
+        if (cardCount > 1)
+            spacing = Mathf.Min(spacing,
+                Mathf.Max(0f, (availableWidth - cardWidth * scale) / (cardCount - 1)));
 
         float scaledWidth =
             cardWidth * scale;
@@ -107,6 +111,8 @@ public class HandLayout : MonoBehaviour
         {
             RectTransform card =
                 transform.GetChild(i) as RectTransform;
+
+            if (card == null) continue;
 
             CardView cardView =
                 card.GetComponent<CardView>();
@@ -207,6 +213,11 @@ public class HandLayout : MonoBehaviour
 
         card.localScale =
             Vector3.one * maximumScale;
+    }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        if (handRect != null) RefreshLayout();
     }
 
     private void Start()

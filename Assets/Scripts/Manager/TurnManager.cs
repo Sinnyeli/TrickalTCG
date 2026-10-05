@@ -6,6 +6,33 @@ public class TurnManager : MonoBehaviour
     [Header("Turn Settings")]
     [SerializeField] private int maxMana = 10;
 
+    [SerializeField, Min(1f)] private float turnDurationSeconds = 75f;
+    private float remainingTurnSeconds;
+    private bool timerRunning;
+    private bool endingTurn;
+    public float RemainingTurnSeconds => remainingTurnSeconds;
+    public bool CanPlayerEndTurn => timerRunning && !endingTurn &&
+        currentSide == PlayerSide.Player && GameManager.Instance != null &&
+        !GameManager.Instance.IsGameOver;
+
+    private void Update()
+    {
+        if (!timerRunning || GameManager.Instance == null) return;
+        if (GameManager.Instance.IsGameOver)
+        {
+            timerRunning = false;
+            return;
+        }
+        remainingTurnSeconds = Mathf.Max(0f, remainingTurnSeconds - Time.deltaTime);
+        if (remainingTurnSeconds <= 0f) EndTurn();
+    }
+
+    // Only the local player's UI may call this entry point.
+    public void EndPlayerTurn()
+    {
+        if (CanPlayerEndTurn) EndTurn();
+    }
+
     private PlayerSide currentSide;
     private int turnNumber;
 
@@ -34,6 +61,8 @@ public class TurnManager : MonoBehaviour
 
     public void Initialize()
     {
+    timerRunning = false;
+    endingTurn = false;
     turnNumber = 1;
 
     playerMaxMana = 0;
@@ -87,43 +116,59 @@ public void StartTurn()
 // AI TURN
 // =========================================
     GameManager.Instance.DrawCard(currentSide);
+    if (GameManager.Instance.IsGameOver) return;
+    remainingTurnSeconds = Mathf.Max(1f, turnDurationSeconds);
+    timerRunning = true;
     OnTurnStarted?.Invoke(currentSide);
 }
     public void EndTurn()
     {
-        if (GameManager.Instance.IsGameOver)
-        return;
-        Debug.Log(
-            $"{currentSide} ended their turn."
-        );
-
-        GameManager.Instance.EffectManager.TriggerTurnEnd(currentSide);
-
-        foreach (PlayerSide side in new[] { PlayerSide.Player, PlayerSide.Opponent })
-        {
-            var field = GameManager.Instance.GetBattlefield(side);
-            if (field == null) continue;
-            foreach (var unit in new System.Collections.Generic.List<RuntimeCard>(field.Minions))
-            {
-                unit.FinishAbilityTurn(currentSide);
-                field.RefreshMinionView(unit);
-                GameManager.Instance.CombatManager.CheckDeath(unit);
-            }
-        }
-
-        if (GameManager.Instance.IsGameOver)
+        if (!timerRunning || endingTurn || GameManager.Instance.IsGameOver)
             return;
-
-        if (currentSide == PlayerSide.Player)
+        timerRunning = false;
+        endingTurn = true;
+        try
         {
-            currentSide = PlayerSide.Opponent;
-        }
-        else
-        {
-            currentSide = PlayerSide.Player;
-            turnNumber++;
-        }
+            if (EffectTargetManager.Instance != null)
+                EffectTargetManager.Instance.CancelTargetSelection();
+            if (GameManager.Instance.CombatManager != null)
+                GameManager.Instance.CombatManager.ClearSelection();
+            Debug.Log(
+                $"{currentSide} ended their turn."
+            );
 
+            GameManager.Instance.EffectManager.TriggerTurnEnd(currentSide);
+
+            foreach (PlayerSide side in new[] { PlayerSide.Player, PlayerSide.Opponent })
+            {
+                var field = GameManager.Instance.GetBattlefield(side);
+                if (field == null) continue;
+                foreach (var unit in new System.Collections.Generic.List<RuntimeCard>(field.Minions))
+                {
+                    unit.FinishAbilityTurn(currentSide);
+                    field.RefreshMinionView(unit);
+                    GameManager.Instance.CombatManager.CheckDeath(unit);
+                }
+            }
+
+            if (GameManager.Instance.IsGameOver)
+                return;
+
+            if (currentSide == PlayerSide.Player)
+            {
+                currentSide = PlayerSide.Opponent;
+            }
+            else
+            {
+                currentSide = PlayerSide.Player;
+                turnNumber++;
+            }
+
+        }
+        finally
+        {
+            endingTurn = false;
+        }
         StartTurn();
     }
 

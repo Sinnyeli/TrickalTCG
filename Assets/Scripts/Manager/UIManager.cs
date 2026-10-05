@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class UIManager : MonoBehaviour
     [Header("Opponent")]
     [SerializeField] private TMP_Text opponentDeckText;
     [SerializeField] private TMP_Text opponentManaText;
+
+    [SerializeField] private Button endTurnButton;
 
     private void Update()
     {
@@ -36,12 +39,15 @@ public class UIManager : MonoBehaviour
         if (turnManager == null)
             return;
 
+        if (endTurnButton != null)
+            endTurnButton.interactable = turnManager.CanPlayerEndTurn;
+
         // Turn
         turnText.text =
             $"Turn {turnManager.TurnNumber}";
 
         currentTurnText.text =
-            $"{turnManager.CurrentSide} Turn";
+            $"{turnManager.CurrentSide} Turn\n{Mathf.CeilToInt(turnManager.RemainingTurnSeconds)}s";
 
         // Player
         playerDeckText.text =

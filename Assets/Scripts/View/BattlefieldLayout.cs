@@ -104,28 +104,30 @@ public class BattlefieldLayout : MonoBehaviour
         }
     }
 
+    private void OnRectTransformDimensionsChange()
+    {
+        if (battlefieldRect != null) RefreshLayout();
+    }
+
     private float CalculateScale(int count)
     {
-        if (count <= 1)
-            return maxScale;
+        float cardWidth = 0f;
+        float cardHeight = 0f;
+        foreach (Transform child in transform)
+        {
+            RectTransform card = child as RectTransform;
+            if (card == null) continue;
+            cardWidth = Mathf.Max(cardWidth, card.rect.width);
+            cardHeight = Mathf.Max(cardHeight, card.rect.height);
+        }
 
-        float availableWidth =
-            battlefieldRect.rect.width;
-
-        float requiredWidth =
-            spacing * (count - 1);
-
-        if (requiredWidth <= availableWidth)
-            return maxScale;
-
-        float scale =
-            availableWidth / requiredWidth;
-
-        return Mathf.Clamp(
-            scale,
-            minScale,
-            maxScale
-        );
+        float requiredWidth = cardWidth + spacing * Mathf.Max(0, count - 1);
+        float widthScale = requiredWidth > 0f
+            ? battlefieldRect.rect.width / requiredWidth : maxScale;
+        float heightScale = cardHeight > 0f
+            ? Mathf.Max(0f, battlefieldRect.rect.height - 2f * Mathf.Abs(centerY)) / cardHeight
+            : maxScale;
+        return Mathf.Clamp(Mathf.Min(widthScale, heightScale), minScale, maxScale);
     }
 
     // Generally tell location of where card is dragged at so index can change
@@ -136,23 +138,10 @@ public class BattlefieldLayout : MonoBehaviour
         if (count == 0)
             return 0;
 
-        float spacing = this.spacing;
-
-        float centerIndex =
-            (count - 1) / 2f;
-
         for (int i = 0; i < count; i++)
         {
-            float offset =
-                i - centerIndex;
-
-            float cardX =
-                offset * spacing;
-
-            if (mouseX < cardX)
-            {
-                return i;
-            }
+            RectTransform card = transform.GetChild(i) as RectTransform;
+            if (card != null && mouseX < card.anchoredPosition.x) return i;
         }
 
         return count;

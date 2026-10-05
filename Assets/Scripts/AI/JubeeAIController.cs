@@ -379,7 +379,12 @@ private void HandleTurnStarted(
     PlayerSide side)
 {
     if (side != PlayerSide.Opponent)
+    {
+        // A timeout must stop pending AI actions before the player's turn.
+        StopAllCoroutines();
+        isTakingTurn = false;
         return;
+    }
 
     TakeTurn();
 }
