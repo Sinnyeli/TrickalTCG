@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!28 &-7507585572091369161
+--- !u!28 &-2985468541044805055
 Texture2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Name: ONE Mobile POP SDF
   m_EditorClassIdentifier: 
   hashCode: 1204763802
-  material: {fileID: 3853051313807993038}
+  material: {fileID: 5060867940650966104}
   materialHashCode: 1757887738
   m_Version: 1.1.0
   m_SourceFontFileGUID: 1e942d887285a3284b667e6f71ab1c60
@@ -48847,7 +48847,7 @@ MonoBehaviour:
     m_GlyphIndex: 12259
     m_Scale: 1
   m_AtlasTextures:
-  - {fileID: -7507585572091369161}
+  - {fileID: -2985468541044805055}
   m_AtlasTextureIndex: 0
   m_IsMultiAtlasTexturesEnabled: 0
   m_ClearDynamicDataOnBuild: 0
@@ -61361,7 +61361,7 @@ MonoBehaviour:
   boldSpacing: 7
   italicStyle: 35
   tabSize: 10
---- !u!21 &3853051313807993038
+--- !u!21 &5060867940650966104
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -61397,7 +61397,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: -7507585572091369161}
+        m_Texture: {fileID: -2985468541044805055}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OutlineTex:

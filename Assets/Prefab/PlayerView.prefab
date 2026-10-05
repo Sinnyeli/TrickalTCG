@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 85b619137e9192e5dbe78b7c4757ba30, type: 2}
-  m_sharedMaterial: {fileID: 1996132661899550098, guid: 85b619137e9192e5dbe78b7c4757ba30, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0d53726b6d8ba3e7b830bf59a2ac70bf, type: 2}
+  m_sharedMaterial: {fileID: 5060867940650966104, guid: 0d53726b6d8ba3e7b830bf59a2ac70bf, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -900,6 +900,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &784612305199880001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5204948407562592057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6897f7a2c8e741f4843a94b7dcf01373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slots:
+  - {fileID: 7612331482360231624}
+  - {fileID: 5860457767526670916}
+  - {fileID: 7017925014767860855}
+  - {fileID: 5952802311383156043}
+  - {fileID: 3307543006716287618}
+  - {fileID: 402917144868756424}
+  - {fileID: 7020652236643109462}
+  - {fileID: 3266908333016828993}
+  - {fileID: 3500305418104252918}
+  - {fileID: 7239884000576775406}
+  availableSprite: {fileID: 21300000, guid: a92aae4bdff3f21a88f3f0aed72ee8d1, type: 3}
+  unavailableSprite: {fileID: 21300000, guid: 6e6cbd891a35d4f7fa7045be2c6a042f, type: 3}
+  lockedColor: {r: 0.45, g: 0.45, b: 0.45, a: 1}
 --- !u!1 &5738704104331182570
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,29 +1315,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &784612305199880001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5204948407562592057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6897f7a2c8e741f4843a94b7dcf01373, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  slots:
-  - {fileID: 7612331482360231624}
-  - {fileID: 5860457767526670916}
-  - {fileID: 7017925014767860855}
-  - {fileID: 5952802311383156043}
-  - {fileID: 3307543006716287618}
-  - {fileID: 402917144868756424}
-  - {fileID: 7020652236643109462}
-  - {fileID: 3266908333016828993}
-  - {fileID: 3500305418104252918}
-  - {fileID: 7239884000576775406}
-  availableSprite: {fileID: 21300000, guid: a92aae4bdff3f21a88f3f0aed72ee8d1, type: 3}
-  unavailableSprite: {fileID: 21300000, guid: 6e6cbd891a35d4f7fa7045be2c6a042f, type: 3}
-  lockedColor: {r: 0.45, g: 0.45, b: 0.45, a: 1}
