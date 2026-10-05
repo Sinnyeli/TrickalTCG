@@ -35,6 +35,7 @@ public class DeckLoaderManager : MonoBehaviour
 
     private void Start()
     {
+        if (!LocalAccountSession.RequireLogin()) return;
         RefreshDeckList();
     }
 
@@ -45,6 +46,7 @@ public class DeckLoaderManager : MonoBehaviour
 
 public void RefreshDeckList()
 {
+        if (!LocalAccountSession.RequireLogin()) return;
     ClearDeckViews();
 
     savedDecks =
@@ -91,10 +93,7 @@ public void RefreshDeckList()
 
 
         string folder =
-            Path.Combine(
-                Application.persistentDataPath,
-                "Decks"
-            );
+            AccountDeckStorage.GetFolder();
 
 
         if (!Directory.Exists(folder))
@@ -164,6 +163,7 @@ public void RefreshDeckList()
 
     public void CreateNewDeck()
     {
+        if (!LocalAccountSession.RequireLogin()) return;
         if (savedDecks.Count >= MaxDecks)
         {
             Debug.Log(
@@ -192,6 +192,7 @@ public void RefreshDeckList()
     public void EditDeck(
         string deckID)
     {
+        if (!LocalAccountSession.RequireLogin()) return;
         if (string.IsNullOrWhiteSpace(deckID))
             return;
 
@@ -214,22 +215,17 @@ public void RefreshDeckList()
     public void DeleteDeck(
         string deckID)
     {
+        if (!LocalAccountSession.RequireLogin()) return;
         if (string.IsNullOrWhiteSpace(deckID))
             return;
 
 
         string folder =
-            Path.Combine(
-                Application.persistentDataPath,
-                "Decks"
-            );
+            AccountDeckStorage.GetFolder();
 
 
         string path =
-            Path.Combine(
-                folder,
-                deckID + ".json"
-            );
+            AccountDeckStorage.GetDeckPath(deckID);
 
 
         if (!File.Exists(path))
@@ -243,6 +239,7 @@ public void RefreshDeckList()
 
 
         File.Delete(path);
+        LocalStorageSync.Flush();
 
 
         Debug.Log(

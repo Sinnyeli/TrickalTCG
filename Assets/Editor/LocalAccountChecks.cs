@@ -35,6 +35,7 @@ public static class LocalAccountChecks
             Debug.Log("Local account checks passed: duplicate IDs, login, password isolation, deck isolation, invalid IDs and password storage.");
         }
         finally { if (Directory.Exists(root)) Directory.Delete(root, true); }
+        AccountDeckStorageChecks.Run();
     }
     private static void Check(bool result, string message) { if (!result) throw new InvalidOperationException(message); }
 }

@@ -88,6 +88,7 @@ public class DeckEditorManager : MonoBehaviour
 
 private void Start()
 {
+    if (!LocalAccountSession.RequireLogin()) return;
     // =========================================
     // CREATE NEW
     // =========================================
@@ -812,6 +813,7 @@ private void RefreshCommanderView()
 
 public bool LoadDeck(string deckID)
 {
+    if (!LocalAccountSession.RequireLogin()) return false;
     if (string.IsNullOrWhiteSpace(deckID))
     {
         Debug.LogWarning(
@@ -822,11 +824,7 @@ public bool LoadDeck(string deckID)
     }
 
     string path =
-        Path.Combine(
-            Application.persistentDataPath,
-            "Decks",
-            deckID + ".json"
-        );
+        AccountDeckStorage.GetDeckPath(deckID);
 
     if (!File.Exists(path))
     {
@@ -1152,6 +1150,7 @@ private void ClearCurrentDeck()
 
 public bool SaveDeck()
 {
+    if (!LocalAccountSession.RequireLogin()) return false;
     string validation =
         GetValidationMessage();
 
@@ -1180,10 +1179,7 @@ public bool SaveDeck()
 
 
     string deckFolder =
-        Path.Combine(
-            Application.persistentDataPath,
-            "Decks"
-        );
+        AccountDeckStorage.GetFolder();
 
 
     if (!Directory.Exists(deckFolder))
@@ -1201,10 +1197,7 @@ public bool SaveDeck()
 
 
     string path =
-        Path.Combine(
-            deckFolder,
-            saveData.deckID + ".json"
-        );
+        AccountDeckStorage.GetDeckPath(saveData.deckID);
 
 
     try
@@ -1213,6 +1206,7 @@ public bool SaveDeck()
             path,
             json
         );
+        LocalStorageSync.Flush();
     }
     catch (System.Exception exception)
     {

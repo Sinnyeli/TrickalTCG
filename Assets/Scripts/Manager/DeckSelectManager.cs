@@ -56,6 +56,7 @@ public class DeckSelectManager : MonoBehaviour
 
     private void Start()
     {
+        if (!LocalAccountSession.RequireLogin()) return;
         LoadSavedDecks();
 
         ClearSelectedDeck();
@@ -75,6 +76,7 @@ public class DeckSelectManager : MonoBehaviour
 
     private void LoadSavedDecks()
     {
+        if (!LocalAccountSession.RequireLogin()) return;
         ClearDeckViews();
 
 
@@ -109,10 +111,7 @@ public class DeckSelectManager : MonoBehaviour
 
 
         string deckFolder =
-            Path.Combine(
-                Application.persistentDataPath,
-                "Decks"
-            );
+            AccountDeckStorage.GetFolder();
 
 
         if (!Directory.Exists(deckFolder))

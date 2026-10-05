@@ -51,6 +51,7 @@ public class BattleDeckLoader : MonoBehaviour
 
     public bool LoadPlayerDeck()
     {
+        if (!LocalAccountSession.RequireLogin()) return false;
         mainDeck.Clear();
 
         loadedDeck = null;
@@ -90,10 +91,7 @@ public class BattleDeckLoader : MonoBehaviour
         // =========================================
 
         string deckFolder =
-            Path.Combine(
-                Application.persistentDataPath,
-                "Decks"
-            );
+            AccountDeckStorage.GetFolder();
 
 
         if (!Directory.Exists(deckFolder))
