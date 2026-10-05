@@ -152,6 +152,7 @@ public void OnDrop(PointerEventData eventData)
 }
 public bool TryEquipArtifact(RuntimeCard artifact)
 {
+    if (!BattleActions.Executing && artifact != null) return BattleActions.Submit(artifact.Owner, BattleActionKind.EquipArtifact, artifact, runtimeCard);
     if (artifact == null)
         return false;
 

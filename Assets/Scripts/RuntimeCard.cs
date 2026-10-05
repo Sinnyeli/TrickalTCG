@@ -4,6 +4,9 @@ using Unity.Mathematics;
 
 public class RuntimeCard
 {
+    public string InstanceID { get; private set; } = System.Guid.NewGuid().ToString("N");
+    private RemoteCardState remoteView;
+
     private bool destroyAtTurnEnd;
     private RuntimeCard turnEndDeathSource;
     public void ScheduleDeathAtTurnEnd(RuntimeCard source)
@@ -83,7 +86,7 @@ public class RuntimeCard
     public int CurrentHealth => currentHealth;
     private int damageTaken;
     public int DamageTaken => damageTaken;
-    public bool CanAttack => !DescribedSpellState.AttacksBlocked && canAttack && !IsFrozen && !restingThisTurn;
+    public bool CanAttack => remoteView != null ? remoteView.ready : !DescribedSpellState.AttacksBlocked && canAttack && !IsFrozen && !restingThisTurn;
     private bool cannotAttackHero;
     public bool CannotAttackHero => cannotAttackHero;
     private bool isSilenced;
@@ -95,6 +98,7 @@ public class RuntimeCard
 
     public int GetManaCost()
 {
+    if (remoteView != null) return remoteView.cost;
     if (Data == null)
         return 0;
 
@@ -215,6 +219,20 @@ public class RuntimeCard
         return 0;
     }
 
+    // Guest presentation only: assignments never publish gameplay triggers or run abilities.
+    public void ApplyRemoteView(RemoteCardState state, CardData data, PlayerSide owner, CardDatabase database)
+    {
+        remoteView = state; InstanceID = state.id; Data = data; Owner = owner; IsCommander = state.commander;
+        Zone = state.zone; currentHealth = state.health; frozen = state.frozen; isSilenced = state.silenced;
+        cannotAttackHero = state.cannotHero; isStealthed = state.keywords.Contains(CardKeyword.Stealth);
+        equippedArtifacts.Clear();
+        foreach (var item in state.artifacts)
+        {
+            var artifactData = database.GetCardByID(item.dataID); if (artifactData == null) continue;
+            var artifact = new RuntimeCard(artifactData); artifact.ApplyRemoteView(item, artifactData, owner, database);
+            equippedArtifacts.Add(artifact);
+        }
+    }
     public RuntimeCard(CardData data, bool isCommander = false)
     {
         Data = data;
@@ -268,6 +286,7 @@ public class RuntimeCard
     public bool HasKeyword(
         CardKeyword keyword)
     {
+        if (remoteView != null) return remoteView.keywords.Contains(keyword);
         if (runtimeKeywords.Exists(grant => grant.Keyword == keyword)) return true;
         // Intrinsic minion keyword
         if (!isSilenced && Data is MinionData minionData &&
@@ -494,6 +513,7 @@ private int GetBaseHealth()
 
         public int GetAttack()
         {
+            if (remoteView != null) return remoteView.attack;
             if (HasActiveAbility<SylphyrFixedStatsEffect>()) return 3;
             int attack = GetBaseAttack();
 
@@ -518,6 +538,7 @@ private int GetBaseHealth()
 
        public int GetMaxHealth()
         {
+            if (remoteView != null) return remoteView.maxHealth;
             if (HasActiveAbility<SylphyrFixedStatsEffect>()) return 3;
             int health = GetBaseHealth();
 

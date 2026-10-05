@@ -456,28 +456,8 @@ public void StartMatch()
     }
 
 
-    // =========================================
-    // TEMPORARY:
-    // Until matchmaking exists, every match
-    // goes against Jubee.
-    // =========================================
+    UnityRemoteMatch.Get().FindMatch(selectedDeck, cardDatabase);
 
-    BattleSession.CreateAIMatch(
-        selectedDeck.deckID,
-        AIType.Jubee
-    );
-
-
-    Debug.Log(
-        $"Starting match with " +
-        $"{selectedDeck.deckName}. " +
-        $"Opponent: {BattleSession.SelectedAI}"
-    );
-
-
-    SceneManager.LoadScene(
-        "Battlefield"
-    );
 }
 
 

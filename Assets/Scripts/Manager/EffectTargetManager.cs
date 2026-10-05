@@ -10,8 +10,22 @@ public class EffectTargetManager : MonoBehaviour
     private CardEffect currentEffect;
     
 
-    public bool IsSelectingTarget =>
-        currentEffect != null;
+    public PlayerSide PendingOwner => UnityRemoteMatch.IsGuest || sourceCard == null ? PlayerSide.Player : sourceCard.Owner;
+    public bool CanChoose(RuntimeCard card) => UnityRemoteMatch.IsGuest ? UnityRemoteMatch.Instance.CanChoose(card) : card != null && card.Zone == CardZone.Field && card.CurrentHealth > 0 && IsValidTarget(card);
+    public bool CanChooseHero(PlayerView hero) => UnityRemoteMatch.IsGuest ? UnityRemoteMatch.Instance.CanChooseHero(hero) : hero != null && IsValidHeroTarget(hero);
+    public bool CanChooseFor(RuntimeCard source, CardEffect effect, RuntimeCard card)
+    {
+        var oldSource = sourceCard; var oldEffect = currentEffect; sourceCard = source; currentEffect = effect;
+        try { return CanChoose(card); } finally { sourceCard = oldSource; currentEffect = oldEffect; }
+    }
+    public bool CanChooseHeroFor(RuntimeCard source, CardEffect effect, PlayerView hero)
+    {
+        var oldSource = sourceCard; var oldEffect = currentEffect; sourceCard = source; currentEffect = effect;
+        try { return CanChooseHero(hero); } finally { sourceCard = oldSource; currentEffect = oldEffect; }
+    }
+    public bool HasPendingTarget => currentEffect != null;
+    public bool IsSelectingTarget => UnityRemoteMatch.IsGuest ? UnityRemoteMatch.Instance.TargetPrompt :
+        HasPendingTarget && (BattleSession.OpponentType != BattleOpponentType.RemotePlayer || PendingOwner == PlayerSide.Player);
 
     private void Awake()
     {
@@ -49,7 +63,8 @@ public class EffectTargetManager : MonoBehaviour
 
     public void SelectTarget(RuntimeCard target)
     {
-        if (!IsSelectingTarget)
+        if (!BattleActions.Executing && IsSelectingTarget) { BattleActions.Submit(PendingOwner, BattleActionKind.ChooseUnit, target: target); return; }
+        if (!HasPendingTarget)
             return;
 
         if (target == null)
@@ -83,7 +98,8 @@ public class EffectTargetManager : MonoBehaviour
 
 public void SelectHeroTarget(PlayerView target)
 {
-    if (!IsSelectingTarget)
+    if (!BattleActions.Executing && IsSelectingTarget && target != null) { BattleActions.Submit(PendingOwner, BattleActionKind.ChooseHero, hero: target.Side); return; }
+    if (!HasPendingTarget)
         return;
 
     if (target == null)

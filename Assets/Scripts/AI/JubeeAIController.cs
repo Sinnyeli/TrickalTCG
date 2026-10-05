@@ -4,388 +4,119 @@ using UnityEngine;
 
 public class JubeeAIController : MonoBehaviour
 {
-    [Header("Managers")]
-    [SerializeField]
-    private HandManager handManager;
-
-    [SerializeField]
-    private BattlefieldManager battlefieldManager;
-
-    [SerializeField]
-    private BattlefieldManager enemyBattlefieldManager;
-
-    [SerializeField]
-    private CombatManager combatManager;
-
-    [SerializeField]
-    private TurnManager turnManager;
-
-
-
-    [Header("Timing")]
-    [SerializeField]
-    private float actionDelay = 0.5f;
-
-
+    [SerializeField] private HandManager handManager;
+    [SerializeField] private BattlefieldManager battlefieldManager;
+    [SerializeField] private BattlefieldManager enemyBattlefieldManager;
+    [SerializeField] private CombatManager combatManager;
+    [SerializeField] private TurnManager turnManager;
+    [SerializeField] private float actionDelay = .5f;
     private bool isTakingTurn;
-
+    private void Update()
+    {
+        if (BattleSession.OpponentType == BattleOpponentType.RemotePlayer || isTakingTurn || GameManager.Instance == null || GameManager.Instance.IsGameOver) return;
+        // Opponent-owned deathrattle choices can also occur during the player's turn.
+        ResolveChoice();
+    }
     private void Start()
     {
-        if (turnManager == null)
-        {
-            Debug.LogError(
-                "JubeeAIController has no TurnManager assigned."
-            );
-
-            return;
-        }
-
-        turnManager.OnTurnStarted +=
-            HandleTurnStarted;
-
-        Debug.Log(
-            "Jubee AI subscribed to TurnManager."
-        );
+        if (BattleSession.OpponentType == BattleOpponentType.RemotePlayer) { enabled = false; return; }
+        if (turnManager == null) turnManager = GameManager.Instance.TurnManager;
+        if (handManager == null) handManager = GameManager.Instance.GetHandManager(PlayerSide.Opponent);
+        if (battlefieldManager == null) battlefieldManager = GameManager.Instance.GetBattlefield(PlayerSide.Opponent);
+        if (enemyBattlefieldManager == null) enemyBattlefieldManager = GameManager.Instance.GetBattlefield(PlayerSide.Player);
+        turnManager.OnTurnStarted += HandleTurnStarted;
+        if (turnManager.IsMyTurn(PlayerSide.Opponent)) TakeTurn();
     }
-
-    // =========================================================
-    // TAKE TURN
-    // =========================================================
-
     public void TakeTurn()
     {
-        if (isTakingTurn)
-            return;
-
-        if (turnManager == null)
-            return;
-
-        if (!turnManager.IsMyTurn(
-                PlayerSide.Opponent))
-        {
-            return;
-        }
-
-        StartCoroutine(
-            TakeTurnRoutine()
-        );
+        if (!isTakingTurn && BattleSession.OpponentType != BattleOpponentType.RemotePlayer && turnManager != null && turnManager.IsMyTurn(PlayerSide.Opponent)) StartCoroutine(TakeTurnRoutine());
     }
-
-
-    // =========================================================
-    // TURN ROUTINE
-    // =========================================================
-
+    private bool Active => GameManager.Instance != null && !GameManager.Instance.IsGameOver && turnManager.IsMyTurn(PlayerSide.Opponent);
     private IEnumerator TakeTurnRoutine()
     {
         isTakingTurn = true;
-
-        Debug.Log(
-            "Jubee AI begins turn."
-        );
-
-        yield return new WaitForSeconds(
-            actionDelay
-        );
-
-
-        // =========================================
-        // PLAY CARDS
-        // =========================================
-
-        yield return PlayCards();
-
-
-        // =========================================
-        // ATTACK
-        // =========================================
-
-        yield return AttackWithMinions();
-
-
-        // =========================================
-        // END TURN
-        // =========================================
-
-        yield return new WaitForSeconds(
-            actionDelay
-        );
-
-        Debug.Log(
-            "Jubee AI ends turn."
-        );
-
-        isTakingTurn = false;
-
-        if (turnManager.IsMyTurn(
-                PlayerSide.Opponent))
+        yield return new WaitForSeconds(actionDelay);
+        int actions = 0;
+        while (Active && actions++ < 100)
         {
-            turnManager.EndTurn();
-        }
-    }
-
-
-    // =========================================================
-    // PLAY CARDS
-    // =========================================================
-
-    private IEnumerator PlayCards()
-    {
-        bool playedCard;
-
-        do
-        {
-            playedCard = false;
-
-            // Copy because playing a card modifies
-            // HandManager.Hand.
-            List<RuntimeCard> cards =
-                new List<RuntimeCard>(
-                    handManager.Hand
-                );
-
-
-            foreach (RuntimeCard card in cards)
+            if (ResolveChoice()) { yield return new WaitForSeconds(actionDelay); continue; }
+            bool played = false;
+            foreach (var card in new List<RuntimeCard>(handManager.Hand))
             {
-                if (card == null)
-                    continue;
-
-                if (!turnManager.IsMyTurn(
-                        PlayerSide.Opponent))
-                {
-                    yield break;
-                }
-
-
-                int cost =
-                    card.GetManaCost();
-
-
-                if (!turnManager.CanSpendMana(
-                        PlayerSide.Opponent,
-                        cost))
-                {
-                    continue;
-                }
-
-
-                // -----------------------------------------
-                // COMMANDER
-                // -----------------------------------------
-
-                if (card.IsCommander)
-                {
-                    bool success =
-                        handManager
-                            .PlayCommanderFromHand(
-                                card
-                            );
-
-                    if (success)
-                    {
-                        playedCard = true;
-
-                        Debug.Log(
-                            $"Jubee AI played Commander: " +
-                            $"{card.Data.cardName}"
-                        );
-
-                        yield return
-                            new WaitForSeconds(
-                                actionDelay
-                            );
-
-                        break;
-                    }
-
-                    continue;
-                }
-
-
-                // -----------------------------------------
-                // NORMAL CARD
-                // -----------------------------------------
-
-                bool played =
-                    handManager
-                        .PlayCardFromHand(
-                            card
-                        );
-
-
-                if (played)
-                {
-                    playedCard = true;
-
-                    Debug.Log(
-                        $"Jubee AI played: " +
-                        $"{card.Data.cardName}"
-                    );
-
-                    yield return
-                        new WaitForSeconds(
-                            actionDelay
-                        );
-
-                    break;
-                }
+                if (!Active) break;
+                if (card.GetManaCost() > turnManager.OpponentMana) continue;
+                if (TryPlay(card)) { played = true; break; }
             }
-
+            if (!played) break;
+            yield return new WaitForSeconds(actionDelay);
         }
-        while (playedCard);
-    }
-
-
-    // =========================================================
-    // ATTACK
-    // =========================================================
-
-    private IEnumerator AttackWithMinions()
-{
-    List<RuntimeCard> attackers =
-        new List<RuntimeCard>(
-            battlefieldManager.Minions
-        );
-
-    HashSet<RuntimeCard> attemptedAttackers =
-        new HashSet<RuntimeCard>();
-
-
-    foreach (RuntimeCard attacker in attackers)
-    {
-        if (attacker == null)
-            continue;
-
-        if (attemptedAttackers.Contains(attacker))
-            continue;
-
-        attemptedAttackers.Add(attacker);
-
-
-        if (!turnManager.IsMyTurn(
-                PlayerSide.Opponent))
+        foreach (var attacker in new List<RuntimeCard>(battlefieldManager.Minions))
         {
-            yield break;
+            // Multiple attacks granted by effects use the same requests and validations.
+            for (int attempts = 0; Active && attacker.Zone == CardZone.Field && attacker.CanAttack && attempts < 12; attempts++)
+            {
+                bool attacked = false;
+                var targets = new List<RuntimeCard>(enemyBattlefieldManager.Minions);
+                targets.Sort((a,b) => b.HasKeyword(CardKeyword.Taunt).CompareTo(a.HasKeyword(CardKeyword.Taunt)));
+                foreach (var target in targets)
+                    if (!target.IsStealthed && BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.AttackUnit, attacker, target)) { attacked = true; break; }
+                if (!attacked) attacked = BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.AttackHero, attacker, hero: PlayerSide.Player);
+                if (!attacked) break;
+                yield return new WaitForSeconds(actionDelay);
+                while (Active && ResolveChoice()) yield return new WaitForSeconds(actionDelay);
+            }
         }
-
-
-        if (!attacker.CanAttack)
-            continue;
-
-
-        bool selected =
-            combatManager.SelectAttacker(
-                attacker
-            );
-
-        if (!selected)
-            continue;
-
-
-        yield return new WaitForSeconds(
-            actionDelay
-        );
-
-
-        bool attacked =
-            TryAttackEnemyMinion();
-
-    if (!attacked)
-    {
-        PlayerView enemyPlayer =
-            GameManager.Instance.GetPlayerView(
-                PlayerSide.Player
-            );
-
-        if (enemyPlayer != null)
-        {
-            attacked =
-                combatManager.Attack(
-                    enemyPlayer
-                );
-        }
-    }
-
-
-        if (!attacked)
-        {
-            combatManager.ClearSelection();
-        }
-
-
-        yield return new WaitForSeconds(
-            actionDelay
-        );
-    }
-}
-
-
-    // =========================================================
-    // CHOOSE ENEMY
-    // =========================================================
-
-    private bool TryAttackEnemyMinion()
-    {
-        if (enemyBattlefieldManager == null)
-            return false;
-
-
-        List<RuntimeCard> targets =
-            new List<RuntimeCard>();
-
-
-        foreach (RuntimeCard target
-                 in enemyBattlefieldManager.Minions)
-        {
-            if (target == null)
-                continue;
-
-            if (target.IsStealthed)
-                continue;
-
-            targets.Add(
-                target
-            );
-        }
-
-
-        if (targets.Count == 0)
-            return false;
-
-
-        RuntimeCard targetCard =
-            targets[
-                Random.Range(
-                    0,
-                    targets.Count
-                )
-            ];
-
-
-        return combatManager.Attack(
-            targetCard
-        );
-    }
-
-private void OnDestroy()
-{
-    if (turnManager != null)
-    {
-        turnManager.OnTurnStarted -=
-            HandleTurnStarted;
-    }
-}
-private void HandleTurnStarted(
-    PlayerSide side)
-{
-    if (side != PlayerSide.Opponent)
-    {
-        // A timeout must stop pending AI actions before the player's turn.
-        StopAllCoroutines();
+        while (Active && ResolveChoice()) yield return new WaitForSeconds(actionDelay);
+        yield return new WaitForSeconds(actionDelay);
+        if (Active) BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.EndTurn);
         isTakingTurn = false;
-        return;
     }
-
-    TakeTurn();
-}
+    private bool TryPlay(RuntimeCard card)
+    {
+        if (card.Data is ArtifactData)
+        {
+            foreach (var unit in battlefieldManager.Minions)
+                if (BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.EquipArtifact, card, unit)) return true;
+            return false;
+        }
+        if (card.Data is SpellData spell)
+        {
+            CardEffect manual = null;
+            foreach (var effect in spell.SpellEffects)
+                if (effect != null && (effect.TargetType == EffectTargetType.FriendlyUnit || effect.TargetType == EffectTargetType.EnemyUnit ||
+                    effect.TargetType == EffectTargetType.AnyUnit || effect.TargetType == EffectTargetType.AnyTarget || effect.TargetType == EffectTargetType.EnemyTarget ||
+                    effect.TargetType == EffectTargetType.FriendlyHero || effect.TargetType == EffectTargetType.EnemyHero)) { manual = effect; break; }
+            if (manual != null)
+            {
+                foreach (PlayerSide side in new[] { PlayerSide.Opponent, PlayerSide.Player })
+                    foreach (var target in GameManager.Instance.GetBattlefield(side).Minions)
+                        if (EffectTargetManager.Instance.CanChooseFor(card, manual, target) && BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.PlaySpellOnUnit, card, target)) return true;
+                foreach (PlayerSide side in new[] { PlayerSide.Opponent, PlayerSide.Player })
+                    if (EffectTargetManager.Instance.CanChooseHeroFor(card, manual, GameManager.Instance.GetPlayerView(side)) &&
+                        BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.PlaySpellOnHero, card, hero: side)) return true;
+                return false;
+            }
+        }
+        return BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.PlayCard, card);
+    }
+    private bool ResolveChoice()
+    {
+        var choice = BattleChoiceRequests.Pending;
+        if (choice != null && choice.owner == PlayerSide.Opponent && choice.cards.Count > 0)
+            return BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.ChooseCard, target: choice.cards[Random.Range(0, choice.cards.Count)], choice: choice.id);
+        var targeting = EffectTargetManager.Instance;
+        if (targeting == null || !targeting.IsSelectingTarget || targeting.PendingOwner != PlayerSide.Opponent) return false;
+        foreach (PlayerSide side in new[] { PlayerSide.Player, PlayerSide.Opponent })
+            foreach (var unit in GameManager.Instance.GetBattlefield(side).Minions)
+                if (targeting.CanChoose(unit)) return BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.ChooseUnit, target: unit);
+        foreach (PlayerSide side in new[] { PlayerSide.Player, PlayerSide.Opponent })
+            if (targeting.CanChooseHero(GameManager.Instance.GetPlayerView(side))) return BattleActions.Submit(PlayerSide.Opponent, BattleActionKind.ChooseHero, hero: side);
+        targeting.CancelTargetSelection(); return false;
+    }
+    private void HandleTurnStarted(PlayerSide side)
+    {
+        if (side != PlayerSide.Opponent) { StopAllCoroutines(); isTakingTurn = false; return; }
+        TakeTurn();
+    }
+    private void OnDestroy() { if (turnManager != null) turnManager.OnTurnStarted -= HandleTurnStarted; }
 }

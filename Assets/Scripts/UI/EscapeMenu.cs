@@ -126,12 +126,12 @@ public class EscapeMenu : MonoBehaviour
     {
         if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return;
         Close();
-        GameManager.Instance.PlayerDefeated(PlayerSide.Player);
+        BattleActions.Submit(PlayerSide.Player, BattleActionKind.Surrender);
     }
     private void Quit()
     {
         if (InBattle && GameManager.Instance != null && !GameManager.Instance.IsGameOver)
-            GameManager.Instance.PlayerDefeated(PlayerSide.Player);
+            BattleActions.Submit(PlayerSide.Player, BattleActionKind.Surrender);
         Close();
         Time.timeScale = 1f;
         LocalAccountSession.LogoutAndOpenLogin();

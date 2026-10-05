@@ -53,6 +53,13 @@ public class CombatFailureUI : MonoBehaviour
         instance.group.alpha = 1;
     }
 
+    public static void ShowText(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message)) return;
+        if (instance == null) instance = new GameObject("Combat Failure Notice").AddComponent<CombatFailureUI>();
+        instance.reason = null; instance.label.text = message;
+        instance.expires = Time.unscaledTime + Duration; instance.group.alpha = 1;
+    }
     private void Awake()
     {
         var canvasObject = new GameObject("Notice Canvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(CanvasGroup));

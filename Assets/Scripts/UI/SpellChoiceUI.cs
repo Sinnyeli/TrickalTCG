@@ -20,7 +20,15 @@ public class SpellChoiceUI : MonoBehaviour
     {
         choices.RemoveAll(c => c == null);
         if (choices.Count == 0) return;
-        if (owner == PlayerSide.Opponent || AutomaticDepth > 0) { callback(choices[UnityEngine.Random.Range(0, choices.Count)]); return; }
+        if (AutomaticDepth > 0)
+        { callback(choices[UnityEngine.Random.Range(0, choices.Count)]); return; }
+        string choiceID = null;
+        if (!UnityRemoteMatch.IsGuest)
+        {
+            choiceID = BattleChoiceRequests.Register(owner, choices, callback);
+            if (owner == PlayerSide.Opponent) return;
+            callback = card => BattleActions.Submit(owner, BattleActionKind.ChooseCard, target: card, choice: choiceID);
+        }
         Action show = () =>
         {
             choosing = true;
@@ -32,7 +40,7 @@ public class SpellChoiceUI : MonoBehaviour
     private void Update()
     {
         var game = GameManager.Instance;
-        if (game == null || game.IsGameOver || !game.TurnManager.IsMyTurn(owner)) { pending.Clear(); Destroy(gameObject); }
+        if (game == null || game.IsGameOver || (!game.TurnManager.IsMyTurn(owner) && !BattleChoiceRequests.IsPendingOwner(owner) && !(UnityRemoteMatch.IsGuest && UnityRemoteMatch.Instance.HasRemoteChoice))) { pending.Clear(); Destroy(gameObject); }
     }
     private void OnDestroy() { if (current == this) { current = null; choosing = false; pending.Clear(); } }
     private void Build()

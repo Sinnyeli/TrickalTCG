@@ -31,8 +31,11 @@ public class MatchSetup : MonoBehaviour
                     "Remote player match selected."
                 );
 
-                // Networking will initialize this later.
-                return false;
+                if (UnityRemoteMatch.Instance == null || opponentDeckManager == null) return false;
+                DeckData remote = UnityRemoteMatch.Instance.RemoteDeck;
+                if (remote == null) return false;
+                opponentDeckManager.SetDeckData(remote);
+                return true;
 
 
             default:

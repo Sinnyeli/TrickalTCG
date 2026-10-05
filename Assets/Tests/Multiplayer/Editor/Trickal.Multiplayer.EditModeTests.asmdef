@@ -1,0 +1,5 @@
+{
+  "name": "Trickal.Multiplayer.EditModeTests",
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

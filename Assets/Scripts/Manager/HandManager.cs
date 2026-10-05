@@ -132,6 +132,15 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
         if (view != null)
         {
             view.SetCard(card);
+            if (owner == PlayerSide.Opponent && BattleSession.OpponentType == BattleOpponentType.RemotePlayer)
+            {
+                if (view.artworkImage != null) view.artworkImage.enabled = false;
+                if (view.nameText != null) view.nameText.text = "";
+                if (view.descriptionText != null) view.descriptionText.text = "";
+                if (view.costText != null) view.costText.gameObject.SetActive(false);
+                if (view.attackText != null) view.attackText.gameObject.SetActive(false);
+                if (view.healthText != null) view.healthText.gameObject.SetActive(false);
+            }
         }
         else
         {
@@ -206,6 +215,16 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
     // Hand Layout Refresh
     // =========================================================
 
+    public void ApplyRemoteHand(List<RuntimeCard> cards)
+    {
+        foreach (var old in new List<RuntimeCard>(hand)) if (!cards.Contains(old)) RemoveCardFromHand(old);
+        foreach (var card in cards)
+        {
+            if (!hand.Contains(card)) AddCard(card);
+            else RefreshCardView(card);
+        }
+        hand.Clear(); hand.AddRange(cards); RefreshHandLayout(); RefreshCommanderLayout();
+    }
     public void RefreshHandLayout()
     {
         if (handLayout != null)
@@ -298,13 +317,13 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
   
 public bool PlayCardFromHand(RuntimeCard card)
 {
+    if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlayCard, card);
     if (card == null)
         return false;
 
     if (card.IsCommander)
     {
-        PlayCommanderFromHand(card);
-        return false;
+        return PlayCommanderFromHand(card);
     }
 
     /// Turn Manager and Mana
@@ -374,6 +393,7 @@ public bool PlayCardFromHand(RuntimeCard card)
 
     public bool PlayCommanderFromHand(RuntimeCard card)
     {
+        if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlayCard, card);
         if (card == null)
             return false;
 
@@ -622,6 +642,7 @@ public bool PlayTargetedSpellFromHand(
     RuntimeCard card,
     RuntimeCard unitTarget)
 {
+    if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlaySpellOnUnit, card, unitTarget);
     if (card == null || unitTarget == null)
         return false;
 
@@ -801,6 +822,8 @@ public bool PlayTargetedSpellFromHand(
     RuntimeCard card,
     PlayerView heroTarget)
 {
+    if (heroTarget == null) return false;
+    if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlaySpellOnHero, card, hero: heroTarget == null ? PlayerSide.Opponent : heroTarget.Side);
     if (card == null || heroTarget == null)
         return false;
 

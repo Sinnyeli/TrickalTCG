@@ -9,6 +9,7 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
     [SerializeField] private int maxHealth = 20;
     private int currentHealth;
 
+    public void ApplyRemoteHealth(int health) { currentHealth = Mathf.Clamp(health, 0, maxHealth); RefreshHealth(); }
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
 

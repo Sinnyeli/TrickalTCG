@@ -17,6 +17,7 @@ public class TurnManager : MonoBehaviour
 
     private void Update()
     {
+        if (UnityRemoteMatch.IsGuest) return;
         if (!timerRunning || GameManager.Instance == null) return;
         if (GameManager.Instance.IsGameOver)
         {
@@ -30,7 +31,7 @@ public class TurnManager : MonoBehaviour
     // Only the local player's UI may call this entry point.
     public void EndPlayerTurn()
     {
-        if (CanPlayerEndTurn) EndTurn();
+        if (CanPlayerEndTurn) BattleActions.Submit(PlayerSide.Player, BattleActionKind.EndTurn);
     }
 
     private PlayerSide currentSide;
@@ -56,9 +57,17 @@ public class TurnManager : MonoBehaviour
 
     private void Start()
     {
+        if (BattleSession.OpponentType == BattleOpponentType.RemotePlayer) return;
         Initialize();
     }
 
+    public void ApplyRemoteTurn(RemoteBattleState state)
+    {
+        currentSide = state.active; turnNumber = state.turn;
+        playerMana = state.ownMana; playerMaxMana = state.ownMaxMana;
+        opponentMana = state.enemyMana; opponentMaxMana = state.enemyMaxMana;
+        remainingTurnSeconds = state.seconds; timerRunning = !state.over;
+    }
     public void Initialize()
     {
     timerRunning = false;
@@ -138,6 +147,8 @@ public void StartTurn()
                 $"{currentSide} ended their turn."
             );
 
+            BattleChoiceRequests.Clear();
+            if (EffectTargetManager.Instance != null) EffectTargetManager.Instance.CancelTargetSelection();
             GameManager.Instance.EffectManager.TriggerTurnEnd(currentSide);
             GameManager.Instance.ExpireTemporaryNextCardDiscount(currentSide);
 

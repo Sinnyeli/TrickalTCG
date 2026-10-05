@@ -70,6 +70,8 @@ public bool ForceUnitAttack(RuntimeCard attacker, RuntimeCard defender, bool all
 
 public bool Attack(RuntimeCard defender)
 {
+    if (!BattleActions.Executing && forcedAttackDepth == 0 && selectedAttacker != null)
+        return BattleActions.Submit(selectedAttacker.Owner, BattleActionKind.AttackUnit, selectedAttacker, defender);
     RuntimeCard attacker = selectedAttacker;
 
     if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return false;
@@ -212,6 +214,9 @@ public bool Attack(RuntimeCard defender)
 
 public bool Attack(PlayerView defender)
 {
+    if (defender == null) return Fail("NO_TARGET", selectedAttacker);
+    if (!BattleActions.Executing && selectedAttacker != null)
+        return BattleActions.Submit(selectedAttacker.Owner, BattleActionKind.AttackHero, selectedAttacker, hero: defender == null ? PlayerSide.Opponent : defender.Side);
     if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return false;
     RuntimeCard attacker = selectedAttacker;
     if (attacker == null) return Fail("NO_ATTACKER");

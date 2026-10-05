@@ -246,6 +246,10 @@ public class BattleDeckLoader : MonoBehaviour
         );
 
 
+    if (UnityRemoteMatch.IsGuest)
+    {
+        gameManager.PrepareRemotePresentation(); UnityRemoteMatch.Instance.BattleReady(cardDatabase); return true;
+    }
     if (mainDeck.Count != 30)
     {
         Debug.LogError(
@@ -277,7 +281,17 @@ if (gameManager == null)
     return false;
 }
 
+if (BattleSession.OpponentType == BattleOpponentType.RemotePlayer)
+{
+    if (matchSetup == null) matchSetup = FindFirstObjectByType<MatchSetup>();
+    if (matchSetup == null || !matchSetup.SetupOpponent()) { Debug.LogError("Remote opponent setup is missing."); return false; }
+}
 gameManager.StartGame();
+if (BattleSession.OpponentType == BattleOpponentType.RemotePlayer)
+{
+    gameManager.TurnManager.Initialize(); UnityRemoteMatch.Instance.BattleReady(cardDatabase);
+}
+else BattleActions.ResetMatch();
 
 return true;
 }

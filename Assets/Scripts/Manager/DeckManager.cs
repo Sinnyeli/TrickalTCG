@@ -16,7 +16,9 @@ public class DeckManager : MonoBehaviour
     private PlayerSide owner;
 
     public PlayerSide Owner => owner;
-    public int RemainingCards => drawPile.Count;
+    private int remoteCount = -1;
+    public void ApplyRemoteCount(int count) { remoteCount = Mathf.Max(0, count); }
+    public int RemainingCards => remoteCount >= 0 ? remoteCount : drawPile.Count;
 
  public void InitializeDeck()
 {
@@ -36,7 +38,7 @@ public class DeckManager : MonoBehaviour
 }
     public int GetDeckCount()
     {
-        return drawPile.Count;
+        return RemainingCards;
     }
 
     public RuntimeCard GetCommander()

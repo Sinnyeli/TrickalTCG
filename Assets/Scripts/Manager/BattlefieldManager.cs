@@ -128,6 +128,18 @@ public static event System.Action<RuntimeCard> OnUnitSummoned;
     return true;
 }
 
+    public void ApplyRemoteField(List<RuntimeCard> cards)
+    {
+        foreach (var old in new List<RuntimeCard>(minions)) if (!cards.Contains(old)) RemoveMinionView(old);
+        foreach (var card in cards)
+        {
+            if (!minionViews.ContainsKey(card)) CreateMinionView(card);
+            else if (minionViews[card] != null) minionViews[card].SetMinion(card);
+            RefreshMinionView(card);
+        }
+        minions.Clear(); minions.AddRange(cards);
+        if (battlefieldLayout != null) battlefieldLayout.RefreshLayout();
+    }
     private void CreateMinionView(RuntimeCard card)
     {
         GameObject minionObject =

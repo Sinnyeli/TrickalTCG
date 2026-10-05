@@ -78,6 +78,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int startingHandSize = 0;
     private GameState currentGameState = GameState.Playing;
 
+    public PlayerSide WinnerSide { get; private set; }
+    public void PrepareRemotePresentation() { gameOverUI.Hide(); CreatePlayerViews(); }
     public GameState CurrentGameState => currentGameState;
 
     private PlayerView playerView;
@@ -149,7 +151,8 @@ private void Awake()
             opponentCommander.SetOwner(PlayerSide.Opponent);
             // Add to list above
         }
-        DrawCard(PlayerSide.Opponent);
+        int opponentStartingCards = BattleSession.OpponentType == BattleOpponentType.RemotePlayer ? startingHandSize : 1;
+        for (int i = 0; i < opponentStartingCards; i++) DrawCard(PlayerSide.Opponent);
     }
         public void SetGameState(GameState newState)
     {
@@ -383,6 +386,7 @@ private void CreatePlayerViews()
                 $"{winner} wins!"
             );
 
+            WinnerSide = winner;
             gameOverUI.Show(winner);
         }
  
