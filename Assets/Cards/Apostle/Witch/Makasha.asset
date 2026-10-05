@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_MAKASHA
   cardName: "\uB9C8\uCE74\uC0E4"
-  description: "\uB4F1\uC7A5: \u300C\uC774\uD788\uD788~\u300D 3\uC7A5\uC744 \uD328\uC5D0
-    \uC0DD\uC131\uD569\uB2C8\uB2E4."
+  description: 'Battlecry: Create 3 Makasha''s Laugh spells in your hand.'
   manaCost: 3
   artwork: {fileID: 21300000, guid: 5210466fe13375404b40a02d502ace54, type: 3}
   onDrawEffects: []
@@ -24,14 +23,17 @@ MonoBehaviour:
   attack: 2
   health: 2
   cardRace: 1
+  additionalRaces: 
   keywords: 
-  battlecry: {fileID: 11400000, guid: 69da3b8fec14c2006bb871bf531f0d90, type: 2}
+  battlecry: {fileID: 11400000, guid: dc49b595ba64967f7a2126be524405b9, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: a73eee8afe3f7e6c288472188b8ebdc5, type: 3}
   maxEquipment: 3

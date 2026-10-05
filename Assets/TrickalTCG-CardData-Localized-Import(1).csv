@@ -1,4 +1,4 @@
-﻿Type,ID,Name,Description,Cost,Attack,Health,Race,Keywords,Collectible,UnlimitedCopies,AttackBonus,HealthBonus,GrantedKeywords,MaxEquipment,NameEnglish,NameKorean,DescriptionEnglish,DescriptionKorean
+Type,ID,Name,Description,Cost,Attack,Health,Race,Keywords,Collectible,UnlimitedCopies,AttackBonus,HealthBonus,GrantedKeywords,MaxEquipment,NameEnglish,NameKorean,DescriptionEnglish,DescriptionKorean
 Apostle,A_BANA,Bana,Battlecry: Draw a random Artifact.,3,2,3,Beastfolk,,true,false,,,,3,Bana,바나,Battlecry: Draw a random Artifact.,등장: 무작위 아티팩트를 1장 뽑기.
 Apostle,A_BENI,Beni,Battlecry: Give another friendly unit +2 Health.,4,3,5,Beastfolk,,true,false,,,,3,Beni,베니,Battlecry: Give another friendly unit +2 Health.,등장: 다른 아군 유닛에게 방어 +2 부여.
 Apostle,A_BUTTER,버터,데미지를 받으면 +1/+1이 된다.,4,3,3,Beastfolk,Endure,true,false,,,,3,Butter,버터,"After taking damage, gain +1/+1.",피해 시 +1/+1.
@@ -146,7 +146,7 @@ Spell,S_PROMOTION,신분 상승,아군 몬스터 하나에게 +2/+2를 부여합
 Spell,S_PERSONAL_TRAINING,개인 트레이닝,아군 사도 하나에게 +1/+2를 부여합니다.,2,,,,,true,false,,,,,,개인 트레이닝,Give a friendly Apostle +1/+2.,아군 사도 하나에게 +1/+2 부여.
 Spell,S_CRITICAL_STRIKE,회심의 일격,이번 턴 아군 유닛 하나에게 공격 +3을 부여합니다.,2,,,,,true,false,,,,,,회심의 일격,Give a friendly unit +3 Attack this turn.,이번 턴 아군 유닛에게 공격 +3 부여.
 Spell,S_FEAT_OF_STRENGTH,차력 시범,아군 유닛 하나를 선택합니다. 그 유닛의 방어력만큼 무작위 적 유닛 하나에게 피해를 줍니다.,2,,,,,true,false,,,,,,차력 시범,Choose a friendly unit. Deal damage equal to its defense to a random enemy unit.,선택한 아군의 방어력만큼 무작위 적 유닛에게 피해.
-Spell,S_IGNORE_WEAK,약자 무시,이번 턴 아군 유닛 하나에게 Bypass와 공격 +1을 부여합니다.,2,,,,,true,false,,,,,,약자 무시,Give a friendly unit Bypass and +1 Attack this turn.,이번 턴 아군 유닛에게 우회와 공격 +1 부여.
+Spell,S_IGNORE_WEAK,약자 무시,공격력이 3 이하인 유닛 하나를 처치합니다.,2,,,,,true,false,,,,,,약자 무시,Destroy a unit with 3 or less Attack.,공격력이 3 이하인 유닛 하나를 처치합니다.
 Spell,S_SCHOLAR,학자,카드를 2장 뽑습니다.,3,,,,,true,false,,,,,,학자,Draw 2 cards.,카드 2장 뽑기.
 Spell,S_GET_THAT_ONE,저놈을 잡아라,적 유닛 하나를 지정합니다. 이번 턴 그 유닛을 공격하는 아군은 공격 +2를 얻습니다.,1,,,,,true,false,,,,,,저놈을 잡아라,"Choose an enemy unit. This turn, friendly units gain +2 Attack when attacking it.",적 유닛 지정. 이번 턴 그 유닛을 공격하는 아군 공격 +2.
 Spell,S_ENDURE,방탄불괴,아군 유닛 하나에게 참기를 부여합니다. 침묵으로 제거할 수 있습니다.,2,,,,,true,false,,,,,,방탄불괴,Give a friendly unit Endure. This grant can be silenced.,아군 유닛 참기 획득. 침묵으로 제거 가능.

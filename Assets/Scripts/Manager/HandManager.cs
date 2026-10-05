@@ -113,6 +113,7 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
 
     hand.Add(commander);
     CreateCommanderView(commander);
+    RefreshCommanderLayout();
 }
 
     // =========================================================
@@ -181,22 +182,25 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
     // =========================================================
 
     private void DestroyCommanderView(RuntimeCard commander)
-{
-    foreach (Transform child in commanderContainer)
     {
-        CardView cardView =
-            child.GetComponent<CardView>();
+        DestroyViewInContainer(commanderContainer, commander);
+        RefreshCommanderLayout();
+    }
 
-        if (cardView == null)
-            continue;
-
-        if (cardView.runtimeCard == commander)
+    private void DestroyViewInContainer(Transform container, RuntimeCard card)
+    {
+        if (container == null) return;
+        foreach (Transform child in container)
         {
-            Destroy(cardView.gameObject);
+            CardviewBase view = child.GetComponent<CardviewBase>();
+            if (view == null || view.runtimeCard != card) continue;
+            // Detach immediately so layout and raycasts no longer include it.
+            child.gameObject.SetActive(false);
+            child.SetParent(null, false);
+            Destroy(child.gameObject);
             return;
         }
     }
-}
 
     // =========================================================
     // Hand Layout Refresh
@@ -447,12 +451,12 @@ public bool PlayCardFromHand(RuntimeCard card)
     // Find card from hand. 
     // =========================================================
 
-private CardView FindCardView(RuntimeCard card)
+private CardviewBase FindCardView(RuntimeCard card)
 {
     foreach (Transform child in handContainer)
     {
-        CardView cardView =
-            child.GetComponent<CardView>();
+        CardviewBase cardView =
+            child.GetComponent<CardviewBase>();
 
         if (cardView == null)
             continue;
@@ -490,12 +494,7 @@ public bool RemoveCardFromHand(RuntimeCard card)
 
 private void DestroyHandView(RuntimeCard card)
 {
-    CardView cardView = FindCardView(card);
-
-    if (cardView != null)
-    {
-        Destroy(cardView.gameObject);
-    }
+    DestroyViewInContainer(handContainer, card);
 }
 
 private bool PlaySpellFromHand(RuntimeCard card)
@@ -925,7 +924,7 @@ public void RefreshCardView(RuntimeCard card)
     if (card == null)
         return;
 
-    CardView view =
+    CardviewBase view =
         FindCardView(card);
 
     if (view == null)
@@ -938,8 +937,8 @@ public void RefreshAllCardViews()
 {
     foreach (Transform child in handContainer)
     {
-        CardView view =
-            child.GetComponent<CardView>();
+        CardviewBase view =
+            child.GetComponent<CardviewBase>();
 
         if (view == null)
             continue;

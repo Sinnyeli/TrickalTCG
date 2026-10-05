@@ -5,19 +5,23 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class MinionView : MinionViewBase, IPointerClickHandler, IDropHandler
+public class MinionView : MinionViewBase, IPointerClickHandler, IDropHandler, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
 
     private Vector3 originalScale;
         private void Awake()
     {
         originalScale = transform.localScale;
+        if (GetComponent<CardHoverZoom>() == null) gameObject.AddComponent<CardHoverZoom>();
     }
 
+
+    private bool draggedAttack;
 
     public void OnPointerClick(
             PointerEventData eventData)
         {
+            if (eventData.button != PointerEventData.InputButton.Left || draggedAttack || EscapeMenu.IsOpen || CombatPresentation.IsAnimating) return;
             // If we have effect manager + effect manager is selecting target.
             if (EffectTargetManager.Instance != null &&
                 EffectTargetManager.Instance.IsSelectingTarget)
@@ -53,6 +57,7 @@ public class MinionView : MinionViewBase, IPointerClickHandler, IDropHandler
                 return;
             }
 
+            if (combat.SelectedAttacker == RuntimeCard) return;
             if (combat.SelectedAttacker == null)
             {
                 combat.SelectAttacker(RuntimeCard);
@@ -62,6 +67,38 @@ public class MinionView : MinionViewBase, IPointerClickHandler, IDropHandler
                 combat.Attack(RuntimeCard);
             }
         }
+
+public void OnPointerDown(PointerEventData eventData)
+{
+    draggedAttack = false;
+    if (eventData.button != PointerEventData.InputButton.Left || EscapeMenu.IsOpen || CombatPresentation.IsAnimating) return;
+    if (runtimeCard == null || runtimeCard.Owner != PlayerSide.Player) return;
+    if (EffectTargetManager.Instance != null && EffectTargetManager.Instance.IsSelectingTarget) return;
+    if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return;
+    if (GameManager.Instance.CombatManager.SelectAttacker(runtimeCard)) CombatPresentation.Get();
+}
+public void OnBeginDrag(PointerEventData eventData)
+{
+    draggedAttack = eventData.button == PointerEventData.InputButton.Left && GameManager.Instance != null &&
+        GameManager.Instance.CombatManager.SelectedAttacker == runtimeCard;
+}
+public void OnDrag(PointerEventData eventData) { }
+public void OnEndDrag(PointerEventData eventData)
+{
+    if (!draggedAttack || GameManager.Instance == null || GameManager.Instance.IsGameOver || EscapeMenu.IsOpen) return;
+    var combat = GameManager.Instance.CombatManager;
+    if (combat.SelectedAttacker != runtimeCard) return;
+    var hits = new List<RaycastResult>();
+    EventSystem.current.RaycastAll(eventData, hits);
+    foreach (var hit in hits)
+    {
+        var unit = hit.gameObject.GetComponentInParent<MinionViewBase>();
+        if (unit != null && unit.RuntimeCard != runtimeCard && combat.Attack(unit.RuntimeCard)) return;
+        var hero = hit.gameObject.GetComponentInParent<PlayerView>();
+        if (hero != null && combat.Attack(hero)) return;
+    }
+    combat.ClearSelection();
+}
 
 public void OnDrop(PointerEventData eventData)
 {

@@ -34,13 +34,28 @@ public static class CardInitializationBuilder
         RunBatch("Elf abilities and M.E.O.W.", ElfAbilityInitializer.Build, failures, ref succeeded);
         RunBatch("Ghost abilities and Alice prophecies", GhostAbilityInitializer.Build, failures, ref succeeded);
         RunBatch("Witch abilities", WitchAbilityInitializer.Build, failures, ref succeeded);
+        RunBatch("Ignore the Weak", InitializeIgnoreWeak, failures, ref succeeded);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        string summary = succeeded + "/15 initialization batches completed.";
+        string summary = succeeded + "/16 initialization batches completed.";
         if (failures.Count > 0)
             Debug.LogError(summary + " Failed batches: " + string.Join("; ", failures) +
                 ". Earlier successful changes remain saved; fix the missing requirements and rerun.");
         else Debug.Log(summary + " Gameplay verification is still required.");
+    }
+
+    public static void InitializeIgnoreWeak()
+    {
+        var card = AssetDatabase.LoadAssetAtPath<SpellData>("Assets/Cards/Spell/S_IGNORE_WEAK.asset");
+        var effect = AssetDatabase.LoadAssetAtPath<DestroyLowAttackEffect>("Assets/Cards/Effects/Initialized/IgnoreWeakDestroy.asset");
+        if (card == null || effect == null) throw new InvalidOperationException("Ignore the Weak card or effect is missing.");
+        var serialized = new SerializedObject(card);
+        var effects = serialized.FindProperty("spellEffects");
+        effects.arraySize = 1;
+        effects.GetArrayElementAtIndex(0).objectReferenceValue = effect;
+        serialized.FindProperty("description").stringValue = "공격력이 3 이하인 유닛 하나를 처치합니다.";
+        serialized.ApplyModifiedPropertiesWithoutUndo();
+        EditorUtility.SetDirty(card);
     }
 
     private static void RunBatch(string name, Action action, List<string> failures, ref int succeeded)

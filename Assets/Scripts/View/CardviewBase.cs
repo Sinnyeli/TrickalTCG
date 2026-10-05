@@ -22,6 +22,7 @@ public abstract class CardviewBase : MonoBehaviour
    
     public void SetCard(RuntimeCard card)
     {
+        if (GetComponent<CardHoverZoom>() == null) gameObject.AddComponent<CardHoverZoom>();
         runtimeCard = card;
         // get runtime card. Get data from it. 
         CardData data = card.Data;

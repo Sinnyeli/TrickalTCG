@@ -12,7 +12,7 @@ public class CombatManager : MonoBehaviour
 
     public bool SelectAttacker(RuntimeCard attacker)
     {
-        if (attacker == null)
+        if (attacker == null || attacker.Zone != CardZone.Field || attacker.CurrentHealth <= 0 || GameManager.Instance.IsGameOver)
             return false;
 
         TurnManager turnManager =
@@ -75,6 +75,10 @@ public bool Attack(RuntimeCard defender)
         return false;
     }
 
+    if (GameManager.Instance.IsGameOver ||
+        defender == null || defender.Zone != CardZone.Field || defender.CurrentHealth <= 0 || defender.IsStealthed)
+        return false;
+
     // Didn't select anything.
     if (defender == null)
     {
@@ -113,6 +117,8 @@ public bool Attack(RuntimeCard defender)
         $"{defender.Data.cardName}"
     );
 
+    MinionViewBase defenderView = CombatPresentation.FindView(defender);
+    if (defenderView != null) CombatPresentation.Attack(attacker, defenderView.transform);
     attacker.MarkAttacked();
     attacker.RemoveStealth();
 
@@ -239,6 +245,7 @@ public bool Attack(PlayerView defender)
     }
 
     RuntimeCard attacker = selectedAttacker;
+    if (GameManager.Instance.IsGameOver) return false;
 
          // Rush restriction.
     if (attacker.CannotAttackHero)
@@ -260,6 +267,7 @@ public bool Attack(PlayerView defender)
 
         return false;
     }
+    CombatPresentation.Attack(attacker, defender.transform);
     attacker.MarkAttacked();
     attacker.RemoveStealth();
 

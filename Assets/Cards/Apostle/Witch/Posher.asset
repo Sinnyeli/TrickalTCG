@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_POSHER
   cardName: Posher
-  description: 'Battlecry: Create a random Potion.'
+  description: 'Battlecry: Create a random Berserk Potion, Defense Potion or High-Caffeine
+    Drink.'
   manaCost: 3
   artwork: {fileID: 21300000, guid: 9fdcbf63dfd3bc20b8e6a7b934dd3d22, type: 3}
   onDrawEffects: []
@@ -23,14 +24,17 @@ MonoBehaviour:
   attack: 2
   health: 4
   cardRace: 1
+  additionalRaces: 
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: 47ce75a8f91ddbf60aef5c39605789e9, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: a73eee8afe3f7e6c288472188b8ebdc5, type: 3}
   maxEquipment: 3

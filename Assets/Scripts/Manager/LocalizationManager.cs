@@ -70,6 +70,11 @@ public class LocalizationManager : MonoBehaviour
         // LOAD CSV
         // =========================================
 
+        if (localizationCSV == null)
+        {
+            var resources = Resources.Load<BattleUXResources>("BattleUXResources");
+            if (resources != null) localizationCSV = resources.localization;
+        }
         LoadLocalizationCSV();
     }
 
@@ -170,6 +175,7 @@ public class LocalizationManager : MonoBehaviour
         );
 
         PlayerPrefs.Save();
+        LocalStorageSync.Flush();
 
 
         OnLanguageChanged?.Invoke();

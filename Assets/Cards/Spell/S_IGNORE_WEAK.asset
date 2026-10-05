@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: S_IGNORE_WEAK
   cardName: "\uC57D\uC790 \uBB34\uC2DC"
-  description: "\uC774\uBC88 \uD134 \uC544\uAD70 \uC720\uB2DB \uD558\uB098\uC5D0\uAC8C
-    Bypass\uC640 \uACF5\uACA9 +1\uC744 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+  description: "\uACF5\uACA9\uB825\uC774 3 \uC774\uD558\uC778 \uC720\uB2DB \uD558\uB098\uB97C
+    \uCC98\uCE58\uD569\uB2C8\uB2E4."
   manaCost: 2
   artwork: {fileID: 0}
   onDrawEffects: []
   collectible: 1
   unlimitedCopies: 0
-  spellEffects: []
+  spellEffects:
+  - {fileID: 11400000, guid: cbac7a7218024a4aa70b8abfa3187b33, type: 2}

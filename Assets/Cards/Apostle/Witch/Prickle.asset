@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_PRICKLE
   cardName: Prickle
-  description: "\uACF5\uBA85: \uC0C1\uB300 \uD50C\uB808\uC774\uC5B4\uC5D0\uAC8C \uD53C\uD574\uB97C
-    1 \uC90D\uB2C8\uB2E4."
+  description: 'Resonance: Deal 1 damage to the enemy hero.'
   manaCost: 3
   artwork: {fileID: 21300000, guid: 9766c50a99f38f1a1b5a96e76e37ff26, type: 3}
   onDrawEffects: []
@@ -24,14 +23,17 @@ MonoBehaviour:
   attack: 2
   health: 4
   cardRace: 1
+  additionalRaces: 
   keywords: 
   battlecry: {fileID: 0}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
-  resonance: {fileID: 11400000, guid: 779d586208e8e66458a805660d42b763, type: 2}
+  additionalPassives: []
+  resonance: {fileID: 11400000, guid: 59cc8583fba66e0d6aa9bfa3a8a7bbd5, type: 2}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: a73eee8afe3f7e6c288472188b8ebdc5, type: 3}
   maxEquipment: 3

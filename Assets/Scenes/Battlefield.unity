@@ -645,7 +645,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1550709279}
   maxHandSize: 7
-  handContainer: {fileID: 238405240}
+  handContainer: {fileID: 512322994}
   commanderContainer: {fileID: 205856752}
   cardPrefab: {fileID: 7681874333562735314, guid: 61896fd615ae7bc6184336a34eb5e40a, type: 3}
   handLayout: {fileID: 512322995}
@@ -932,12 +932,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69cca3a4a6654c2518d752780c8f60ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimumScale: 0.65
-  maximumScale: 0.7
+  minimumScale: 0.5
+  maximumScale: 0.5
   cardSpacing: 200
   maxFanAngle: 4
-  fanHeight: 16
-  centerY: 24
+  fanHeight: 6
+  centerY: 0
   isCommander: 0
 --- !u!1 &519420028
 GameObject:

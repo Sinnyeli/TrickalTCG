@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -10,7 +11,8 @@ public class EscapeMenu : MonoBehaviour
     private static EscapeMenu instance;
     private GameObject overlay;
     private RectTransform panel;
-    private Font font;
+    private TMP_FontAsset font;
+    public static bool IsOpen => instance != null && instance.overlay != null && instance.overlay.activeSelf;
     private PlayerIconCatalog catalog;
     private bool choosingIcons;
     private int page;
@@ -29,7 +31,9 @@ public class EscapeMenu : MonoBehaviour
 
     private void Awake()
     {
-        font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        var resources = Resources.Load<BattleUXResources>("BattleUXResources");
+        font = resources == null ? TMP_Settings.defaultFontAsset : resources.menuFont;
+        if (LocalizationManager.Instance == null) new GameObject("Localization Manager").AddComponent<LocalizationManager>();
         catalog = Resources.Load<PlayerIconCatalog>("PlayerIconCatalog");
         SceneManager.sceneLoaded += SceneLoaded;
     }
@@ -71,24 +75,31 @@ public class EscapeMenu : MonoBehaviour
         RectTransform shadeRect = shade.rectTransform;
         shadeRect.anchorMin = Vector2.zero; shadeRect.anchorMax = Vector2.one;
         shadeRect.sizeDelta = Vector2.zero;
-        panel = Element("Menu Panel", overlay.transform, Vector2.zero, new Vector2(520, choosingIcons ? 680 : 380));
+        panel = Element("Menu Panel", overlay.transform, Vector2.zero, new Vector2(520, choosingIcons ? 680 : 460));
         panel.gameObject.AddComponent<Image>().color = new Color(.13f, .16f, .21f, 1);
-        Label(panel, choosingIcons ? "Choose Player Icon" : "Menu", new Vector2(0, choosingIcons ? 300 : 145), new Vector2(470, 50), 28);
+        Label(panel, choosingIcons ? "Choose Player Icon" : "Menu", new Vector2(0, choosingIcons ? 300 : 185), new Vector2(470, 50), 28);
         if (choosingIcons) { BuildIcons(); return; }
-        Button settings = MenuButton("Settings", 70, () => { });
+        Button settings = MenuButton("Settings", 120, () => { });
         settings.interactable = false;
+        MenuButton(Korean ? "언어: 한국어" : "Language: English", 55, () =>
+        {
+            LocalizationManager.Instance.SetLanguage(Korean ? GameLanguage.English : GameLanguage.Korean);
+            foreach (CardviewBase view in FindObjectsByType<CardviewBase>(FindObjectsSortMode.None))
+                if (view.runtimeCard != null) view.SetCard(view.runtimeCard);
+            Build();
+        });
         if (InBattle)
         {
-            Button surrender = MenuButton("Surrender", 5, Surrender);
+            Button surrender = MenuButton("Surrender", -10, Surrender);
             surrender.interactable = GameManager.Instance != null && !GameManager.Instance.IsGameOver;
         }
         else
         {
-            Button icon = MenuButton("Player Icon", 5, () => { choosingIcons = true; Build(); });
+            Button icon = MenuButton("Player Icon", -10, () => { choosingIcons = true; Build(); });
             icon.interactable = LocalAccountSession.IsLoggedIn && catalog != null && catalog.icons.Length > 0;
         }
-        MenuButton("Quit to Login", -60, Quit);
-        MenuButton("Close", -125, Close);
+        MenuButton("Quit to Login", -75, Quit);
+        MenuButton("Close", -140, Close);
     }
     private void BuildIcons()
     {
@@ -136,9 +147,28 @@ public class EscapeMenu : MonoBehaviour
     }
     private void Label(Transform parent, string value, Vector2 position, Vector2 size, int fontSize)
     {
-        Text text = Element("Label", parent, position, size).gameObject.AddComponent<Text>();
-        text.font = font; text.fontSize = fontSize; text.text = value;
-        text.color = Color.white; text.alignment = TextAnchor.MiddleCenter; text.raycastTarget = false;
+        TextMeshProUGUI text = Element("Label", parent, position, size).gameObject.AddComponent<TextMeshProUGUI>();
+        text.font = font; text.fontSize = fontSize; text.text = Translate(value);
+        text.color = Color.white; text.alignment = TextAlignmentOptions.Center; text.raycastTarget = false;
+    }
+    private bool Korean => LocalizationManager.Instance != null && LocalizationManager.Instance.CurrentLanguage == GameLanguage.Korean;
+    private string Translate(string value)
+    {
+        if (!Korean) return value;
+        switch (value)
+        {
+            case "Menu": return "메뉴";
+            case "Settings": return "설정";
+            case "Player Icon": return "플레이어 아이콘";
+            case "Choose Player Icon": return "플레이어 아이콘 선택";
+            case "Surrender": return "항복";
+            case "Quit to Login": return "로그인 화면으로";
+            case "Close": return "닫기";
+            case "Previous": return "이전";
+            case "Next": return "다음";
+            case "Back": return "뒤로";
+            default: return value;
+        }
     }
     private static RectTransform Element(string name, Transform parent, Vector2 position, Vector2 size)
     {

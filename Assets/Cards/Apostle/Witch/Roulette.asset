@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_ROULETTE
   cardName: Roulette
-  description: 'Battlecry: Spin the Roulette. Apply the same random result to both
-    players.'
+  description: 'Battlecry: One shared 25% roll: both players draw 1, destroy all
+    minions, each summons a random minion from their deck if possible, or each discards
+    a random card.'
   manaCost: 5
   artwork: {fileID: 21300000, guid: cb08b413f6fbab21bae70a761db511bc, type: 3}
   onDrawEffects: []
@@ -24,14 +25,17 @@ MonoBehaviour:
   attack: 4
   health: 5
   cardRace: 1
+  additionalRaces: 
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: 8676c87190352acfd9ee6a713d9b6d84, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: a73eee8afe3f7e6c288472188b8ebdc5, type: 3}
   maxEquipment: 3
