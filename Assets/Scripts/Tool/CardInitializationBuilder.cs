@@ -32,9 +32,11 @@ public static class CardInitializationBuilder
         RunBatch("Karen Erpin and Mayo", FairyAbilityInitializer.Build, failures, ref succeeded);
         RunBatch("Elemental abilities", ElementalAbilityInitializer.Build, failures, ref succeeded);
         RunBatch("Elf abilities and M.E.O.W.", ElfAbilityInitializer.Build, failures, ref succeeded);
+        RunBatch("Ghost abilities and Alice prophecies", GhostAbilityInitializer.Build, failures, ref succeeded);
+        RunBatch("Witch abilities", WitchAbilityInitializer.Build, failures, ref succeeded);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        string summary = succeeded + "/13 initialization batches completed.";
+        string summary = succeeded + "/15 initialization batches completed.";
         if (failures.Count > 0)
             Debug.LogError(summary + " Failed batches: " + string.Join("; ", failures) +
                 ". Earlier successful changes remain saved; fix the missing requirements and rerun.");

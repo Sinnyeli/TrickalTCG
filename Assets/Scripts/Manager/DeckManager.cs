@@ -227,6 +227,8 @@ public void InitializeDeck(
 {
     drawPile.Clear();
     discardPile.Clear();
+    GameManager.Instance?.ResetDestiny(owner);
+    GameManager.Instance?.ResetSpellHistory(owner);
 
     Commander = null;
 
@@ -314,4 +316,10 @@ public void InitializeDeck(
 {
     deckData = data;
 }
+    public List<RuntimeCard> GetDiscardPileSnapshot() => new List<RuntimeCard>(discardPile);
+    public bool TryRecoverDiscardedCard(RuntimeCard card)
+    {
+        if (card == null || card.Owner != owner || card.Zone != CardZone.Graveyard || !discardPile.Remove(card)) return false;
+        card.ChangeZone(CardZone.Hand); return true;
+    }
 }

@@ -270,6 +270,7 @@ public static event System.Action<RuntimeCard> OnUnitSummoned;
         unit.RecalculateCurrentHealth();
         GameManager.Instance.GetBattlefield(unit.Owner)?.RefreshMinionView(unit);
     }
+    foreach (PlayerSide side in new[] { PlayerSide.Player, PlayerSide.Opponent }) GameManager.Instance.GetHandManager(side)?.RefreshAllCardViews();
 }
 public bool BounceCard(RuntimeCard card)
 {
@@ -420,7 +421,7 @@ public bool BounceCard(RuntimeCard card)
 
 public bool TransformCard(
     RuntimeCard target,
-    CardData newData)
+    CardData newData, bool allowCommander = false)
 {
     if (target == null ||
         newData == null)
@@ -439,7 +440,7 @@ public bool TransformCard(
         return false;
     }
 
-    if (target.IsCommander)
+    if (target.IsCommander && !allowCommander)
     {
         Debug.LogWarning(
             "Commanders cannot currently be transformed."

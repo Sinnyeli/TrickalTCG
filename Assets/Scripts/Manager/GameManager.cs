@@ -412,4 +412,38 @@ public HandManager GetHandManager(
         DrawCard(PlayerSide.Player);
     }
 
+    private readonly Dictionary<PlayerSide, int> destinyCounters = new Dictionary<PlayerSide, int>();
+    private readonly Dictionary<PlayerSide, int> destinyDrawnKinds = new Dictionary<PlayerSide, int>();
+    public int GetDestinyCounter(PlayerSide side) => destinyCounters.TryGetValue(side, out int count) ? count : 0;
+    public void ResetDestiny(PlayerSide side)
+    {
+        destinyCounters.Remove(side); destinyDrawnKinds.Remove(side);
+    }
+    public void RecordDestinyDraw(PlayerSide side, int kind)
+    {
+        if (IsGameOver || kind < 0 || kind > 2) return;
+        destinyCounters[side] = GetDestinyCounter(side) + 1;
+        destinyDrawnKinds.TryGetValue(side, out int mask);
+        mask |= 1 << kind; destinyDrawnKinds[side] = mask;
+        Debug.Log(side + " Destiny: " + destinyCounters[side]);
+        if (mask == 7) PlayerDefeated(side == PlayerSide.Player ? PlayerSide.Opponent : PlayerSide.Player);
+    }
+    private readonly Dictionary<PlayerSide, SpellData> lastCastSpells = new Dictionary<PlayerSide, SpellData>();
+    public void RecordLastCastSpell(RuntimeCard card)
+    {
+        if (card != null && card.Data is SpellData spell) lastCastSpells[card.Owner] = spell;
+    }
+    public SpellData GetLastCastSpell(PlayerSide side) => lastCastSpells.TryGetValue(side, out var spell) ? spell : null;
+    public void ResetSpellHistory(PlayerSide side) => lastCastSpells.Remove(side);
+    public int GetWitchSpellAuraDiscount(PlayerSide side)
+    {
+        int amount = 0; var field = GetBattlefield(side);
+        if (field == null) return 0;
+        foreach (var unit in field.Minions)
+        {
+            if (unit.IsSilenced || unit.CurrentHealth <= 0 || !(unit.Data is MinionData data)) continue;
+            foreach (var effect in data.Passives) if (effect is WitchSpellCostAuraEffect aura) amount += aura.Amount;
+        }
+        return amount;
+    }
 }

@@ -23,14 +23,17 @@ MonoBehaviour:
   attack: 2
   health: 1
   cardRace: 6
+  additionalRaces: 
   keywords: 02000000
-  battlecry: {fileID: 11400000, guid: 35a13f8b71240a0989d5c9af4074a971, type: 2}
+  battlecry: {fileID: 11400000, guid: 850c0fe018feba9c3a111f647f8d91e0, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 0}
   maxEquipment: 3

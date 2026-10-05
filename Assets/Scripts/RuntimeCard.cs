@@ -4,6 +4,31 @@ using Unity.Mathematics;
 
 public class RuntimeCard
 {
+    private bool destroyAtTurnEnd;
+    private RuntimeCard turnEndDeathSource;
+    public void ScheduleDeathAtTurnEnd(RuntimeCard source)
+    {
+        destroyAtTurnEnd = true; turnEndDeathSource = source;
+    }
+    private void ClearScheduledDeath() { destroyAtTurnEnd = false; turnEndDeathSource = null; }
+    private readonly Dictionary<CardEffect, int> turnAbilityCounts = new Dictionary<CardEffect, int>();
+    public int AdvanceTurnAbilityCounter(CardEffect effect)
+    {
+        turnAbilityCounts.TryGetValue(effect, out int count); turnAbilityCounts[effect] = ++count; return count;
+    }
+    private readonly Dictionary<CardEffect, RuntimeCard> deathMarks = new Dictionary<CardEffect, RuntimeCard>();
+    public void SetDeathMark(CardEffect effect, RuntimeCard target) => deathMarks[effect] = target;
+    public RuntimeCard ConsumeDeathMark(CardEffect effect)
+    {
+        deathMarks.TryGetValue(effect, out var target); deathMarks.Remove(effect); return target;
+    }
+    // Stat exchanges use visible Attack/current Health and clear old wounds after assignment.
+    public void SetCurrentStats(int attack, int health, RuntimeCard source)
+    {
+        if (HasActiveAbility<SylphyrFixedStatsEffect>()) return;
+        AddModifier(new RuntimeModifier(attack - GetAttack(), health - GetMaxHealth(), true, source));
+        damageTaken = 0; currentHealth = Mathf.Max(0, GetMaxHealth());
+    }
     public bool IsFusionSummon { get; private set; }
     public bool SuppressSummonBattlecry { get; private set; }
     private bool immuneUntilTurnEnd;
@@ -80,7 +105,7 @@ public class RuntimeCard
         0,
         baseCost + manaCostModifier -
         (Zone == CardZone.Hand && GameManager.Instance != null ? GameManager.Instance.GetNextCardDiscount(Owner) : 0) -
-        (Data is SpellData && GameManager.Instance != null ? GameManager.Instance.GetPermanentSpellDiscount(Owner) : 0)
+        (Data is SpellData && GameManager.Instance != null ? GameManager.Instance.GetPermanentSpellDiscount(Owner) + GameManager.Instance.GetWitchSpellAuraDiscount(Owner) : 0)
     );
 }
     private bool resolvingPassive = false;
@@ -141,7 +166,7 @@ public class RuntimeCard
     public void FinishAbilityTurn(PlayerSide endingSide)
     {
         immuneUntilTurnEnd = false;
-        if (endingSide == Owner) restingThisTurn = false;
+        if (endingSide == Owner) { restingThisTurn = false; turnAbilityCounts.Clear(); }
         foreach (var modifier in new List<RuntimeModifier>(timedModifiers.Keys))
         {
             int remaining = timedModifiers[modifier] - 1;
@@ -161,6 +186,11 @@ public class RuntimeCard
             freezeReachedOwnTurn = false;
         }
         RecalculateCurrentHealth();
+        if (destroyAtTurnEnd && Zone == CardZone.Field)
+        {
+            var deathSource = turnEndDeathSource; ClearScheduledDeath();
+            Kill(deathSource); // TurnManager checks death immediately after finishing this unit's turn effects.
+        }
     }
 
     public PlayerSide Owner { get; private set; }
@@ -196,6 +226,7 @@ public class RuntimeCard
     {
         if (Zone == CardZone.Field && newZone != CardZone.Field)
         {
+            ClearScheduledDeath();
             frozen = false; freezeReachedOwnTurn = false;
             runtimeKeywords.Clear();
             foreach (var modifier in timedModifiers.Keys) modifiers.Remove(modifier);
@@ -623,6 +654,7 @@ public void RecalculateCurrentHealth()
     public void Silence()
     {
         isSilenced = true;
+        deathMarks.Clear(); turnAbilityCounts.Clear(); ClearScheduledDeath();
         frozen = false; freezeReachedOwnTurn = false;
         runtimeKeywords.Clear();
         RemoveStealth();
@@ -762,6 +794,7 @@ public void Kill(RuntimeCard source = null)
 public void ResetAfterBounce()
 {
     triggerCounts.Clear();
+    deathMarks.Clear(); turnAbilityCounts.Clear(); ClearScheduledDeath();
     abilityCounts.Clear(); immuneUntilTurnEnd = false; skippedAttackTurns = 0; restingThisTurn = false;
     LastDamageSource = null;
     LethalStatSnapshot = null;
@@ -804,6 +837,7 @@ public bool TransformInto(CardData newData)
 
     // Clear temporary battlefield modifications.
     triggerCounts.Clear();
+    deathMarks.Clear(); turnAbilityCounts.Clear(); ClearScheduledDeath();
     abilityCounts.Clear(); immuneUntilTurnEnd = false; skippedAttackTurns = 0; restingThisTurn = false;
     LastDamageSource = null;
     LethalStatSnapshot = null;

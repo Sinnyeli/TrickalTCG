@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_ALICE
   cardName: Alice
-  description: 'Bypass. Battlecry: Shuffle 3 unique Tarot cards into your deck. Draw
-    all 3 to win.'
+  description: 'Bypass. Battlecry: Shuffle Past, Present and Future into your deck.
+    Drawing each advances Destiny. Draw all three kinds to win.'
   manaCost: 5
   artwork: {fileID: 21300000, guid: ebf7baffaa4514fbe8df7f53f85f8325, type: 3}
   onDrawEffects: []
@@ -24,14 +24,17 @@ MonoBehaviour:
   attack: 3
   health: 5
   cardRace: 6
+  additionalRaces: 
   keywords: 02000000
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: 26b8cd685f387afd7ae183eb6e2b338f, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
+  additionalPassives: []
   resonance: {fileID: 0}
   turnStart: {fileID: 0}
   turnEnd: {fileID: 0}
   onDamageTaken: {fileID: 0}
   onAttack: {fileID: 0}
+  playRule: {fileID: 0}
   typeIcon: {fileID: 21300000, guid: bccddf9e7940652579ea3c9bd636c7a0, type: 3}
   maxEquipment: 3

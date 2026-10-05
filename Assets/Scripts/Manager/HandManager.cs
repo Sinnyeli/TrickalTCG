@@ -597,6 +597,7 @@ private void CompleteSpellCast(
     if (turnManager == null)
         return;
 
+    GameManager.Instance.RecordLastCastSpell(card);
     RuntimeCard.PublishTrigger(CardTriggerType.SpellCast, card, card);
     Debug.Log(
         $"{card.Data.cardName} finished casting."
