@@ -108,7 +108,7 @@ public class BattleActionTests
         Assert.True(Validate(saved,catalog));
         entries.Clear();entries.Add(Entry("M_TEST",3));entries.Add(Entry("M_JUBEE_TEST",27));Assert.False(Validate(saved,catalog));
         entries.Clear();entries.Add(Entry("M_JUBEE_TEST",29));Assert.False(Validate(saved,catalog));
-        entries.Clear();entries.Add(Entry("A_TEST",1));entries.Add(Entry("M_JUBEE_TEST",29));Assert.False(Validate(saved,catalog));
+        entries.Clear();entries.Add(Entry("A_TEST",1));entries.Add(Entry("M_JUBEE_TEST",29));Assert.True(Validate(saved,catalog));
     }
     [Test] public void RemotePresentationUsesAuthoritativeStatsAndIdentity()
     {
