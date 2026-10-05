@@ -287,6 +287,7 @@ MonoBehaviour:
   side: 0
   maxHealth: 20
   healthText: {fileID: 4678290534890420036}
+  playerIcon: {fileID: 669450120096902003}
 --- !u!1 &7986022496257271480
 GameObject:
   m_ObjectHideFlags: 0

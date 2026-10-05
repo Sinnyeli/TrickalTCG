@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UI;
 
 public class PlayerView : MonoBehaviour, IPointerClickHandler
 {
@@ -13,7 +14,16 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
 
     [SerializeField] private TMP_Text healthText;
 
+    [SerializeField] private Image playerIcon;
     public PlayerSide Side => side;
+
+    public void RefreshPlayerIcon()
+    {
+        if (side != PlayerSide.Player || playerIcon == null) return;
+        var catalog = Resources.Load<PlayerIconCatalog>("PlayerIconCatalog");
+        Sprite selected = catalog == null ? null : catalog.SelectedSprite();
+        if (selected != null) { playerIcon.sprite = selected; playerIcon.preserveAspect = true; }
+    }
 
 private void Awake()
 {
@@ -36,6 +46,7 @@ private void Awake()
         currentHealth = maxHealth;
 
         RefreshView();
+        RefreshPlayerIcon();
         RefreshHealth();
 
         Debug.Log(
@@ -63,7 +74,7 @@ private void Awake()
     private void RefreshHealth()
     {
         healthText.text =
-            $"{currentHealth} / {maxHealth}";
+            currentHealth.ToString();
     }
  public void TakeDamage(int damage)
 {
