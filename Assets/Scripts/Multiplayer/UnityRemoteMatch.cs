@@ -190,7 +190,7 @@ public class UnityRemoteMatch : MonoBehaviour
         var go = new GameObject("Trickal Netcode", typeof(UnityTransport), typeof(NetworkManager));
         DontDestroyOnLoad(go); network = go.GetComponent<NetworkManager>(); transport = go.GetComponent<UnityTransport>();
         transport.UseWebSockets = true;
-        network.NetworkConfig = new NetworkConfig { NetworkTransport = transport, EnableSceneManagement = false, ConnectionApproval = true };
+        network.NetworkConfig = new NetworkConfig { NetworkTransport = transport, EnableSceneManagement = false, ConnectionApproval = true, ConnectionData = Array.Empty<byte>() };
         network.ConnectionApprovalCallback = (request, response) => {
             response.Approved = searching && !inMatch && (request.ClientNetworkId == NetworkManager.ServerClientId || network.ConnectedClientsIds.Count < 2);
             response.CreatePlayerObject = false; response.Pending = false;
