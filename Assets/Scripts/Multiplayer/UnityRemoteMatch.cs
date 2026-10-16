@@ -35,7 +35,7 @@ public class UnityRemoteMatch : MonoBehaviour
     private ulong remoteClient;
     private DeckSaveData selected;
     private CardDatabase database;
-    private float nextState, nextHeartbeat;
+    private float nextState, nextHeartbeat, nextLobbyQuery;
     private RemoteBattleState latest;
     private string shownChoice;
     private readonly Dictionary<string, RuntimeCard> mirrors = new Dictionary<string, RuntimeCard>();
@@ -118,9 +118,24 @@ public class UnityRemoteMatch : MonoBehaviour
                 await WaitMilliseconds(500);
                 if (!Current(attempt) || inMatch) break;
                 // Concurrent arrivals can create two lobbies. The newer empty host joins the older one.
-                if (ownsLobby && network.ConnectedClientsIds.Count <= 1)
+                if (ownsLobby && network.ConnectedClientsIds.Count <= 1 && Time.realtimeSinceStartup >= nextLobbyQuery)
                 {
-                    var response = await LobbyService.Instance.QueryLobbiesAsync(new QueryLobbiesOptions { Filters = Filters(), Count = 10 });
+                    // Queries are limited to one per second. Leave margin and back off on errors.
+                    nextLobbyQuery = Time.realtimeSinceStartup + 1.5f;
+                    QueryResponse response;
+                    try
+                    {
+                        response = await LobbyService.Instance.QueryLobbiesAsync(new QueryLobbiesOptions { Filters = Filters(), Count = 10 });
+                    }
+                    catch (LobbyServiceException error)
+                    {
+                        nextLobbyQuery = Time.realtimeSinceStartup + 3f;
+                        Debug.LogWarning("Optional Lobby query failed; staying queued until JubeeAI fallback. " + error);
+                        continue;
+                    }
+                    // An asynchronous query can finish after cancellation or a successful handshake.
+                    if (!Current(attempt) || inMatch || lobby == null) break;
+                    if (response == null || response.Results == null) continue;
                     var older = response.Results.Where(l => l.Id != lobby.Id && (l.Created < lobby.Created ||
                         (l.Created == lobby.Created && string.CompareOrdinal(l.Id, lobby.Id) < 0)))
                         .OrderBy(l => l.Created).ThenBy(l => l.Id, StringComparer.Ordinal).FirstOrDefault();
@@ -141,30 +156,43 @@ public class UnityRemoteMatch : MonoBehaviour
                 }
             }
             if (!Current(attempt) || inMatch) return;
-            // Only an unpaired host may fall back. Joining/connection errors are displayed as errors.
-            if (!ownsLobby) throw new TimeoutException("The opponent connection timed out. Please retry.");
+            // Any attempt that fails before a match starts falls back to JubeeAI.
+            if (!ownsLobby) throw new TimeoutException("The opponent connection timed out.");
             await LobbyService.Instance.UpdateLobbyAsync(lobby.Id, new UpdateLobbyOptions { IsLocked = true });
             // Give an already claimed lobby slot time to finish its Relay handshake.
             float grace = Time.realtimeSinceStartup + 5;
             while (Current(attempt) && !inMatch && network.ConnectedClientsIds.Count > 1 && Time.realtimeSinceStartup < grace) await WaitMilliseconds(100);
             if (!Current(attempt) || inMatch) return;
-            searching = false; ++generation;
-            await CleanupNetwork();
-            if (notice != null) Destroy(notice.gameObject);
-            BattleSession.CreateAIMatch(selected.deckID, AIType.Jubee);
-            BattleActions.ResetMatch(); SceneManager.LoadScene("Battlefield");
+            await StartJubeeFallback(attempt);
         }
         catch (Exception error)
         {
             if (!Current(attempt) || inMatch) return;
-            searching = false; ++generation;
-            Debug.LogException(error); await CleanupNetwork();
-            if (notice != null) notice.ShowError("Connection failed. Retry Play. / 연결 실패. 다시 시도하세요.");
+            Debug.LogException(error);
+            await StartJubeeFallback(attempt);
         }
         finally
         {
             if (!searching && !inMatch && network != null && network.IsListening) await CleanupNetwork();
         }
+    }
+    private async Task StartJubeeFallback(int attempt)
+    {
+        if (!Current(attempt) || inMatch) return;
+        searching = false; ++generation; closing = true;
+        string deckID = selected.deckID;
+        try
+        {
+            await CleanupNetwork();
+            if (notice != null) Destroy(notice.gameObject);
+            // A scene change while cleanup was pending must not start an unwanted match.
+            if (SceneManager.GetActiveScene().name != "DeckSelector" || inMatch) return;
+            Debug.Log("No remote connection established. Starting JubeeAI match.");
+            BattleSession.CreateAIMatch(deckID, AIType.Jubee);
+            BattleActions.ResetMatch();
+            SceneManager.LoadScene("Battlefield");
+        }
+        finally { closing = false; }
     }
     // Avoid thread-based timers: WebGL runs the game on a browser main thread.
     private static async Task WaitMilliseconds(int milliseconds)
@@ -392,7 +420,8 @@ public class UnityRemoteMatch : MonoBehaviour
     private async Task CleanupNetwork()
     {
         var old = lobby; bool host = ownsLobby; lobby = null; ownsLobby = false;
-        if (network != null && network.IsListening) network.Shutdown();
+        try { if (network != null && network.IsListening) network.Shutdown(); }
+        catch (Exception error) { Debug.LogWarning("Network shutdown: " + error); }
         try
         {
             if (old != null && AuthenticationService.Instance.IsSignedIn)

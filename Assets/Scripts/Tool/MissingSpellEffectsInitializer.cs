@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Linq;
 using UnityEditor;
@@ -27,3 +28,4 @@ public static class MissingSpellEffectsInitializer
         AssetDatabase.SaveAssets();
     }
 }
+#endif

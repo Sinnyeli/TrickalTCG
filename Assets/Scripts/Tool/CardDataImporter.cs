@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -295,3 +296,4 @@ public static class CardDataImporter
             property.GetArrayElementAtIndex(i).enumValueIndex = (int)keywords[i];
     }
 }
+#endif

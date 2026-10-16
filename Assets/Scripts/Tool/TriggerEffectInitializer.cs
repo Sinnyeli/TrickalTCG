@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Linq;
 using System.IO;
@@ -237,3 +238,4 @@ public static class TriggerEffectInitializer
         var s = new SerializedObject(asset); action(s); s.ApplyModifiedProperties(); EditorUtility.SetDirty(asset);
     }
 }
+#endif

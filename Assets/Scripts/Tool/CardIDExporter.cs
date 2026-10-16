@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -32,3 +33,4 @@ public static class CardIDExporter
         Debug.Log($"Exported {guids.Length} Card IDs to {exportPath}");
     }
 }
+#endif

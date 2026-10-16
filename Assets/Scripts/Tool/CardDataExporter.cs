@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -127,3 +128,4 @@ internal static class CardDataCsv
 
     internal static List<List<string>> Parse(string text) => CsvText.Parse(text);
 }
+#endif
