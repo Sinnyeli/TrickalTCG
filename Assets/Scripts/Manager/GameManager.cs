@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour
     [Header("Other UIs")]
     [SerializeField] private GameOverUI gameOverUI;
 
-    private List<RuntimeCard> opponentHand = new List<RuntimeCard>(); // Temp List for OpponentHand. 
     [SerializeField] private BattlefieldManager opponentBattlefieldManager;
     [SerializeField] private TurnManager turnManager;
 
@@ -131,29 +130,26 @@ private void Awake()
         CreatePlayerViews();
         
  
-        RuntimeCard playerCommander = deckManager.GetCommander();
+        SetUpCommander(PlayerSide.Player);
+        DrawStartingHand();
 
-        if (playerCommander != null)
-        {
-            playerCommander.SetOwner(PlayerSide.Player);
-            handManager.AddCommander(playerCommander);
-        }
-
-            DrawStartingHand();
-    // Opponent (Testing)
-
+        // Opponent
         opponentDeckManager.InitializeDeck();
-        RuntimeCard opponentCommander = opponentDeckManager.GetCommander();
-
-       if (opponentCommander != null)
-        {
-            opponentHandManager.AddCommander(opponentCommander);
-            opponentCommander.SetOwner(PlayerSide.Opponent);
-            // Add to list above
-        }
+        SetUpCommander(PlayerSide.Opponent);
         int opponentStartingCards = BattleSession.OpponentType == BattleOpponentType.RemotePlayer ? startingHandSize : 1;
         for (int i = 0; i < opponentStartingCards; i++) DrawCard(PlayerSide.Opponent);
     }
+    // Both sides place their commander the same way: owner first, then the commander slot in hand.
+    private void SetUpCommander(PlayerSide side)
+    {
+        RuntimeCard commander = GetDeck(side).GetCommander();
+        if (commander == null)
+            return;
+
+        commander.SetOwner(side);
+        GetHandManager(side).AddCommander(commander);
+    }
+
         public void SetGameState(GameState newState)
     {
         currentGameState = newState;
@@ -172,73 +168,34 @@ private void Awake()
         }
     }
 
-       public void DrawCard(PlayerSide side)
-{
-    DeckManager deck;
-    HandManager hand;
+    public void DrawCard(PlayerSide side)
+    {
+        RuntimeCard card = GetDeck(side).DrawCard();
 
-    if (side == PlayerSide.Player)
-    {
-        deck = deckManager;
-        hand = handManager;
-    }
-    else
-    {
-        deck = opponentDeckManager;
-        hand = opponentHandManager;
+        if (card == null)
+        {
+            Debug.Log($"{side} cannot draw. Deck is empty.");
+            return;
+        }
+
+        HandleDrawnCard(card, side);
     }
 
-    RuntimeCard card =
-        deck.DrawCard();
-
-    if (card == null)
+    public void HandleDrawnCard(RuntimeCard card, PlayerSide side)
     {
-        Debug.Log(
-            $"{side} cannot draw. Deck is empty."
-        );
+        if (card == null)
+            return;
 
-        return;
+        card.SetOwner(side);
+        bool added = GetHandManager(side).AddCard(card);
+
+        // On-draw effects fire even when the hand is full and the card is burnt.
+        EffectManager.ResolveOnDraw(card);
+
+        if (!added)
+            GetDeck(side).Discard(card);
     }
 
-    HandleDrawnCard(
-        card,
-        side
-    );
-}
-
-public void HandleDrawnCard(
-    RuntimeCard card,
-    PlayerSide side)
-{
-    if (card == null)
-        return;
-
-    DeckManager deck;
-    HandManager hand;
-
-    if (side == PlayerSide.Player)
-    {
-        deck = deckManager;
-        hand = handManager;
-    }
-    else
-    {
-        deck = opponentDeckManager;
-        hand = opponentHandManager;
-    }
-
-    card.SetOwner(side);
-
-    bool added =
-        hand.AddCard(card);
-
-    EffectManager.ResolveOnDraw(card);
-
-    if (!added)
-    {
-        deck.Discard(card);
-    }
-}
 //// //////////////////
 ///  Create Player Views
 /// ///////////////////
@@ -359,7 +316,7 @@ private void CreatePlayerViews()
             return false;
         }
 
-        GameManager.Instance.EndPlayerTurn();
+        turnManager.EndPlayerTurn();
         return true;
     }
     //////////////////////////
@@ -398,38 +355,6 @@ public HandManager GetHandManager(
 
     return opponentHandManager;
 }
-
-////////////////////////////
-    // Test Area. 
-///////////////////////////
-    public void TestOpponentPlay()
-    {
-        RuntimeCard card =
-            opponentHandManager.GetFirstNormalCard();
-            if (card == null)
-            {
-                Debug.Log("Opponent has no normal cards to play.");
-                return;
-            }
-
-            Debug.Log(
-                $"Opponent attempting to play {card.Data.cardName}"
-            );
-
-            bool played =
-                opponentHandManager.PlayCardFromHand(card);
-
-            if (!played)
-            {
-                Debug.Log(
-                    $"Opponent could not play {card.Data.cardName}"
-                );
-            }
-        }
-    public void TestDraw()
-    {
-        DrawCard(PlayerSide.Player);
-    }
 
     private readonly Dictionary<PlayerSide, int> destinyCounters = new Dictionary<PlayerSide, int>();
     private readonly Dictionary<PlayerSide, int> destinyDrawnKinds = new Dictionary<PlayerSide, int>();

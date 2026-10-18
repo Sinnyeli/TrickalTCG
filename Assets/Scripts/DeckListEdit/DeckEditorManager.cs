@@ -521,75 +521,7 @@ private void RefreshCommanderView()
     // COPY LIMIT
     // =========================================================
 
-    private int GetCopyLimit(
-        CardData card)
-    {
-        if (card == null)
-            return 0;
-
-
-        // -----------------------------------------
-        // JUBEE EXCEPTION
-        // -----------------------------------------
-
-        /*
-         * Temporary identification by card name.
-         *
-         * Once we establish permanent Card IDs,
-         * this should use cardID instead.
-         */
-
-        if (card.cardName == "Jubee")
-        {
-            // -1 means unlimited.
-            return -1;
-        }
-
-
-        // -----------------------------------------
-        // SPELL
-        // -----------------------------------------
-
-        if (card is SpellData)
-        {
-            return 3;
-        }
-
-
-        // -----------------------------------------
-        // APOSTLE
-        // -----------------------------------------
-
-        if (card is ApostleData)
-        {
-            return 2;
-        }
-
-
-        // -----------------------------------------
-        // MONSTER
-        // -----------------------------------------
-
-        if (card is MonsterData)
-        {
-            return 2;
-        }
-
-
-        // -----------------------------------------
-        // ARTIFACT
-        // -----------------------------------------
-
-        if (card is ArtifactData)
-        {
-            return 2;
-        }
-
-
-        // Unknown card types cannot currently
-        // be added to a deck.
-        return 0;
-    }
+    private int GetCopyLimit(CardData card) => DeckRules.GetCopyLimit(card);
 
 
     // =========================================================

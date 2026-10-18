@@ -447,24 +447,23 @@ public class UnityRemoteMatch : MonoBehaviour
         foreach (var entry in saved.cards)
         {
             error = "Saved deck contains an invalid card count.";
-            if (entry == null || entry.count <= 0 || entry.count > 30) return false;
+            if (entry == null || entry.count <= 0 || entry.count > DeckRules.MainDeckSize) return false;
             var card = catalog.GetCardByID(entry.cardID);
             error = $"Card could not be found: {entry.cardID}.";
             if (card == null) return false;
             error = $"{card.cardName} is not collectible.";
             if (!card.Collectible) return false;
             counts.TryGetValue(entry.cardID, out int previous); counts[entry.cardID] = previous + entry.count;
-            // Match DeckEditorManager: the commander may also appear in the main deck.
-            int limit = card.cardName == "Jubee" ? -1 : card is SpellData ? 3 :
-                card is ApostleData || card is MonsterData || card is ArtifactData ? 2 : 0;
+            // Same limits as DeckEditorManager: the commander may also appear in the main deck.
+            int limit = DeckRules.GetCopyLimit(card);
             error = $"{card.cardName} has {counts[entry.cardID]} copies; the limit is {limit}.";
             if (limit >= 0 && counts[entry.cardID] > limit) return false;
             for (int i = 0; i < entry.count; i++) cards.Add(card);
-            error = $"Deck must contain 30 main-deck cards; found more than 30.";
-            if (cards.Count > 30) return false;
+            error = $"Deck must contain {DeckRules.MainDeckSize} main-deck cards; found more than {DeckRules.MainDeckSize}.";
+            if (cards.Count > DeckRules.MainDeckSize) return false;
         }
-        error = $"Deck must contain 30 main-deck cards; found {cards.Count}.";
-        if (cards.Count != 30) return false;
+        error = $"Deck must contain {DeckRules.MainDeckSize} main-deck cards; found {cards.Count}.";
+        if (cards.Count != DeckRules.MainDeckSize) return false;
         deck = ScriptableObject.CreateInstance<DeckData>(); deck.commander = commander; deck.cards = cards;
         error = null; return true;
     }

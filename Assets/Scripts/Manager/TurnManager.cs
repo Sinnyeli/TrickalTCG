@@ -250,6 +250,14 @@ public void StartTurn()
         return opponentMana;
     }
 
+/// <summary>Returns mana spent on an action that could not complete. Not capped, unlike RestoreMana.</summary>
+public void RefundMana(PlayerSide side, int amount)
+{
+    if (amount <= 0) return;
+    if (side == PlayerSide.Player) playerMana += amount;
+    else opponentMana += amount;
+}
+
 /// <summary>Restores available mana, capped at this side's current maximum.</summary>
 public int RestoreMana(PlayerSide side, int amount)
 {

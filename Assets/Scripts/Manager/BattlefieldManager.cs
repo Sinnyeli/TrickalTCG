@@ -232,6 +232,9 @@ public static event System.Action<RuntimeCard> OnUnitSummoned;
             .EffectManager
             .ResolveDeathrattle(card);
 
+        // Artifact deathrattles above still see the equipment; afterwards it follows the unit to the Graveyard.
+        card.RemoveAllArtifacts();
+
         return true;
     }
     public void SetMinionSelected(RuntimeCard card, bool selected)

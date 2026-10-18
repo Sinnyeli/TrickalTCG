@@ -216,14 +216,13 @@ public bool Attack(PlayerView defender)
 {
     if (defender == null) return Fail("NO_TARGET", selectedAttacker);
     if (!BattleActions.Executing && selectedAttacker != null)
-        return BattleActions.Submit(selectedAttacker.Owner, BattleActionKind.AttackHero, selectedAttacker, hero: defender == null ? PlayerSide.Opponent : defender.Side);
+        return BattleActions.Submit(selectedAttacker.Owner, BattleActionKind.AttackHero, selectedAttacker, hero: defender.Side);
     if (GameManager.Instance == null || GameManager.Instance.IsGameOver) return false;
     RuntimeCard attacker = selectedAttacker;
     if (attacker == null) return Fail("NO_ATTACKER");
     if (attacker.Zone != CardZone.Field || attacker.CurrentHealth <= 0) return Fail("INVALID_UNIT", attacker);
     if (!GameManager.Instance.TurnManager.IsMyTurn(attacker.Owner)) return Fail("NOT_TURN", attacker);
     if (!attacker.CanAttack) return FailNotReady(attacker);
-    if (defender == null) return Fail("NO_TARGET", attacker);
     if (attacker.Owner == defender.Side) return Fail("OWN_PLAYER", attacker);
     if (attacker.CannotAttackHero) return Fail("RUSH", attacker);
     if (HasTaunt(defender.Side) && !attacker.HasKeyword(CardKeyword.Bypass)) return Fail("TAUNT_HERO", attacker);

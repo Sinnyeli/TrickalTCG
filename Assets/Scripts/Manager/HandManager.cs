@@ -20,9 +20,6 @@ public class HandManager : MonoBehaviour
     private PlayerSide owner;
 
     public Transform HandContainer => handContainer;
-    // Runtime card. Essentially represent card hand is holding.
-    private RuntimeCard runtimeCard;
-    public RuntimeCard RuntimeCard => runtimeCard;
     private List<RuntimeCard> hand = new List<RuntimeCard>();
     // This holds the list of cards in hand.
 
@@ -153,15 +150,6 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
     }
 
     // =========================================================
-    // Set Card UI
-    // =========================================================
-
-    public void SetCard(RuntimeCard card)
-        {
-            runtimeCard = card;
-
-        }
-    // =========================================================
     // CREATE COMMANDER UI
     // =========================================================
 
@@ -258,59 +246,6 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
     }
 
     // =========================================================
-    // DRAW TEST (used with button OnClick())
-    // =========================================================
-
-    public void DrawTestCard()
-    {
-        DeckManager deckManager =
-            FindFirstObjectByType<DeckManager>();
-
-        if (deckManager == null)
-        {
-            Debug.LogError(
-                "DeckManager not found!"
-            );
-
-            return;
-        }
-
-        RuntimeCard card =
-            deckManager.DrawCard();
-
-        if (card == null)
-            return;
-
-        bool added = AddCard(card);
-
-        // If the card couldn't be added because the hand
-        // is full, discard/exhaust it.
-        if (!added)
-        {
-            deckManager.Discard(card);
-        }
-    }
-
-    // =========================================================
-    // Remove Card Here
-    // =========================================================
-
-    public bool RemoveCard(RuntimeCard card)
-    {
-        if (card == null)
-            return false;
-
-        if (!hand.Contains(card))
-            return false;
-
-        hand.Remove(card);
-
-        RefreshHandLayout();
-
-        return true;
-    }
-
-    // =========================================================
     // Play Card from Hand here. 
     // =========================================================
 
@@ -372,20 +307,9 @@ public bool PlayCardFromHand(RuntimeCard card)
     if (!battlefield.HasAvailableMinionSlot) return false;
     if (card.Data is ApostleData playData && playData.PlayRule != null &&
         !playData.PlayRule.ApplyBeforeHandPlay(card)) return false;
-    int usedDiscount = GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
-    bool success =
-        battlefield.PlayCard(card);
-
-    if (!success)
-    {
-        GameManager.Instance.AddNextCardDiscount(card.Owner, usedDiscount);
+    if (!PayAndPlayUnit(card, cost, battlefield))
         return false;
-    }
-   // Only spend mana after the card successfully enters the field.
-        turnManager.SpendMana(
-            card.Owner,
-            cost
-        );
+
     SparrotDeckAbility.NotifyApostlePlayed(card);
 
     return true;
@@ -449,23 +373,34 @@ public bool PlayCardFromHand(RuntimeCard card)
         if (!battlefield.HasAvailableMinionSlot) return false;
         if (card.Data is ApostleData playData && playData.PlayRule != null &&
             !playData.PlayRule.ApplyBeforeHandPlay(card)) return false;
-        int usedDiscount = GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
-        bool success =
-            battlefield.PlayCard(card);
-
-        if (!success)
-        {
-            GameManager.Instance.AddNextCardDiscount(card.Owner, usedDiscount);
+        if (!PayAndPlayUnit(card, cost, battlefield))
             return false;
-        }
-    // Only spend mana after the card successfully enters the field.
-        turnManager.SpendMana(card.Owner, cost);
+
         SparrotDeckAbility.NotifyApostlePlayed(card);
 
         return true;
     }
 
 
+
+    // Units pay before entering the field, like spells, so a Battlecry sees the mana left after the cost.
+    // If the card cannot enter the field, the mana and next-card discount are refunded.
+    private bool PayAndPlayUnit(RuntimeCard card, int cost, BattlefieldManager battlefield)
+    {
+        TurnManager turnManager = GameManager.Instance.TurnManager;
+
+        if (!turnManager.SpendMana(card.Owner, cost))
+            return false;
+
+        int usedDiscount = GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
+
+        if (battlefield.PlayCard(card))
+            return true;
+
+        turnManager.RefundMana(card.Owner, cost);
+        GameManager.Instance.AddNextCardDiscount(card.Owner, usedDiscount);
+        return false;
+    }
 
     // =========================================================
     // Find card from hand. 
@@ -590,22 +525,6 @@ private bool PlaySpellFromHand(RuntimeCard card)
 
     return true;
 }
-// Test Area
-
-public RuntimeCard GetFirstNormalCard()
-{
-    foreach (RuntimeCard card in hand)
-    {
-        if (card == null)
-            continue;
-
-        if (!card.IsCommander)
-            return card;
-    }
-
-    return null;
-}
-
 private void CompleteSpellCast(
     RuntimeCard card,
     int cost)
@@ -823,7 +742,7 @@ public bool PlayTargetedSpellFromHand(
     PlayerView heroTarget)
 {
     if (heroTarget == null) return false;
-    if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlaySpellOnHero, card, hero: heroTarget == null ? PlayerSide.Opponent : heroTarget.Side);
+    if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlaySpellOnHero, card, hero: heroTarget.Side);
     if (card == null || heroTarget == null)
         return false;
 
@@ -979,26 +898,6 @@ public void RefreshAllCardViews()
     }
 }
 
-public void TestReduceFirstCardCost()
-{
-    RuntimeCard card =
-        GetFirstNormalCard();
-
-    if (card == null)
-        return;
-
-    Debug.Log(
-        $"Before: {card.GetManaCost()}"
-    );
-
-    card.ModifyManaCost(-2);
-
-    Debug.Log(
-        $"After: {card.GetManaCost()}"
-    );
-
-    RefreshCardView(card);
-}
 private void ResolveSpellEffectOnHero(
     RuntimeCard card,
     CardEffect effect,

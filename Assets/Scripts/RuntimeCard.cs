@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.Mathematics;
 
 public class RuntimeCard
 {
@@ -266,21 +265,13 @@ public class RuntimeCard
         currentHealth = GetMaxHealth();
         damageTaken = 0;
 
-     if (HasKeyword(CardKeyword.Rush))
-    {
-        canAttack = HasKeyword(CardKeyword.Rush); // if true it can attack
+        // Units cannot attack the hero on the turn they arrive; Rush lets them attack units.
+        // ResetForTurn lifts both restrictions at the owner's next turn start.
+        canAttack = HasKeyword(CardKeyword.Rush);
         cannotAttackHero = true;
-    }
-    if (HasKeyword(CardKeyword.Stealth))
-        {
+
+        if (HasKeyword(CardKeyword.Stealth))
             ActivateStealth();
-        }
-    else
-    {
-        canAttack = HasKeyword(CardKeyword.Rush); // if false, it has no rush and can't attack anyways. Rather have additional check.
-        cannotAttackHero = true;
-    }
-        
     }
 
     public bool HasKeyword(
@@ -812,6 +803,9 @@ public void Kill(RuntimeCard source = null)
 {
     LethalStatSnapshot = new RuntimeModifier(GetAttack(), GetMaxHealth(), false);
     LastDamageSource = source;
+    // Record lethal damage too, so RecalculateCurrentHealth cannot bring the unit back
+    // before CheckDeath removes it (for example, when another unit dies first in a trade).
+    damageTaken = Mathf.Max(damageTaken, GetMaxHealth());
     currentHealth = 0;
 }
 public void ResetAfterBounce()
