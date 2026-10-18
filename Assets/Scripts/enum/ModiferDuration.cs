@@ -7,5 +7,5 @@ public enum ModifierDuration
     Permanent,
     UntilEndOfTurn,
     UntilStartOfNextTurn,
-    Turns
+    Turns,
 }

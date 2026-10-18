@@ -7,7 +7,11 @@ public class CardEffectInspector : Editor
 {
     private static readonly string[] BaseFields =
     {
-        "targetType", "targetFilter", "cardRace", "cardType", "specificCard"
+        "targetType",
+        "targetFilter",
+        "cardRace",
+        "cardType",
+        "specificCard",
     };
 
     public override void OnInspectorGUI()
@@ -21,30 +25,36 @@ public class CardEffectInspector : Editor
 
         bool drawsCards = effect is DrawCardEffect;
         bool modifiesHandCosts = effect is CostModifierEffect;
-        bool usesTargeting = !drawsCards && !modifiesHandCosts &&
-                             !(effect is CreateCardsEffect) &&
-                             !(effect is SummonEffect) &&
-                             !(effect is ConditionalEffect) &&
-                             !(effect is TriggeredEffect) &&
-                             !(effect is AddCardToDeckEffect) &&
-                             !(effect is IncreaseMaxManaEffect);
+        bool usesTargeting =
+            !drawsCards
+            && !modifiesHandCosts
+            && !(effect is CreateCardsEffect)
+            && !(effect is SummonEffect)
+            && !(effect is ConditionalEffect)
+            && !(effect is TriggeredEffect)
+            && !(effect is AddCardToDeckEffect)
+            && !(effect is IncreaseMaxManaEffect);
 
         if (!(effect is TriggeredEffect))
         {
             EditorGUILayout.LabelField("Targeting", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(targetType);
-            if (!usesTargeting &&
-                (EffectTargetType)targetType.enumValueIndex != EffectTargetType.None)
+            if (
+                !usesTargeting
+                && (EffectTargetType)targetType.enumValueIndex != EffectTargetType.None
+            )
             {
                 EditorGUILayout.HelpBox(
                     "This effect handles its own targets. Set Target Type to None so EffectManager calls it directly.",
-                    MessageType.Warning);
+                    MessageType.Warning
+                );
             }
         }
 
-        bool usesFilter = modifiesHandCosts ||
-                          (drawsCards && GetDrawType() == DrawType.RandomMatching) ||
-                          (usesTargeting && IsUnitTarget((EffectTargetType)targetType.enumValueIndex));
+        bool usesFilter =
+            modifiesHandCosts
+            || (drawsCards && GetDrawType() == DrawType.RandomMatching)
+            || (usesTargeting && IsUnitTarget((EffectTargetType)targetType.enumValueIndex));
 
         if (usesFilter)
         {

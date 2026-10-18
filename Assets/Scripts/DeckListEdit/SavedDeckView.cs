@@ -10,30 +10,23 @@ public class SavedDeckView : MonoBehaviour
 
     [SerializeField]
     private TMP_Text deckNameText;
-  
+
     [SerializeField]
     private Button editButton;
 
     [SerializeField]
     private Button deleteButton;
 
-
     private DeckSaveData deckData;
     private DeckLoaderManager loaderManager;
 
-
-    public void Initialize(
-        DeckSaveData data,
-        DeckLoaderManager manager,
-        CardDatabase cardDatabase)
+    public void Initialize(DeckSaveData data, DeckLoaderManager manager, CardDatabase cardDatabase)
     {
         deckData = data;
         loaderManager = manager;
 
-
         if (deckData == null)
             return;
-
 
         // =========================================
         // NAME
@@ -41,8 +34,7 @@ public class SavedDeckView : MonoBehaviour
 
         if (deckNameText != null)
         {
-            deckNameText.text =
-                deckData.deckName;
+            deckNameText.text = deckData.deckName;
         }
 
         // =========================================
@@ -51,19 +43,13 @@ public class SavedDeckView : MonoBehaviour
 
         if (cardDatabase != null)
         {
-            CardData commander =
-                cardDatabase.GetCardByID(
-                    deckData.commanderID
-                );
+            CardData commander = cardDatabase.GetCardByID(deckData.commanderID);
 
-            if (commander != null &&
-                commanderArtwork != null)
+            if (commander != null && commanderArtwork != null)
             {
-                commanderArtwork.sprite =
-                    commander.artwork;
+                commanderArtwork.sprite = commander.artwork;
             }
         }
-
 
         // =========================================
         // BUTTONS
@@ -73,34 +59,25 @@ public class SavedDeckView : MonoBehaviour
         {
             editButton.onClick.RemoveAllListeners();
 
-            editButton.onClick.AddListener(
-                EditDeck
-            );
+            editButton.onClick.AddListener(EditDeck);
         }
-
 
         if (deleteButton != null)
         {
             deleteButton.onClick.RemoveAllListeners();
 
-            deleteButton.onClick.AddListener(
-                DeleteDeck
-            );
+            deleteButton.onClick.AddListener(DeleteDeck);
         }
     }
 
-
     private int GetDeckSize()
     {
-        if (deckData == null ||
-            deckData.cards == null)
+        if (deckData == null || deckData.cards == null)
             return 0;
-
 
         int total = 0;
 
-        foreach (DeckCardEntry entry
-                 in deckData.cards)
+        foreach (DeckCardEntry entry in deckData.cards)
         {
             if (entry == null)
                 continue;
@@ -111,27 +88,19 @@ public class SavedDeckView : MonoBehaviour
         return total;
     }
 
-
     private void EditDeck()
     {
-        if (loaderManager == null ||
-            deckData == null)
+        if (loaderManager == null || deckData == null)
             return;
 
-        loaderManager.EditDeck(
-            deckData.deckID
-        );
+        loaderManager.EditDeck(deckData.deckID);
     }
-
 
     private void DeleteDeck()
     {
-        if (loaderManager == null ||
-            deckData == null)
+        if (loaderManager == null || deckData == null)
             return;
 
-        loaderManager.DeleteDeck(
-            deckData.deckID
-        );
+        loaderManager.DeleteDeck(deckData.deckID);
     }
 }

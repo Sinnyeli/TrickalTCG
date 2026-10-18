@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public abstract class MinionViewBase : MonoBehaviour
 {
-[Header("UI")]
+    [Header("UI")]
     public Image artworkImage;
     public TMP_Text nameText;
     public TMP_Text attackText;
@@ -21,18 +21,17 @@ public abstract class MinionViewBase : MonoBehaviour
 
     private bool isSelected;
     public bool IsSelected => isSelected;
+
     public void SetSelected(bool selected)
     {
-        isSelected = selected; 
+        isSelected = selected;
     }
 
     public void SetMinion(RuntimeCard card)
     {
         if (card == null)
         {
-            Debug.LogError(
-                "MinionView received a null RuntimeCard."
-            );
+            Debug.LogError("MinionView received a null RuntimeCard.");
 
             return;
         }
@@ -42,34 +41,27 @@ public abstract class MinionViewBase : MonoBehaviour
         CardData data = card.Data;
 
         RefreshLocalization();
-            if (runtimeCard == null)
-        return;
+        if (runtimeCard == null)
+            return;
 
-            if (nameText == null)
-                return;
+        if (nameText == null)
+            return;
 
-            if (LocalizationManager.Instance != null)
-            {
-                nameText.text =
-                    LocalizationManager.Instance
-                        .GetCardName(
-                            runtimeCard.Data
-                        );
-            }
-            else
-            {
-                nameText.text =
-                    runtimeCard.Data.cardName;
-            }
+        if (LocalizationManager.Instance != null)
+        {
+            nameText.text = LocalizationManager.Instance.GetCardName(runtimeCard.Data);
+        }
+        else
+        {
+            nameText.text = runtimeCard.Data.cardName;
+        }
 
         if (data.artwork != null)
             artworkImage.sprite = data.artwork;
-        
 
         attackText.gameObject.SetActive(false);
         healthText.gameObject.SetActive(false);
         raceImage.gameObject.SetActive(false);
-        
 
         if (data is MonsterData monster)
         {
@@ -91,121 +83,109 @@ public abstract class MinionViewBase : MonoBehaviour
         artifactOne.gameObject.SetActive(false);
         artifactTwo.gameObject.SetActive(false);
         artifactThree.gameObject.SetActive(false);
-        
-        Debug.Log(
-            $"MinionView created for {data.cardName}"
-        );
+
+        Debug.Log($"MinionView created for {data.cardName}");
         RefreshArtifacts();
-        
     }
+
     public void RefreshStats()
-{
-    if (runtimeCard == null)
-        return;
-
-    if (attackText != null)
-        attackText.text = runtimeCard.GetAttack().ToString();
-
-    if (healthText != null)
-        healthText.text = runtimeCard.CurrentHealth.ToString();
-}
-public void RefreshArtifacts()
-{
-    ClearArtifactSlot(artifactOne);
-    ClearArtifactSlot(artifactTwo);
-    ClearArtifactSlot(artifactThree);
-
-    if (runtimeCard == null)
-        return;
-
-    IReadOnlyList<RuntimeCard> artifacts =
-        runtimeCard.EquippedArtifacts;
-
-    for (int i = 0; i < artifacts.Count; i++)
     {
-        RuntimeCard artifact = artifacts[i];
+        if (runtimeCard == null)
+            return;
 
-        if (artifact == null)
-            continue;
+        if (attackText != null)
+            attackText.text = runtimeCard.GetAttack().ToString();
 
-        Image slot = GetArtifactSlot(i);
+        if (healthText != null)
+            healthText.text = runtimeCard.CurrentHealth.ToString();
+    }
 
+    public void RefreshArtifacts()
+    {
+        ClearArtifactSlot(artifactOne);
+        ClearArtifactSlot(artifactTwo);
+        ClearArtifactSlot(artifactThree);
+
+        if (runtimeCard == null)
+            return;
+
+        IReadOnlyList<RuntimeCard> artifacts = runtimeCard.EquippedArtifacts;
+
+        for (int i = 0; i < artifacts.Count; i++)
+        {
+            RuntimeCard artifact = artifacts[i];
+
+            if (artifact == null)
+                continue;
+
+            Image slot = GetArtifactSlot(i);
+
+            if (slot == null)
+                continue;
+
+            slot.sprite = artifact.Data.artwork;
+            slot.gameObject.SetActive(true);
+        }
+    }
+
+    private void ClearArtifactSlot(Image slot)
+    {
         if (slot == null)
-            continue;
+            return;
 
-        slot.sprite = artifact.Data.artwork;
-        slot.gameObject.SetActive(true);
+        slot.sprite = null;
+        slot.gameObject.SetActive(false);
     }
-}
-private void ClearArtifactSlot(Image slot)
-{
-    if (slot == null)
-        return;
 
-    slot.sprite = null;
-    slot.gameObject.SetActive(false);
-}
-
-private Image GetArtifactSlot(int index)
-{
-    switch (index)
+    private Image GetArtifactSlot(int index)
     {
-        case 0:
-            return artifactOne;
+        switch (index)
+        {
+            case 0:
+                return artifactOne;
 
-        case 1:
-            return artifactTwo;
+            case 1:
+                return artifactTwo;
 
-        case 2:
-            return artifactThree;
+            case 2:
+                return artifactThree;
 
-        default:
-            return null;
+            default:
+                return null;
+        }
     }
-}
 
-private void RefreshLocalization()
-{
-    if (runtimeCard == null)
-        return;
-
-    if (nameText == null)
-        return;
-
-    if (LocalizationManager.Instance != null)
+    private void RefreshLocalization()
     {
-        nameText.text =
-            LocalizationManager.Instance
-                .GetCardName(
-                    runtimeCard.Data
-                );
-    }
-    else
-    {
-        nameText.text =
-            runtimeCard.Data.cardName;
-    }
-}
-protected virtual void OnEnable()
-{
-    if (LocalizationManager.Instance != null)
-    {
-        LocalizationManager.Instance
-            .OnLanguageChanged +=
-            RefreshLocalization;
-    }
-}
+        if (runtimeCard == null)
+            return;
 
-protected virtual void OnDisable()
-{
-    if (LocalizationManager.Instance != null)
-    {
-        LocalizationManager.Instance
-            .OnLanguageChanged -=
-            RefreshLocalization;
+        if (nameText == null)
+            return;
+
+        if (LocalizationManager.Instance != null)
+        {
+            nameText.text = LocalizationManager.Instance.GetCardName(runtimeCard.Data);
+        }
+        else
+        {
+            nameText.text = runtimeCard.Data.cardName;
+        }
     }
-}
-        
 
+    protected virtual void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged += RefreshLocalization;
+        }
+    }
 
+    protected virtual void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshLocalization;
+        }
+    }
 }

@@ -33,11 +33,27 @@ public sealed class BattleSandbox : IDisposable
         SetField(Game, "effectManager", Add<EffectManager>("EffectManager"));
 
         SetField(Game, "deckManager", SideComponent<DeckManager>(PlayerSide.Player, "owner"));
-        SetField(Game, "opponentDeckManager", SideComponent<DeckManager>(PlayerSide.Opponent, "owner"));
+        SetField(
+            Game,
+            "opponentDeckManager",
+            SideComponent<DeckManager>(PlayerSide.Opponent, "owner")
+        );
         SetField(Game, "handManager", SideComponent<HandManager>(PlayerSide.Player, "owner"));
-        SetField(Game, "opponentHandManager", SideComponent<HandManager>(PlayerSide.Opponent, "owner"));
-        SetField(Game, "playerBattlefieldManager", SideComponent<BattlefieldManager>(PlayerSide.Player, "side"));
-        SetField(Game, "opponentBattlefieldManager", SideComponent<BattlefieldManager>(PlayerSide.Opponent, "side"));
+        SetField(
+            Game,
+            "opponentHandManager",
+            SideComponent<HandManager>(PlayerSide.Opponent, "owner")
+        );
+        SetField(
+            Game,
+            "playerBattlefieldManager",
+            SideComponent<BattlefieldManager>(PlayerSide.Player, "side")
+        );
+        SetField(
+            Game,
+            "opponentBattlefieldManager",
+            SideComponent<BattlefieldManager>(PlayerSide.Opponent, "side")
+        );
 
         SetStaticField(typeof(GameManager), "<Instance>k__BackingField", Game);
         BattleActions.ResetMatch("sandbox-match");
@@ -88,7 +104,11 @@ public sealed class BattleSandbox : IDisposable
     public ApostleData ApostleData(int attack, int health, params CardKeyword[] keywords) =>
         MinionData<ApostleData>(attack, health, keywords);
 
-    public ArtifactData ArtifactData(int attackBonus = 0, int healthBonus = 0, CardEffect deathrattle = null)
+    public ArtifactData ArtifactData(
+        int attackBonus = 0,
+        int healthBonus = 0,
+        CardEffect deathrattle = null
+    )
     {
         var data = CardData<ArtifactData>("Test Artifact");
         SetField(data, "attackBonus", attackBonus);
@@ -97,7 +117,8 @@ public sealed class BattleSandbox : IDisposable
         return data;
     }
 
-    public T CardData<T>(string name, int manaCost = 0) where T : CardData
+    public T CardData<T>(string name, int manaCost = 0)
+        where T : CardData
     {
         var data = Create<T>();
         data.name = name;
@@ -107,7 +128,8 @@ public sealed class BattleSandbox : IDisposable
         return data;
     }
 
-    public T Effect<T>(EffectTargetType targetType = EffectTargetType.None) where T : CardEffect
+    public T Effect<T>(EffectTargetType targetType = EffectTargetType.None)
+        where T : CardEffect
     {
         var effect = Create<T>();
         SetField(effect, "targetType", targetType);
@@ -116,7 +138,8 @@ public sealed class BattleSandbox : IDisposable
 
     public ScenarioProbeEffect Probe() => Effect<ScenarioProbeEffect>();
 
-    private T MinionData<T>(int attack, int health, CardKeyword[] keywords) where T : MinionData
+    private T MinionData<T>(int attack, int health, CardKeyword[] keywords)
+        where T : MinionData
     {
         var data = CardData<T>($"Test {attack}/{health}");
         data.attack = attack;
@@ -151,14 +174,21 @@ public sealed class BattleSandbox : IDisposable
         return card;
     }
 
-    public RuntimeCard Summon(int attack, int health, PlayerSide owner, params CardKeyword[] keywords) =>
-        Summon(UnitData(attack, health, keywords), owner);
+    public RuntimeCard Summon(
+        int attack,
+        int health,
+        PlayerSide owner,
+        params CardKeyword[] keywords
+    ) => Summon(UnitData(attack, health, keywords), owner);
 
     public RuntimeCard GiveToHand(CardData data, PlayerSide owner)
     {
         RuntimeCard card = Card(data, owner);
         card.ChangeZone(CardZone.Hand);
-        Expect(Game.GetHandManager(owner).AddCard(card), $"{data.cardName} could not be added to {owner}'s hand.");
+        Expect(
+            Game.GetHandManager(owner).AddCard(card),
+            $"{data.cardName} could not be added to {owner}'s hand."
+        );
         return card;
     }
 
@@ -174,14 +204,20 @@ public sealed class BattleSandbox : IDisposable
     public bool IsOnField(RuntimeCard card) =>
         card.Zone == CardZone.Field && Game.GetBattlefield(card.Owner).Minions.ContainsCard(card);
 
-    public bool IsInHand(RuntimeCard card) => Game.GetHandManager(card.Owner).Hand.ContainsCard(card);
+    public bool IsInHand(RuntimeCard card) =>
+        Game.GetHandManager(card.Owner).Hand.ContainsCard(card);
 
     // =========================================
     // ACTIONS (through the same entry point as player input)
     // =========================================
 
-    public BattleActionResult Act(PlayerSide seat, BattleActionKind kind, RuntimeCard card = null,
-        RuntimeCard target = null, PlayerSide hero = PlayerSide.Opponent)
+    public BattleActionResult Act(
+        PlayerSide seat,
+        BattleActionKind kind,
+        RuntimeCard card = null,
+        RuntimeCard target = null,
+        PlayerSide hero = PlayerSide.Opponent
+    )
     {
         var request = new BattleActionRequest
         {
@@ -232,7 +268,8 @@ public sealed class BattleSandbox : IDisposable
         return info.Invoke(target, args);
     }
 
-    public static object GetField(object target, string field) => FindField(target.GetType(), field).GetValue(target);
+    public static object GetField(object target, string field) =>
+        FindField(target.GetType(), field).GetValue(target);
 
     public static void SetField(object target, string field, object value) =>
         FindField(target.GetType(), field).SetValue(target, value);
@@ -252,14 +289,16 @@ public sealed class BattleSandbox : IDisposable
     private static void SetStaticField(Type type, string field, object value) =>
         type.GetField(field, BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, value);
 
-    private T Add<T>(string name) where T : Component
+    private T Add<T>(string name)
+        where T : Component
     {
         var go = new GameObject("Sandbox " + name);
         created.Add(go);
         return go.AddComponent<T>();
     }
 
-    private T SideComponent<T>(PlayerSide side, string sideField) where T : Component
+    private T SideComponent<T>(PlayerSide side, string sideField)
+        where T : Component
     {
         T component = Add<T>($"{typeof(T).Name} ({side})");
         SetField(component, sideField, side);
@@ -268,7 +307,8 @@ public sealed class BattleSandbox : IDisposable
         return component;
     }
 
-    private T Create<T>() where T : ScriptableObject
+    private T Create<T>()
+        where T : ScriptableObject
     {
         var obj = ScriptableObject.CreateInstance<T>();
         created.Add(obj);
@@ -278,8 +318,10 @@ public sealed class BattleSandbox : IDisposable
     // DescribedSpellState keeps a static instance between battles.
     private static void ResetDescribedSpellState()
     {
-        var instance = (DescribedSpellState)typeof(DescribedSpellState)
-            .GetField("instance", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+        var instance = (DescribedSpellState)
+            typeof(DescribedSpellState)
+                .GetField("instance", BindingFlags.Static | BindingFlags.NonPublic)
+                .GetValue(null);
         if (instance != null)
             Object.DestroyImmediate(instance.gameObject);
         SetStaticField(typeof(DescribedSpellState), "instance", null);

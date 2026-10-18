@@ -14,7 +14,10 @@ public class BattleScenarioTests
 
     public static IEnumerable<TestCaseData> Scenarios()
     {
-        foreach (MethodInfo method in GameType("BattleScenarios").GetMethods(BindingFlags.Public | BindingFlags.Static))
+        foreach (
+            MethodInfo method in GameType("BattleScenarios")
+                .GetMethods(BindingFlags.Public | BindingFlags.Static)
+        )
         {
             object attribute = method
                 .GetCustomAttributes(false)
@@ -38,7 +41,8 @@ public class BattleScenarioTests
         {
             GameType("BattleScenarios").GetMethod(scenario).Invoke(null, new object[] { sandbox });
         }
-        catch (TargetInvocationException error) when (error.InnerException?.GetType().Name == "BattleScenarioFailure")
+        catch (TargetInvocationException error)
+            when (error.InnerException?.GetType().Name == "BattleScenarioFailure")
         {
             Assert.Fail(error.InnerException.Message);
         }
@@ -52,5 +56,6 @@ public class BattleScenarioTests
         }
     }
 
-    private static object Property(object target, string name) => target.GetType().GetProperty(name).GetValue(target);
+    private static object Property(object target, string name) =>
+        target.GetType().GetProperty(name).GetValue(target);
 }

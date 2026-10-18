@@ -3,39 +3,40 @@ using UnityEngine;
 
 public class DeckManager : MonoBehaviour
 {
-    [SerializeField] private DeckData deckData;
+    [SerializeField]
+    private DeckData deckData;
 
-    private List<RuntimeCard> drawPile =
-        new List<RuntimeCard>();
+    private List<RuntimeCard> drawPile = new List<RuntimeCard>();
 
-    private List<RuntimeCard> discardPile =
-        new List<RuntimeCard>();
+    private List<RuntimeCard> discardPile = new List<RuntimeCard>();
 
     public RuntimeCard Commander { get; private set; }
+
     [SerializeField]
     private PlayerSide owner;
 
     public PlayerSide Owner => owner;
     private int remoteCount = -1;
-    public void ApplyRemoteCount(int count) { remoteCount = Mathf.Max(0, count); }
-    public int RemainingCards => remoteCount >= 0 ? remoteCount : drawPile.Count;
 
- public void InitializeDeck()
-{
-    if (deckData == null)
+    public void ApplyRemoteCount(int count)
     {
-        Debug.LogError(
-            $"{owner} has no DeckData assigned."
-        );
-
-        return;
+        remoteCount = Mathf.Max(0, count);
     }
 
-    InitializeDeck(
-        deckData.commander,
-        deckData.cards
-    );
-}
+    public int RemainingCards => remoteCount >= 0 ? remoteCount : drawPile.Count;
+
+    public void InitializeDeck()
+    {
+        if (deckData == null)
+        {
+            Debug.LogError($"{owner} has no DeckData assigned.");
+
+            return;
+        }
+
+        InitializeDeck(deckData.commander, deckData.cards);
+    }
+
     public int GetDeckCount()
     {
         return RemainingCards;
@@ -58,14 +59,11 @@ public class DeckManager : MonoBehaviour
             return null;
         }
 
-        RuntimeCard card =
-            drawPile[0];
+        RuntimeCard card = drawPile[0];
 
         drawPile.RemoveAt(0);
 
-        card.ChangeZone(
-            CardZone.Hand
-        );
+        card.ChangeZone(CardZone.Hand);
 
         return card;
     }
@@ -75,16 +73,11 @@ public class DeckManager : MonoBehaviour
         if (cardData == null)
             return null;
 
-        RuntimeCard card = drawPile.Find(
-            c => c != null &&
-                c.Data == cardData
-        );
+        RuntimeCard card = drawPile.Find(c => c != null && c.Data == cardData);
 
         if (card == null)
         {
-            Debug.Log(
-                $"{cardData.cardName} was not found in deck."
-            );
+            Debug.Log($"{cardData.cardName} was not found in deck.");
 
             return null;
         }
@@ -96,33 +89,33 @@ public class DeckManager : MonoBehaviour
         return card;
     }
 
-    public RuntimeCard DrawRandomMatchingCard(
-    System.Predicate<RuntimeCard> predicate)
-{
-    if (predicate == null)
-        return null;
+    public RuntimeCard DrawRandomMatchingCard(System.Predicate<RuntimeCard> predicate)
+    {
+        if (predicate == null)
+            return null;
 
-    List<RuntimeCard> matches =
-        drawPile.FindAll(predicate);
+        List<RuntimeCard> matches = drawPile.FindAll(predicate);
 
-    if (matches.Count == 0)
-        return null;
+        if (matches.Count == 0)
+            return null;
 
-    RuntimeCard card =
-        matches[Random.Range(0, matches.Count)];
+        RuntimeCard card = matches[Random.Range(0, matches.Count)];
 
-    drawPile.Remove(card);
+        drawPile.Remove(card);
 
-    card.ChangeZone(CardZone.Hand);
+        card.ChangeZone(CardZone.Hand);
 
-    return card;
-}
+        return card;
+    }
 
     public RuntimeCard DestroyTopCard()
     {
-        if (drawPile.Count == 0) return null;
-        var card = drawPile[0]; drawPile.RemoveAt(0);
-        if (card != null) Discard(card); // No draw event or on-draw effect.
+        if (drawPile.Count == 0)
+            return null;
+        var card = drawPile[0];
+        drawPile.RemoveAt(0);
+        if (card != null)
+            Discard(card); // No draw event or on-draw effect.
         return card;
     }
 
@@ -130,7 +123,13 @@ public class DeckManager : MonoBehaviour
 
     public bool TryDrawRuntimeCard(RuntimeCard card)
     {
-        if (card == null || card.Owner != owner || card.Zone != CardZone.Deck || !drawPile.Remove(card)) return false;
+        if (
+            card == null
+            || card.Owner != owner
+            || card.Zone != CardZone.Deck
+            || !drawPile.Remove(card)
+        )
+            return false;
         card.ChangeZone(CardZone.Hand);
         return true;
     }
@@ -138,7 +137,13 @@ public class DeckManager : MonoBehaviour
     // Restore the same runtime card if a deck summon could not commit.
     public void ReturnDrawnCardToDeck(RuntimeCard card)
     {
-        if (card == null || card.Owner != owner || card.Zone != CardZone.Hand || drawPile.Contains(card)) return;
+        if (
+            card == null
+            || card.Owner != owner
+            || card.Zone != CardZone.Hand
+            || drawPile.Contains(card)
+        )
+            return;
         card.ChangeZone(CardZone.Deck);
         drawPile.Add(card);
     }
@@ -147,22 +152,15 @@ public class DeckManager : MonoBehaviour
     // ADD CARD TO DECK
     // =========================================
 
-    public void AddCardToDeck(
-        CardData cardData,
-        bool shuffle = true)
+    public void AddCardToDeck(CardData cardData, bool shuffle = true)
     {
         if (cardData == null)
             return;
 
-        RuntimeCard card =
-            new RuntimeCard(cardData);
+        RuntimeCard card = new RuntimeCard(cardData);
 
-        card.SetOwner(
-            owner
-        );
-        card.ChangeZone(
-            CardZone.Deck
-        );
+        card.SetOwner(owner);
+        card.ChangeZone(CardZone.Deck);
 
         drawPile.Add(card);
 
@@ -172,8 +170,7 @@ public class DeckManager : MonoBehaviour
         }
 
         Debug.Log(
-            $"{cardData.cardName} added to deck. " +
-            $"Deck now contains {drawPile.Count} cards."
+            $"{cardData.cardName} added to deck. " + $"Deck now contains {drawPile.Count} cards."
         );
     }
 
@@ -186,9 +183,7 @@ public class DeckManager : MonoBehaviour
         if (card == null)
             return;
 
-        card.ChangeZone(
-            CardZone.Graveyard
-        );
+        card.ChangeZone(CardZone.Graveyard);
 
         discardPile.Add(card);
     }
@@ -199,129 +194,102 @@ public class DeckManager : MonoBehaviour
 
     public void Shuffle()
     {
-        for (int i = 0;
-             i < drawPile.Count;
-             i++)
+        for (int i = 0; i < drawPile.Count; i++)
         {
-            int randomIndex =
-                Random.Range(
-                    i,
-                    drawPile.Count
-                );
+            int randomIndex = Random.Range(i, drawPile.Count);
 
-            RuntimeCard temp =
-                drawPile[i];
+            RuntimeCard temp = drawPile[i];
 
-            drawPile[i] =
-                drawPile[randomIndex];
+            drawPile[i] = drawPile[randomIndex];
 
-            drawPile[randomIndex] =
-                temp;
-        }
-    }
-// =========================================
-// INITIALIZE FROM CARD DATA
-// =========================================
-
-public void InitializeDeck(
-    ApostleData commanderData,
-    IEnumerable<CardData> cards)
-{
-    drawPile.Clear();
-    discardPile.Clear();
-    GameManager.Instance?.ResetDestiny(owner);
-    GameManager.Instance?.ResetSpellHistory(owner);
-
-    Commander = null;
-
-
-    // =========================================
-    // CREATE COMMANDER
-    // =========================================
-
-    if (commanderData != null)
-    {
-        Commander =
-            new RuntimeCard(
-                commanderData,
-                true
-            );
-
-        Commander.SetOwner(
-            owner
-        );
-
-        Commander.ChangeZone(
-            CardZone.Hand
-        );
-    }
-    else
-    {
-        Debug.LogError(
-            $"{owner} deck has no Commander assigned!"
-        );
-
-        return;
-    }
-
-
-    // =========================================
-    // CREATE NORMAL DECK
-    // =========================================
-
-    if (cards != null)
-    {
-        foreach (
-            CardData cardData
-            in cards)
-        {
-            if (cardData == null)
-                continue;
-
-
-            RuntimeCard card =
-                new RuntimeCard(
-                    cardData
-                );
-
-            card.SetOwner(
-                owner
-            );
-
-            card.ChangeZone(
-                CardZone.Deck
-            );
-
-            drawPile.Add(
-                card
-            );
+            drawPile[randomIndex] = temp;
         }
     }
 
-
     // =========================================
-    // SHUFFLE
+    // INITIALIZE FROM CARD DATA
     // =========================================
 
-    Shuffle();
+    public void InitializeDeck(ApostleData commanderData, IEnumerable<CardData> cards)
+    {
+        drawPile.Clear();
+        discardPile.Clear();
+        GameManager.Instance?.ResetDestiny(owner);
+        GameManager.Instance?.ResetSpellHistory(owner);
 
+        Commander = null;
 
-    Debug.Log(
-        $"{owner} deck initialized. " +
-        $"Commander: " +
-        $"{Commander?.Data.cardName}, " +
-        $"Cards: {drawPile.Count}"
-    );
-}
-    public void SetDeckData(
-    DeckData data)
-{
-    deckData = data;
-}
+        // =========================================
+        // CREATE COMMANDER
+        // =========================================
+
+        if (commanderData != null)
+        {
+            Commander = new RuntimeCard(commanderData, true);
+
+            Commander.SetOwner(owner);
+
+            Commander.ChangeZone(CardZone.Hand);
+        }
+        else
+        {
+            Debug.LogError($"{owner} deck has no Commander assigned!");
+
+            return;
+        }
+
+        // =========================================
+        // CREATE NORMAL DECK
+        // =========================================
+
+        if (cards != null)
+        {
+            foreach (CardData cardData in cards)
+            {
+                if (cardData == null)
+                    continue;
+
+                RuntimeCard card = new RuntimeCard(cardData);
+
+                card.SetOwner(owner);
+
+                card.ChangeZone(CardZone.Deck);
+
+                drawPile.Add(card);
+            }
+        }
+
+        // =========================================
+        // SHUFFLE
+        // =========================================
+
+        Shuffle();
+
+        Debug.Log(
+            $"{owner} deck initialized. "
+                + $"Commander: "
+                + $"{Commander?.Data.cardName}, "
+                + $"Cards: {drawPile.Count}"
+        );
+    }
+
+    public void SetDeckData(DeckData data)
+    {
+        deckData = data;
+    }
+
     public List<RuntimeCard> GetDiscardPileSnapshot() => new List<RuntimeCard>(discardPile);
+
     public bool TryRecoverDiscardedCard(RuntimeCard card)
     {
-        if (card == null || card.Owner != owner || card.Zone != CardZone.Graveyard || !discardPile.Remove(card)) return false;
-        card.ChangeZone(CardZone.Hand); return true;
+        if (
+            card == null
+            || card.Owner != owner
+            || card.Zone != CardZone.Graveyard
+            || !discardPile.Remove(card)
+        )
+            return false;
+        card.ChangeZone(CardZone.Hand);
+        return true;
     }
 }

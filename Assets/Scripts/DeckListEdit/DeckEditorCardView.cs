@@ -3,21 +3,31 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DeckEditorCardView :
-    MonoBehaviour,
-    IPointerClickHandler,
-    IBeginDragHandler,
-    IDragHandler,
-    IEndDragHandler
+public class DeckEditorCardView
+    : MonoBehaviour,
+        IPointerClickHandler,
+        IBeginDragHandler,
+        IDragHandler,
+        IEndDragHandler
 {
     [Header("UI")]
-    [SerializeField] private Image artworkImage;
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private TMP_Text manaCostText;
+    [SerializeField]
+    private Image artworkImage;
 
-    [SerializeField] private TMP_Text descriptionText;
-    [SerializeField] private TMP_Text attackText;
-    [SerializeField] private TMP_Text healthText;
+    [SerializeField]
+    private TMP_Text nameText;
+
+    [SerializeField]
+    private TMP_Text manaCostText;
+
+    [SerializeField]
+    private TMP_Text descriptionText;
+
+    [SerializeField]
+    private TMP_Text attackText;
+
+    [SerializeField]
+    private TMP_Text healthText;
 
     private CardData cardData;
     private DeckEditorManager deckEditor;
@@ -33,17 +43,14 @@ public class DeckEditorCardView :
 
     public CardData CardData => cardData;
 
-
     // =========================================================
     // INITIALIZE
     // =========================================================
 
     private void Awake()
     {
-        rootCanvas =
-            GetComponentInParent<Canvas>();
+        rootCanvas = GetComponentInParent<Canvas>();
     }
-
 
     public void SetCard(CardData data)
     {
@@ -52,44 +59,39 @@ public class DeckEditorCardView :
         if (cardData == null)
             return;
 
-        deckEditor =
-            FindFirstObjectByType<DeckEditorManager>();
+        deckEditor = FindFirstObjectByType<DeckEditorManager>();
 
         if (nameText != null)
             nameText.text = cardData.cardName;
 
         if (artworkImage != null)
-         artworkImage.sprite = cardData.artwork;
+            artworkImage.sprite = cardData.artwork;
 
         if (manaCostText != null)
-            manaCostText.text =
-                cardData.manaCost.ToString();
+            manaCostText.text = cardData.manaCost.ToString();
 
         if (descriptionText != null)
-                descriptionText.text =
-                cardData.description.ToString();
+            descriptionText.text = cardData.description.ToString();
 
-     /*   if (attackText != null)
-           attackText.text =
-                cardData.attack.ToString();
-
-        if (healthText != null)
-            healthText.text =
-                cardData.health.ToString();
-
-        
-*/
+        /*   if (attackText != null)
+              attackText.text =
+                   cardData.attack.ToString();
+   
+           if (healthText != null)
+               healthText.text =
+                   cardData.health.ToString();
+   
+           
+   */
         RefreshStats();
         RefreshLocalization();
     }
-
 
     // =========================================================
     // CLICK
     // =========================================================
 
-    public void OnPointerClick(
-        PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
         if (wasDragging)
         {
@@ -97,22 +99,17 @@ public class DeckEditorCardView :
             return;
         }
 
-        if (cardData == null ||
-            deckEditor == null)
+        if (cardData == null || deckEditor == null)
             return;
 
-        deckEditor.OnLibraryCardClicked(
-            cardData
-        );
+        deckEditor.OnLibraryCardClicked(cardData);
     }
-
 
     // =========================================================
     // BEGIN DRAG
     // =========================================================
 
-    public void OnBeginDrag(
-        PointerEventData eventData)
+    public void OnBeginDrag(PointerEventData eventData)
     {
         if (cardData == null)
             return;
@@ -124,46 +121,34 @@ public class DeckEditorCardView :
 
         CreateDragGhost();
 
-        UpdateDragGhostPosition(
-            eventData
-        );
+        UpdateDragGhostPosition(eventData);
     }
-
 
     // =========================================================
     // DRAG
     // =========================================================
 
-    public void OnDrag(
-        PointerEventData eventData)
+    public void OnDrag(PointerEventData eventData)
     {
         if (dragGhost == null)
             return;
 
-        UpdateDragGhostPosition(
-            eventData
-        );
+        UpdateDragGhostPosition(eventData);
     }
-
 
     // =========================================================
     // END DRAG
     // =========================================================
 
-    public void OnEndDrag(
-        PointerEventData eventData)
+    public void OnEndDrag(PointerEventData eventData)
     {
         if (deckEditor != null)
         {
-            deckEditor.HandleCardDrop(
-                cardData,
-                eventData
-            );
+            deckEditor.HandleCardDrop(cardData, eventData);
         }
 
         DestroyDragGhost();
     }
-
 
     // =========================================================
     // CREATE DRAG GHOST
@@ -174,75 +159,56 @@ public class DeckEditorCardView :
         // Remove an old ghost just in case.
         DestroyDragGhost();
 
-        dragGhost =
-            Instantiate(
-                gameObject,
-                rootCanvas.transform
-            );
+        dragGhost = Instantiate(gameObject, rootCanvas.transform);
 
-        dragGhost.name =
-            $"{cardData.cardName}_DragGhost";
+        dragGhost.name = $"{cardData.cardName}_DragGhost";
 
-        dragGhostRect =
-            dragGhost.GetComponent<RectTransform>();
-
+        dragGhostRect = dragGhost.GetComponent<RectTransform>();
 
         // =========================================
         // DISABLE CARD SCRIPT
         // =========================================
 
-        DeckEditorCardView ghostCardView =
-            dragGhost.GetComponent<
-                DeckEditorCardView
-            >();
+        DeckEditorCardView ghostCardView = dragGhost.GetComponent<DeckEditorCardView>();
 
         if (ghostCardView != null)
         {
             ghostCardView.enabled = false;
         }
 
-
         // =========================================
         // IGNORE RAYCASTS
         // =========================================
 
-        CanvasGroup canvasGroup =
-            dragGhost.GetComponent<CanvasGroup>();
+        CanvasGroup canvasGroup = dragGhost.GetComponent<CanvasGroup>();
 
         if (canvasGroup == null)
         {
-            canvasGroup =
-                dragGhost.AddComponent<CanvasGroup>();
+            canvasGroup = dragGhost.AddComponent<CanvasGroup>();
         }
 
         canvasGroup.blocksRaycasts = false;
         canvasGroup.interactable = false;
 
-
         // Slight transparency so it feels
         // like a dragged preview.
         canvasGroup.alpha = 0.8f;
-
 
         // Keep it above the rest of the UI.
         dragGhost.transform.SetAsLastSibling();
     }
 
-
     // =========================================================
     // MOVE DRAG GHOST
     // =========================================================
 
-    private void UpdateDragGhostPosition(
-        PointerEventData eventData)
+    private void UpdateDragGhostPosition(PointerEventData eventData)
     {
         if (dragGhostRect == null)
             return;
 
-        dragGhostRect.position =
-            eventData.position;
+        dragGhostRect.position = eventData.position;
     }
-
 
     // =========================================================
     // DESTROY DRAG GHOST
@@ -259,60 +225,54 @@ public class DeckEditorCardView :
         dragGhostRect = null;
     }
 
-private void RefreshStats()
-{
-    if (attackText != null)
-        attackText.gameObject.SetActive(false);
-
-    if (healthText != null)
-        healthText.gameObject.SetActive(false);
-
-
-    // =========================================
-    // APOSTLE
-    // =========================================
-
-    if (cardData is ApostleData apostle)
+    private void RefreshStats()
     {
         if (attackText != null)
-        {
-            attackText.gameObject.SetActive(true);
-            attackText.text =
-                apostle.attack.ToString();
-        }
+            attackText.gameObject.SetActive(false);
 
         if (healthText != null)
+            healthText.gameObject.SetActive(false);
+
+        // =========================================
+        // APOSTLE
+        // =========================================
+
+        if (cardData is ApostleData apostle)
         {
-            healthText.gameObject.SetActive(true);
-            healthText.text =
-                apostle.health.ToString();
+            if (attackText != null)
+            {
+                attackText.gameObject.SetActive(true);
+                attackText.text = apostle.attack.ToString();
+            }
+
+            if (healthText != null)
+            {
+                healthText.gameObject.SetActive(true);
+                healthText.text = apostle.health.ToString();
+            }
+
+            return;
         }
 
-        return;
+        // =========================================
+        // MONSTER
+        // =========================================
+
+        if (cardData is MonsterData monster)
+        {
+            if (attackText != null)
+            {
+                attackText.gameObject.SetActive(true);
+                attackText.text = monster.attack.ToString();
+            }
+
+            if (healthText != null)
+            {
+                healthText.gameObject.SetActive(true);
+                healthText.text = monster.health.ToString();
+            }
+        }
     }
-
-
-    // =========================================
-    // MONSTER
-    // =========================================
-
-    if (cardData is MonsterData monster)
-    {
-        if (attackText != null)
-        {
-            attackText.gameObject.SetActive(true);
-            attackText.text =
-                monster.attack.ToString();
-        }
-
-        if (healthText != null)
-        {
-            healthText.gameObject.SetActive(true);
-            healthText.text =
-                monster.health.ToString();
-        }
-    }
-}
 
     // =========================================================
     // LOCALIZATION
@@ -326,31 +286,27 @@ private void RefreshStats()
         if (descriptionText != null)
         {
             LocalizationManager localization = LocalizationManager.Instance;
-            descriptionText.text = localization == null
-                ? cardData.description : localization.GetCardText(cardData);
+            descriptionText.text =
+                localization == null ? cardData.description : localization.GetCardText(cardData);
         }
-
 
         if (nameText != null)
         {
             // Use localization if available.
             if (LocalizationManager.Instance != null)
             {
-                nameText.text =
-                    LocalizationManager.Instance
-                        .GetCardName(cardData);
+                nameText.text = LocalizationManager.Instance.GetCardName(cardData);
             }
-
             // Useful fallback if the manager
             // isn't present during development.
             else
             {
-                nameText.text =
-                    cardData.cardName;
+                nameText.text = cardData.cardName;
             }
         }
     }
-      // =========================================================
+
+    // =========================================================
     // LANGUAGE EVENT
     // =========================================================
 
@@ -358,20 +314,15 @@ private void RefreshStats()
     {
         if (LocalizationManager.Instance != null)
         {
-            LocalizationManager.Instance
-                .OnLanguageChanged +=
-                RefreshLocalization;
+            LocalizationManager.Instance.OnLanguageChanged += RefreshLocalization;
         }
     }
-
 
     private void OnDisable()
     {
         if (LocalizationManager.Instance != null)
         {
-            LocalizationManager.Instance
-                .OnLanguageChanged -=
-                RefreshLocalization;
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshLocalization;
         }
     }
 }

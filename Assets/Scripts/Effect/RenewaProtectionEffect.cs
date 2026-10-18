@@ -6,6 +6,8 @@ public class RenewaProtectionEffect : CardEffect
 {
     public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
-        foreach (var target in targets) if (target != null) target.ProtectUntilTurnEnd();
+        foreach (var target in targets)
+            if (target != null)
+                target.ProtectUntilTurnEnd();
     }
 }

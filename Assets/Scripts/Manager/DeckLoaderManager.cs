@@ -9,11 +9,9 @@ public class DeckLoaderManager : MonoBehaviour
 {
     private const int MaxDecks = 9;
 
-
     [Header("Database")]
     [SerializeField]
     private CardDatabase cardDatabase;
-
 
     [Header("Saved Deck UI")]
     [SerializeField]
@@ -28,59 +26,46 @@ public class DeckLoaderManager : MonoBehaviour
     [SerializeField]
     private Button createDeckButton;
 
-
-    private List<DeckSaveData> savedDecks =
-        new List<DeckSaveData>();
-
+    private List<DeckSaveData> savedDecks = new List<DeckSaveData>();
 
     private void Start()
     {
-        if (!LocalAccountSession.RequireLogin()) return;
+        if (!LocalAccountSession.RequireLogin())
+            return;
         RefreshDeckList();
     }
-
 
     // =========================================================
     // REFRESH
     // =========================================================
 
-public void RefreshDeckList()
-{
-        if (!LocalAccountSession.RequireLogin()) return;
-    ClearDeckViews();
-
-    savedDecks =
-        LoadAllDecks();
-
-    foreach (DeckSaveData deck
-             in savedDecks)
+    public void RefreshDeckList()
     {
-        if (deck == null)
-            continue;
+        if (!LocalAccountSession.RequireLogin())
+            return;
+        ClearDeckViews();
 
-        SavedDeckView view =
-            Instantiate(
-                savedDeckPrefab,
-                deckContent
-            );
+        savedDecks = LoadAllDecks();
 
-        view.Initialize(
-            deck,
-            this,
-            cardDatabase
-        );
+        foreach (DeckSaveData deck in savedDecks)
+        {
+            if (deck == null)
+                continue;
+
+            SavedDeckView view = Instantiate(savedDeckPrefab, deckContent);
+
+            view.Initialize(deck, this, cardDatabase);
+        }
+
+        // Always put Create New Deck
+        // after all existing decks.
+        if (createDeckButton != null)
+        {
+            createDeckButton.transform.SetAsLastSibling();
+        }
+
+        RefreshDeckCount();
     }
-
-    // Always put Create New Deck
-    // after all existing decks.
-    if (createDeckButton != null)
-    {
-        createDeckButton.transform.SetAsLastSibling();
-    }
-
-    RefreshDeckCount();
-}
-
 
     // =========================================================
     // LOAD ALL DECKS
@@ -88,13 +73,9 @@ public void RefreshDeckList()
 
     private List<DeckSaveData> LoadAllDecks()
     {
-        List<DeckSaveData> decks =
-            new List<DeckSaveData>();
+        List<DeckSaveData> decks = new List<DeckSaveData>();
 
-
-        string folder =
-            AccountDeckStorage.GetFolder();
-
+        string folder = AccountDeckStorage.GetFolder();
 
         if (!Directory.Exists(folder))
         {
@@ -103,59 +84,36 @@ public void RefreshDeckList()
             return decks;
         }
 
-
-        string[] files =
-            Directory.GetFiles(
-                folder,
-                "*.json"
-            );
-
+        string[] files = Directory.GetFiles(folder, "*.json");
 
         foreach (string file in files)
         {
             try
             {
-                string json =
-                    File.ReadAllText(file);
+                string json = File.ReadAllText(file);
 
-
-                DeckSaveData data =
-                    JsonUtility.FromJson<
-                        DeckSaveData
-                    >(json);
-
+                DeckSaveData data = JsonUtility.FromJson<DeckSaveData>(json);
 
                 if (data == null)
                     continue;
 
-
-                if (string.IsNullOrWhiteSpace(
-                        data.deckID))
+                if (string.IsNullOrWhiteSpace(data.deckID))
                 {
-                    Debug.LogWarning(
-                        $"Deck file has no Deck ID: {file}"
-                    );
+                    Debug.LogWarning($"Deck file has no Deck ID: {file}");
 
                     continue;
                 }
-
 
                 decks.Add(data);
             }
             catch (System.Exception exception)
             {
-                Debug.LogError(
-                    $"Failed to load deck file " +
-                    $"{file}: " +
-                    $"{exception.Message}"
-                );
+                Debug.LogError($"Failed to load deck file " + $"{file}: " + $"{exception.Message}");
             }
         }
 
-
         return decks;
     }
-
 
     // =========================================================
     // CREATE
@@ -163,93 +121,65 @@ public void RefreshDeckList()
 
     public void CreateNewDeck()
     {
-        if (!LocalAccountSession.RequireLogin()) return;
+        if (!LocalAccountSession.RequireLogin())
+            return;
         if (savedDecks.Count >= MaxDecks)
         {
-            Debug.Log(
-                "Maximum number of decks reached."
-            );
+            Debug.Log("Maximum number of decks reached.");
 
             return;
         }
 
-
         DeckEditorSession.StartNewDeck();
 
-
-        SceneManager.LoadScene(
-            "DeckEditor"
-        );
+        SceneManager.LoadScene("DeckEditor");
     }
-
-
-
 
     // =========================================================
     // EDIT
     // =========================================================
 
-    public void EditDeck(
-        string deckID)
+    public void EditDeck(string deckID)
     {
-        if (!LocalAccountSession.RequireLogin()) return;
+        if (!LocalAccountSession.RequireLogin())
+            return;
         if (string.IsNullOrWhiteSpace(deckID))
             return;
 
+        DeckEditorSession.EditDeck(deckID);
 
-        DeckEditorSession.EditDeck(
-            deckID
-        );
-
-
-        SceneManager.LoadScene(
-            "DeckEditor"
-        );
+        SceneManager.LoadScene("DeckEditor");
     }
-
 
     // =========================================================
     // DELETE
     // =========================================================
 
-    public void DeleteDeck(
-        string deckID)
+    public void DeleteDeck(string deckID)
     {
-        if (!LocalAccountSession.RequireLogin()) return;
+        if (!LocalAccountSession.RequireLogin())
+            return;
         if (string.IsNullOrWhiteSpace(deckID))
             return;
 
+        string folder = AccountDeckStorage.GetFolder();
 
-        string folder =
-            AccountDeckStorage.GetFolder();
-
-
-        string path =
-            AccountDeckStorage.GetDeckPath(deckID);
-
+        string path = AccountDeckStorage.GetDeckPath(deckID);
 
         if (!File.Exists(path))
         {
-            Debug.LogWarning(
-                $"Could not find deck file: {deckID}"
-            );
+            Debug.LogWarning($"Could not find deck file: {deckID}");
 
             return;
         }
 
-
         File.Delete(path);
         LocalStorageSync.Flush();
 
-
-        Debug.Log(
-            $"Deleted deck: {deckID}"
-        );
-
+        Debug.Log($"Deleted deck: {deckID}");
 
         RefreshDeckList();
     }
-
 
     // =========================================================
     // COUNT
@@ -257,49 +187,39 @@ public void RefreshDeckList()
 
     private void RefreshDeckCount()
     {
-        int count =
-            savedDecks.Count;
-
+        int count = savedDecks.Count;
 
         if (deckCountText != null)
         {
-            deckCountText.text =
-                $"{count} / {MaxDecks}";
+            deckCountText.text = $"{count} / {MaxDecks}";
         }
-
 
         if (createDeckButton != null)
         {
-            createDeckButton.gameObject.SetActive(
-                count < MaxDecks
-            );
+            createDeckButton.gameObject.SetActive(count < MaxDecks);
         }
     }
-
 
     // =========================================================
     // CLEAR UI
     // =========================================================
 
-private void ClearDeckViews()
-{
-    if (deckContent == null)
-        return;
-
-    foreach (Transform child in deckContent)
+    private void ClearDeckViews()
     {
-        // Don't destroy the Create Deck button.
-        if (createDeckButton != null &&
-            child.gameObject ==
-            createDeckButton.gameObject)
+        if (deckContent == null)
+            return;
+
+        foreach (Transform child in deckContent)
         {
-            continue;
+            // Don't destroy the Create Deck button.
+            if (createDeckButton != null && child.gameObject == createDeckButton.gameObject)
+            {
+                continue;
+            }
+
+            Destroy(child.gameObject);
         }
-
-        Destroy(child.gameObject);
     }
-}
-
 
     // =========================================================
     // BACK
@@ -307,12 +227,6 @@ private void ClearDeckViews()
 
     public void ReturnToTitle()
     {
-        SceneManager.LoadScene(
-            "TitleScreen"
-        );
+        SceneManager.LoadScene("TitleScreen");
     }
-
-
-
-    
 }

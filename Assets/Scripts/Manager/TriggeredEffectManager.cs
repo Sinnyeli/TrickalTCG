@@ -10,13 +10,10 @@ public class TriggeredEffectManager : MonoBehaviour
     private void OnEnable()
     {
         RuntimeCard.OnGameplayTrigger += HandleGameplayTrigger;
-        RuntimeCard.OnStatsGained +=
-            HandleStatsGained;
+        RuntimeCard.OnStatsGained += HandleStatsGained;
 
-        BattlefieldManager.OnUnitSummoned +=
-            HandleUnitSummoned;
+        BattlefieldManager.OnUnitSummoned += HandleUnitSummoned;
     }
-
 
     // =========================================================
     // UNSUBSCRIBE
@@ -25,20 +22,23 @@ public class TriggeredEffectManager : MonoBehaviour
     private void OnDisable()
     {
         RuntimeCard.OnGameplayTrigger -= HandleGameplayTrigger;
-        RuntimeCard.OnStatsGained -=
-            HandleStatsGained;
+        RuntimeCard.OnStatsGained -= HandleStatsGained;
 
-        BattlefieldManager.OnUnitSummoned -=
-            HandleUnitSummoned;
+        BattlefieldManager.OnUnitSummoned -= HandleUnitSummoned;
     }
-
 
     private int triggerDepth;
     private int triggerBudget;
 
-    private void HandleGameplayTrigger(CardTriggerType type, RuntimeCard actor, RuntimeCard subject, RuntimeModifier snapshot)
+    private void HandleGameplayTrigger(
+        CardTriggerType type,
+        RuntimeCard actor,
+        RuntimeCard subject,
+        RuntimeModifier snapshot
+    )
     {
-        if (triggerDepth == 0) triggerBudget = 256;
+        if (triggerDepth == 0)
+            triggerBudget = 256;
         if (triggerDepth >= 32 || --triggerBudget < 0)
         {
             Debug.LogError("Trigger chain exceeded its safety limit; remaining event skipped.");
@@ -50,16 +50,33 @@ public class TriggeredEffectManager : MonoBehaviour
             DispatchSide(PlayerSide.Player, type, actor, subject, snapshot);
             DispatchSide(PlayerSide.Opponent, type, actor, subject, snapshot);
         }
-        finally { triggerDepth--; }
+        finally
+        {
+            triggerDepth--;
+        }
     }
 
-    private void DispatchSide(PlayerSide side, CardTriggerType type, RuntimeCard actor, RuntimeCard subject, RuntimeModifier snapshot)
+    private void DispatchSide(
+        PlayerSide side,
+        CardTriggerType type,
+        RuntimeCard actor,
+        RuntimeCard subject,
+        RuntimeModifier snapshot
+    )
     {
         var field = GameManager.Instance?.GetBattlefield(side);
-        if (field == null) return;
+        if (field == null)
+            return;
         foreach (var source in new List<RuntimeCard>(field.Minions))
         {
-            if (source == null || source.Zone != CardZone.Field || source.CurrentHealth <= 0 || source.IsSilenced || !(source.Data is MinionData data)) continue;
+            if (
+                source == null
+                || source.Zone != CardZone.Field
+                || source.CurrentHealth <= 0
+                || source.IsSilenced
+                || !(source.Data is MinionData data)
+            )
+                continue;
             foreach (var passive in new List<CardEffect>(data.Passives))
                 if (passive is TriggeredEffect effect && effect.TriggerType == type)
                     effect.ResolveGameplayTrigger(source, actor, subject, snapshot);
@@ -70,32 +87,19 @@ public class TriggeredEffectManager : MonoBehaviour
     // UNIT SUMMONED
     // =========================================================
 
-    private void HandleUnitSummoned(
-        RuntimeCard summonedCard)
+    private void HandleUnitSummoned(RuntimeCard summonedCard)
     {
-        ResolveBattlefieldTriggers(
-            CardTriggerType.UnitSummoned,
-            summonedCard,
-            null
-        );
+        ResolveBattlefieldTriggers(CardTriggerType.UnitSummoned, summonedCard, null);
     }
-
 
     // =========================================================
     // STATS GAINED
     // =========================================================
 
-    private void HandleStatsGained(
-        RuntimeCard card,
-        RuntimeModifier modifier)
+    private void HandleStatsGained(RuntimeCard card, RuntimeModifier modifier)
     {
-        ResolveBattlefieldTriggers(
-            CardTriggerType.StatsGained,
-            card,
-            modifier
-        );
+        ResolveBattlefieldTriggers(CardTriggerType.StatsGained, card, modifier);
     }
-
 
     // =========================================================
     // RESOLVE BOTH SIDES
@@ -104,23 +108,13 @@ public class TriggeredEffectManager : MonoBehaviour
     private void ResolveBattlefieldTriggers(
         CardTriggerType triggerType,
         RuntimeCard triggerCard,
-        RuntimeModifier modifier)
+        RuntimeModifier modifier
+    )
     {
-        ResolveSide(
-            PlayerSide.Player,
-            triggerType,
-            triggerCard,
-            modifier
-        );
+        ResolveSide(PlayerSide.Player, triggerType, triggerCard, modifier);
 
-        ResolveSide(
-            PlayerSide.Opponent,
-            triggerType,
-            triggerCard,
-            modifier
-        );
+        ResolveSide(PlayerSide.Opponent, triggerType, triggerCard, modifier);
     }
-
 
     // =========================================================
     // RESOLVE SIDE
@@ -130,28 +124,20 @@ public class TriggeredEffectManager : MonoBehaviour
         PlayerSide side,
         CardTriggerType triggerType,
         RuntimeCard triggerCard,
-        RuntimeModifier modifier)
+        RuntimeModifier modifier
+    )
     {
         if (GameManager.Instance == null)
             return;
 
-
-        BattlefieldManager battlefield =
-            GameManager.Instance.GetBattlefield(
-                side
-            );
+        BattlefieldManager battlefield = GameManager.Instance.GetBattlefield(side);
 
         if (battlefield == null)
             return;
 
-
         // Copy because effects could modify the field
         // while triggers are resolving.
-        List<RuntimeCard> cards =
-            new List<RuntimeCard>(
-                battlefield.Minions
-            );
-
+        List<RuntimeCard> cards = new List<RuntimeCard>(battlefield.Minions);
 
         foreach (RuntimeCard source in cards)
         {
@@ -161,17 +147,14 @@ public class TriggeredEffectManager : MonoBehaviour
             if (source.IsSilenced)
                 continue;
 
-
             // =========================================
             // MUST BE A MINION
             // =========================================
 
-            if (!(source.Data
-                is MinionData minionData))
+            if (!(source.Data is MinionData minionData))
             {
                 continue;
             }
-
 
             // =========================================
             // GET PASSIVE
@@ -179,8 +162,7 @@ public class TriggeredEffectManager : MonoBehaviour
 
             foreach (CardEffect passive in minionData.Passives)
             {
-                if (!(passive is TriggeredEffect triggered) ||
-                    triggered.TriggerType != triggerType)
+                if (!(passive is TriggeredEffect triggered) || triggered.TriggerType != triggerType)
                     continue;
 
                 triggered.ResolveTrigger(source, triggerCard, modifier);

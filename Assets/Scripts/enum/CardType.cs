@@ -7,5 +7,5 @@ public enum CardType
     Monster,
     Apostle,
     Spell,
-    Artifact
+    Artifact,
 }

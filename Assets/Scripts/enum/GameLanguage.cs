@@ -1,5 +1,5 @@
 public enum GameLanguage
 {
     English,
-    Korean
+    Korean,
 }

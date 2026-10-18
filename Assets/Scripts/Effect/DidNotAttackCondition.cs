@@ -2,14 +2,11 @@ using UnityEngine;
 
 [CreateAssetMenu(
     fileName = "DidNotAttackCondition",
-    menuName =
-        "Card Effects/Conditions/Did Not Attack"
+    menuName = "Card Effects/Conditions/Did Not Attack"
 )]
-public class DidNotAttackCondition
-    : CardEffectCondition
+public class DidNotAttackCondition : CardEffectCondition
 {
-    public override bool IsMet(
-        RuntimeCard source)
+    public override bool IsMet(RuntimeCard source)
     {
         if (source == null)
             return false;

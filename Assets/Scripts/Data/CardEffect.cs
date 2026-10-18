@@ -3,73 +3,68 @@ using UnityEngine;
 
 public abstract class CardEffect : ScriptableObject
 {
-  [Header("Targeting")]
-    [SerializeField] private EffectTargetType targetType;
+    [Header("Targeting")]
+    [SerializeField]
+    private EffectTargetType targetType;
 
     [Header("Target Filter")]
-    [SerializeField] private EffectTargetFilter targetFilter;
+    [SerializeField]
+    private EffectTargetFilter targetFilter;
 
-    [SerializeField] private CardRace cardRace;
-    [SerializeField] private CardType cardType;
+    [SerializeField]
+    private CardRace cardRace;
 
+    [SerializeField]
+    private CardType cardType;
 
     public CardRace CardRace => cardRace;
     public CardType CardType => cardType;
 
-    [SerializeField] private CardData specificCard;
+    [SerializeField]
+    private CardData specificCard;
 
     public EffectTargetType TargetType => targetType;
 
     public EffectTargetFilter TargetFilter => targetFilter;
 
-    
-
     public CardData SpecificCard => specificCard;
 
-    public abstract void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets
-    );
+    public abstract void Resolve(RuntimeCard source, List<RuntimeCard> targets);
 
-    public virtual bool CanTarget(RuntimeCard source, RuntimeCard target) => MatchesTargetFilter(target);
+    public virtual bool CanTarget(RuntimeCard source, RuntimeCard target) =>
+        MatchesTargetFilter(target);
 
     public bool MatchesTargetFilter(RuntimeCard target)
-{
-    if (target == null)
-        return false;
-
-    switch (targetFilter)
     {
-        case EffectTargetFilter.None:
-            return true;
-
-        case EffectTargetFilter.SpecificCard:
-            return target.Data == specificCard;
-
-        case EffectTargetFilter.CardRace:
-            if (target.Data is MonsterData monster)
-                return monster.HasRace(cardRace);
-
-            if (target.Data is ApostleData apostle)
-                return apostle.HasRace(cardRace);
-
+        if (target == null)
             return false;
 
-        case EffectTargetFilter.CardType:
-            return MatchesCardType(
-                target.Data,
-                cardType
-            );
+        switch (targetFilter)
+        {
+            case EffectTargetFilter.None:
+                return true;
 
-        default:
-            return false;
+            case EffectTargetFilter.SpecificCard:
+                return target.Data == specificCard;
+
+            case EffectTargetFilter.CardRace:
+                if (target.Data is MonsterData monster)
+                    return monster.HasRace(cardRace);
+
+                if (target.Data is ApostleData apostle)
+                    return apostle.HasRace(cardRace);
+
+                return false;
+
+            case EffectTargetFilter.CardType:
+                return MatchesCardType(target.Data, cardType);
+
+            default:
+                return false;
+        }
     }
 
-}
-
-    private bool MatchesCardType(
-        CardData data,
-        CardType type)
+    private bool MatchesCardType(CardData data, CardType type)
     {
         if (data == null)
             return false;

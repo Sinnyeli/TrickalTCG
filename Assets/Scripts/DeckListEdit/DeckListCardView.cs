@@ -5,16 +5,27 @@ using UnityEngine.UI;
 public class DeckListCardView : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] private TMP_Text manaCostText;
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private Image artworkImage;
+    [SerializeField]
+    private TMP_Text manaCostText;
 
-    [SerializeField] private TMP_Text countText;
-    [SerializeField] private Button plusButton;
-    [SerializeField] private Button minusButton;
+    [SerializeField]
+    private TMP_Text nameText;
+
+    [SerializeField]
+    private Image artworkImage;
+
+    [SerializeField]
+    private TMP_Text countText;
+
+    [SerializeField]
+    private Button plusButton;
+
+    [SerializeField]
+    private Button minusButton;
 
     [Header("Commander")]
-    [SerializeField] private GameObject commanderLabel;
+    [SerializeField]
+    private GameObject commanderLabel;
 
     private CardData cardData;
     private DeckEditorManager deckEditor;
@@ -23,14 +34,11 @@ public class DeckListCardView : MonoBehaviour
 
     public CardData CardData => cardData;
 
-
     // =========================================================
     // NORMAL DECK CARD
     // =========================================================
 
-    public void Initialize(
-        CardData data,
-        DeckEditorManager editor)
+    public void Initialize(CardData data, DeckEditorManager editor)
     {
         cardData = data;
         deckEditor = editor;
@@ -63,14 +71,11 @@ public class DeckListCardView : MonoBehaviour
         Refresh();
     }
 
-
     // =========================================================
     // COMMANDER
     // =========================================================
 
-    public void InitializeCommander(
-        ApostleData data,
-        DeckEditorManager editor)
+    public void InitializeCommander(ApostleData data, DeckEditorManager editor)
     {
         cardData = data;
         deckEditor = editor;
@@ -92,7 +97,6 @@ public class DeckListCardView : MonoBehaviour
             commanderLabel.SetActive(true);
     }
 
-
     // =========================================================
     // CARD INFO
     // =========================================================
@@ -106,15 +110,12 @@ public class DeckListCardView : MonoBehaviour
             nameText.text = cardData.cardName;
 
         if (manaCostText != null)
-            manaCostText.text =
-                cardData.manaCost.ToString();
+            manaCostText.text = cardData.manaCost.ToString();
 
         if (artworkImage != null)
-            artworkImage.sprite =
-                cardData.artwork;
+            artworkImage.sprite = cardData.artwork;
         RefreshLocalization();
     }
-
 
     // =========================================================
     // ADD
@@ -125,13 +126,11 @@ public class DeckListCardView : MonoBehaviour
         if (isCommander)
             return;
 
-        if (deckEditor == null ||
-            cardData == null)
+        if (deckEditor == null || cardData == null)
             return;
 
         deckEditor.TryAddCard(cardData);
     }
-
 
     // =========================================================
     // REMOVE
@@ -142,13 +141,11 @@ public class DeckListCardView : MonoBehaviour
         if (isCommander)
             return;
 
-        if (deckEditor == null ||
-            cardData == null)
+        if (deckEditor == null || cardData == null)
             return;
 
         deckEditor.TryRemoveCard(cardData);
     }
-
 
     // =========================================================
     // REFRESH
@@ -167,50 +164,43 @@ public class DeckListCardView : MonoBehaviour
         if (deckEditor == null)
             return;
 
-        int count =
-            deckEditor.GetCardCount(cardData);
+        int count = deckEditor.GetCardCount(cardData);
 
         if (countText != null)
             countText.text = count.ToString();
     }
 
     private void RefreshLocalization()
-{
-    if (cardData == null)
-        return;
+    {
+        if (cardData == null)
+            return;
 
-    if (nameText == null)
-        return;
+        if (nameText == null)
+            return;
 
-    if (LocalizationManager.Instance != null)
-    {
-        nameText.text =
-            LocalizationManager.Instance
-                .GetCardName(cardData);
+        if (LocalizationManager.Instance != null)
+        {
+            nameText.text = LocalizationManager.Instance.GetCardName(cardData);
+        }
+        else
+        {
+            nameText.text = cardData.cardName;
+        }
     }
-    else
-    {
-        nameText.text =
-            cardData.cardName;
-    }
-}
-private void OnEnable()
-{
-    if (LocalizationManager.Instance != null)
-    {
-        LocalizationManager.Instance
-            .OnLanguageChanged +=
-            RefreshLocalization;
-    }
-}
 
-private void OnDisable()
-{
-    if (LocalizationManager.Instance != null)
+    private void OnEnable()
     {
-        LocalizationManager.Instance
-            .OnLanguageChanged -=
-            RefreshLocalization;
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged += RefreshLocalization;
+        }
     }
-}
+
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshLocalization;
+        }
+    }
 }

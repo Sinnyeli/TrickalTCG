@@ -1,5 +1,5 @@
 public enum DeckEditorDropType
 {
     Commander,
-    Deck
+    Deck,
 }

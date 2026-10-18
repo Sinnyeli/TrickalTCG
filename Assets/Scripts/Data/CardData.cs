@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class CardData : ScriptableObject
 {
@@ -18,24 +18,20 @@ public abstract class CardData : ScriptableObject
     [Header("Visuals")]
     public Sprite artwork;
 
-  [Header("On Draw")]
+    [Header("On Draw")]
     [SerializeField]
-    private List<CardEffect> onDrawEffects =
-        new List<CardEffect>();
+    private List<CardEffect> onDrawEffects = new List<CardEffect>();
 
-    public IReadOnlyList<CardEffect> OnDrawEffects =>
-        onDrawEffects;
+    public IReadOnlyList<CardEffect> OnDrawEffects => onDrawEffects;
 
     [Header("Deck Building")]
     [SerializeField]
     private bool collectible = true;
-    
 
     public bool Collectible => collectible;
+
     [SerializeField]
     private bool unlimitedCopies = false;
 
     public bool UnlimitedCopies => unlimitedCopies;
-
-    
 }

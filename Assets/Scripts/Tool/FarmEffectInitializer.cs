@@ -9,24 +9,34 @@ using UnityEngine;
 
 public static class FarmEffectInitializer
 {
-    private const string EffectPath = "Assets/Cards/Effects/Initialized/FX_FarmRandomVegetable.asset";
+    private const string EffectPath =
+        "Assets/Cards/Effects/Initialized/FX_FarmRandomVegetable.asset";
 
     public static void Build()
     {
-        if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+            return;
         var cards = CardDataCsv.FindCards();
         var farms = cards.Where(c => c.CardID == "S_FARM").ToList();
         if (farms.Count != 1 || !(farms[0] is SpellData))
             throw new InvalidOperationException("Import exactly one S_FARM SpellData first.");
         // Includes token vegetables: this generates a unit, rather than drawing from a deck.
-        var pool = cards.OfType<MonsterData>()
+        var pool = cards
+            .OfType<MonsterData>()
             .Where(c => c.cardRace == CardRace.Vegetable && c.health > 0)
-            .OrderBy(c => c.CardID, StringComparer.Ordinal).ToList();
+            .OrderBy(c => c.CardID, StringComparer.Ordinal)
+            .ToList();
         if (pool.Count == 0)
-            throw new InvalidOperationException("No living Vegetable Monster assets found. Import their race and stats first.");
-        if (pool.Any(c => string.IsNullOrWhiteSpace(c.CardID)) ||
-            pool.GroupBy(c => c.CardID).Any(g => g.Count() > 1))
-            throw new InvalidOperationException("Vegetable pool has missing or duplicate CardIDs. Correct these first.");
+            throw new InvalidOperationException(
+                "No living Vegetable Monster assets found. Import their race and stats first."
+            );
+        if (
+            pool.Any(c => string.IsNullOrWhiteSpace(c.CardID))
+            || pool.GroupBy(c => c.CardID).Any(g => g.Count() > 1)
+        )
+            throw new InvalidOperationException(
+                "Vegetable pool has missing or duplicate CardIDs. Correct these first."
+            );
         var rows = CardDataCsv.ReadLocalizationRows();
         var existing = AssetDatabase.LoadMainAssetAtPath(EffectPath);
         if (existing != null && !(existing is SummonEffect))
@@ -48,7 +58,8 @@ public static class FarmEffectInitializer
         serialized.FindProperty("summonSideMode").enumValueIndex = (int)SummonSideMode.SourceOwner;
         var list = serialized.FindProperty("summonPool");
         list.arraySize = pool.Count;
-        for (int i = 0; i < pool.Count; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = pool[i];
+        for (int i = 0; i < pool.Count; i++)
+            list.GetArrayElementAtIndex(i).objectReferenceValue = pool[i];
         serialized.ApplyModifiedProperties();
         EditorUtility.SetDirty(effect);
 
@@ -66,19 +77,33 @@ public static class FarmEffectInitializer
 
         string key = "S_FARM_TEXT";
         var row = rows.Skip(1).FirstOrDefault(r => r[0] == key);
-        if (row == null) { row = new List<string> { key, english, korean }; rows.Add(row); }
-        else { row[1] = english; row[2] = korean; }
+        if (row == null)
+        {
+            row = new List<string> { key, english, korean };
+            rows.Add(row);
+        }
+        else
+        {
+            row[1] = english;
+            row[2] = korean;
+        }
         var csv = new StringBuilder();
-        foreach (var entry in rows) CardDataCsv.AppendRow(csv, entry);
+        foreach (var entry in rows)
+            CardDataCsv.AppendRow(csv, entry);
         File.WriteAllText(CardDataCsv.LocalizationPath, csv.ToString(), new UTF8Encoding(true));
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("S_FARM initialized with " + pool.Count + " Vegetable Monsters. Rerun after adding vegetables.");
+        Debug.Log(
+            "S_FARM initialized with "
+                + pool.Count
+                + " Vegetable Monsters. Rerun after adding vegetables."
+        );
     }
 
     private static void EnsureFolder(string path)
     {
-        if (AssetDatabase.IsValidFolder(path)) return;
+        if (AssetDatabase.IsValidFolder(path))
+            return;
         string parent = Path.GetDirectoryName(path).Replace('\\', '/');
         EnsureFolder(parent);
         AssetDatabase.CreateFolder(parent, Path.GetFileName(path));

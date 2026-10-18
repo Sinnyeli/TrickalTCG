@@ -11,5 +11,5 @@ public enum CardTrigger
     OnAttack,
     OnDraw,
     OnDeath,
-    OnPlay
+    OnPlay,
 }

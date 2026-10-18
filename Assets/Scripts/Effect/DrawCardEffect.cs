@@ -1,10 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(
-    fileName = "DrawCardEffect",
-    menuName = "Card Effects/Draw Card"
-)]
+[CreateAssetMenu(fileName = "DrawCardEffect", menuName = "Card Effects/Draw Card")]
 public class DrawCardEffect : CardEffect
 {
     [Header("Draw Settings")]
@@ -12,12 +9,9 @@ public class DrawCardEffect : CardEffect
     private int amount = 1;
 
     [SerializeField]
-    private DrawType drawType =
-        DrawType.Top;
+    private DrawType drawType = DrawType.Top;
 
-    public override void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets)
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
         if (source == null)
             return;
@@ -28,9 +22,7 @@ public class DrawCardEffect : CardEffect
             {
                 case DrawType.Top:
 
-                    GameManager.Instance.DrawCard(
-                        source.Owner
-                    );
+                    GameManager.Instance.DrawCard(source.Owner);
 
                     break;
 
@@ -49,56 +41,36 @@ public class DrawCardEffect : CardEffect
         }
     }
 
-    private void DrawSpecific(
-        RuntimeCard source)
+    private void DrawSpecific(RuntimeCard source)
     {
         if (SpecificCard == null)
             return;
 
-        DeckManager deck =
-            GameManager.Instance.GetDeck(
-                source.Owner
-            );
+        DeckManager deck = GameManager.Instance.GetDeck(source.Owner);
 
         if (deck == null)
             return;
 
-        RuntimeCard card =
-            deck.DrawSpecificCard(
-                SpecificCard
-            );
+        RuntimeCard card = deck.DrawSpecificCard(SpecificCard);
 
         if (card == null)
             return;
 
-        GameManager.Instance.HandleDrawnCard(
-            card,
-            source.Owner
-        );
+        GameManager.Instance.HandleDrawnCard(card, source.Owner);
     }
 
-    private void DrawRandomMatching(
-        RuntimeCard source)
+    private void DrawRandomMatching(RuntimeCard source)
     {
-        DeckManager deck =
-            GameManager.Instance.GetDeck(
-                source.Owner
-            );
+        DeckManager deck = GameManager.Instance.GetDeck(source.Owner);
 
         if (deck == null)
             return;
 
-        RuntimeCard card =
-            deck.DrawRandomMatchingCard(
-                MatchesTargetFilter
-            );
+        RuntimeCard card = deck.DrawRandomMatchingCard(MatchesTargetFilter);
 
         if (card == null)
             return;
 
-        GameManager.Instance.HandleDrawnCard(
-            card,
-            source.Owner
-        );
+        GameManager.Instance.HandleDrawnCard(card, source.Owner);
     }
 }

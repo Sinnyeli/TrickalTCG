@@ -1,18 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(
-    fileName = "CreateCardsEffect",
-    menuName = "Card Effects/Create Cards"
-)]
+[CreateAssetMenu(fileName = "CreateCardsEffect", menuName = "Card Effects/Create Cards")]
 public class CreateCardsEffect : CardEffect
 {
-    [SerializeField] private CardData cardToCreate;
-    [SerializeField] private int amount = 1;
+    [SerializeField]
+    private CardData cardToCreate;
 
-    public override void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets)
+    [SerializeField]
+    private int amount = 1;
+
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
         if (source == null || cardToCreate == null)
             return;
@@ -29,24 +27,14 @@ public class CreateCardsEffect : CardEffect
 
         for (int i = 0; i < amount; i++)
         {
-            bool added =
-                handManager.AddGeneratedCard(
-                    cardToCreate,
-                    source.Owner
-                );
+            bool added = handManager.AddGeneratedCard(cardToCreate, source.Owner);
 
             if (!added)
             {
-                Debug.Log(
-                    $"Could not create {cardToCreate.cardName}. " +
-                    "Hand may be full."
-                );
+                Debug.Log($"Could not create {cardToCreate.cardName}. " + "Hand may be full.");
             }
         }
 
-        Debug.Log(
-            $"{source.Data.cardName} created " +
-            $"{amount}x {cardToCreate.cardName}."
-        );
+        Debug.Log($"{source.Data.cardName} created " + $"{amount}x {cardToCreate.cardName}.");
     }
 }

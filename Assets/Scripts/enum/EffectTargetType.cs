@@ -28,5 +28,5 @@ public enum EffectTargetType
     TriggerCard,
 
     CardRace,
-    EnemyTarget
+    EnemyTarget,
 }

@@ -1,11 +1,11 @@
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public abstract class CardviewBase : MonoBehaviour
 {
- [Header("UI")]
+    [Header("UI")]
     public Image artworkImage;
     public TMP_Text nameText;
     public TMP_Text descriptionText;
@@ -18,21 +18,21 @@ public abstract class CardviewBase : MonoBehaviour
     public RuntimeCard runtimeCard;
     private HandManager handManager;
 
-
-   
     public void SetCard(RuntimeCard card)
     {
-        if (GetComponent<CardHoverZoom>() == null) gameObject.AddComponent<CardHoverZoom>();
+        if (GetComponent<CardHoverZoom>() == null)
+            gameObject.AddComponent<CardHoverZoom>();
         runtimeCard = card;
-        // get runtime card. Get data from it. 
+        // get runtime card. Get data from it.
         CardData data = card.Data;
 
         LocalizationManager localization = LocalizationManager.Instance;
         nameText.text = localization == null ? data.cardName : localization.GetCardName(data);
-        descriptionText.text = localization == null ? data.description : localization.GetCardText(data);
+        descriptionText.text =
+            localization == null ? data.description : localization.GetCardText(data);
         costText.text = data.manaCost.ToString();
 
-      if (artworkImage != null)
+        if (artworkImage != null)
         {
             artworkImage.sprite = data.artwork;
         }
@@ -41,7 +41,6 @@ public abstract class CardviewBase : MonoBehaviour
         healthText.gameObject.SetActive(false);
         raceImage.gameObject.SetActive(false);
         typeText.gameObject.SetActive(false);
-        
 
         if (data is MonsterData monster)
         {
@@ -62,8 +61,8 @@ public abstract class CardviewBase : MonoBehaviour
             healthText.text = apostle.health.ToString();
             raceImage.sprite = apostle.TypeIcon;
         }
-
     }
+
     public void RefreshCardView()
     {
         if (runtimeCard == null)
@@ -71,11 +70,9 @@ public abstract class CardviewBase : MonoBehaviour
 
         if (costText != null)
         {
-            costText.text =
-                runtimeCard.GetManaCost().ToString();
+            costText.text = runtimeCard.GetManaCost().ToString();
         }
 
         // Keep any other runtime-updating fields here later.
     }
-
 }

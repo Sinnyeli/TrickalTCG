@@ -6,5 +6,5 @@ public enum DeckTargetType
 {
     Friendly,
     Enemy,
-    Both
+    Both,
 }

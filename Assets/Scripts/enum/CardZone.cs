@@ -8,5 +8,5 @@ public enum CardZone
     Hand,
     Field,
     Graveyard,
-    Exhausted
+    Exhausted,
 }
