@@ -119,6 +119,10 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
 
     private void CreateCardView(RuntimeCard card)
     {
+        // Headless battles (automated tests) have no prefab and run without views.
+        if (cardPrefab == null)
+            return;
+
          GameObject obj =
         Instantiate(cardPrefab, handContainer);
 
@@ -155,6 +159,9 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
 
     private void CreateCommanderView(RuntimeCard commander)
     {
+        if (cardPrefab == null)
+            return;
+
         GameObject obj = Instantiate(
             cardPrefab,
             commanderContainer
@@ -408,6 +415,9 @@ public bool PlayCardFromHand(RuntimeCard card)
 
 private CardviewBase FindCardView(RuntimeCard card)
 {
+    if (handContainer == null)
+        return null;
+
     foreach (Transform child in handContainer)
     {
         CardviewBase cardView =
@@ -886,6 +896,9 @@ public void RefreshCardView(RuntimeCard card)
 
 public void RefreshAllCardViews()
 {
+    if (handContainer == null)
+        return;
+
     foreach (Transform child in handContainer)
     {
         CardviewBase view =

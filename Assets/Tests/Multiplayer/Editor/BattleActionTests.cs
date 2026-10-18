@@ -98,17 +98,17 @@ public class BattleActionTests
     [Test] public void DeckValidationHonorsSpellLimitAndRejectsWrongSizeAndUnitOverLimit()
     {
         var commander=Card("ApostleData","A_TEST","Commander");
-        var jubee=Card("MonsterData","M_JUBEE_TEST","Jubee");
+        var jubee=Card("MonsterData","A_JUBEE","Jubee");
         var spell=Card("SpellData","S_TEST","Spell");
         var unit=Card("MonsterData","M_TEST","Unit");
         var catalog=ScriptableObject.CreateInstance(T("CardDatabase"));created.Add(catalog);
         var cards=(IList)Get(catalog,"allCards");cards.Add(commander);cards.Add(jubee);cards.Add(spell);cards.Add(unit);
         var saved=Activator.CreateInstance(T("DeckSaveData"));Set(saved,"commanderID","A_TEST");
-        var entries=(IList)Get(saved,"cards");entries.Add(Entry("S_TEST",3));entries.Add(Entry("M_JUBEE_TEST",27));
+        var entries=(IList)Get(saved,"cards");entries.Add(Entry("S_TEST",3));entries.Add(Entry("A_JUBEE",27));
         Assert.True(Validate(saved,catalog));
-        entries.Clear();entries.Add(Entry("M_TEST",3));entries.Add(Entry("M_JUBEE_TEST",27));Assert.False(Validate(saved,catalog));
-        entries.Clear();entries.Add(Entry("M_JUBEE_TEST",29));Assert.False(Validate(saved,catalog));
-        entries.Clear();entries.Add(Entry("A_TEST",1));entries.Add(Entry("M_JUBEE_TEST",29));Assert.True(Validate(saved,catalog));
+        entries.Clear();entries.Add(Entry("M_TEST",3));entries.Add(Entry("A_JUBEE",27));Assert.False(Validate(saved,catalog));
+        entries.Clear();entries.Add(Entry("A_JUBEE",29));Assert.False(Validate(saved,catalog));
+        entries.Clear();entries.Add(Entry("A_TEST",1));entries.Add(Entry("A_JUBEE",29));Assert.True(Validate(saved,catalog));
     }
     [Test] public void RemotePresentationUsesAuthoritativeStatsAndIdentity()
     {

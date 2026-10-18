@@ -142,6 +142,10 @@ public static event System.Action<RuntimeCard> OnUnitSummoned;
     }
     private void CreateMinionView(RuntimeCard card)
     {
+        // Headless battles (automated tests) have no prefab and run without views.
+        if (minionPrefab == null)
+            return;
+
         GameObject minionObject =
             Instantiate(minionPrefab, minionContainer);
 
