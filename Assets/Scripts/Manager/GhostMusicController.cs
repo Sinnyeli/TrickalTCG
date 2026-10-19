@@ -32,6 +32,7 @@ public class GhostMusicController : MonoBehaviour
         }
         musicSource.clip = track;
         musicSource.loop = false;
+        musicSource.volume = GameSettings.MusicVolume;
         musicSource.Play();
     }
 }

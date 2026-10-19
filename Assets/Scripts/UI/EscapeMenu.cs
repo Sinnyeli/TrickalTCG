@@ -15,8 +15,20 @@ public class EscapeMenu : MonoBehaviour
     public static bool IsOpen =>
         instance != null && instance.overlay != null && instance.overlay.activeSelf;
     private PlayerIconCatalog catalog;
-    private bool choosingIcons;
+
+    private enum Page
+    {
+        Main,
+        Icons,
+        Settings,
+    }
+
+    private Page current;
     private int page;
+
+    // Window changes apply at the end of the frame, so remember what was picked to show it immediately.
+    private bool? chosenFullscreen;
+    private Vector2Int? chosenResolution;
     private const int PageSize = 6;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -52,7 +64,7 @@ public class EscapeMenu : MonoBehaviour
     private void SceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Close();
-        choosingIcons = false;
+        current = Page.Main;
         page = 0;
     }
 
@@ -71,7 +83,7 @@ public class EscapeMenu : MonoBehaviour
             Close();
         else
         {
-            choosingIcons = false;
+            current = Page.Main;
             Build();
         }
     }
@@ -112,26 +124,93 @@ public class EscapeMenu : MonoBehaviour
             "Menu Panel",
             overlay.transform,
             Vector2.zero,
-            new Vector2(520, choosingIcons ? 680 : 460)
+            new Vector2(520, PanelHeight)
         );
         panel.gameObject.AddComponent<Image>().color = new Color(.13f, .16f, .21f, 1);
-        Label(
-            panel,
-            choosingIcons ? "Choose Player Icon" : "Menu",
-            new Vector2(0, choosingIcons ? 300 : 185),
-            new Vector2(470, 50),
-            28
-        );
-        if (choosingIcons)
+        Label(panel, Title, new Vector2(0, PanelHeight / 2 - 40), new Vector2(470, 50), 28);
+        switch (current)
         {
-            BuildIcons();
-            return;
+            case Page.Icons:
+                BuildIcons();
+                break;
+            case Page.Settings:
+                BuildSettings();
+                break;
+            default:
+                BuildMain();
+                break;
         }
-        Button settings = MenuButton("Settings", 120, () => { });
-        settings.interactable = false;
+    }
+
+    private float PanelHeight =>
+        current == Page.Icons ? 680
+        : current == Page.Settings ? 600
+        : 400;
+
+    private string Title =>
+        current == Page.Icons ? "Choose Player Icon"
+        : current == Page.Settings ? "Settings"
+        : "Menu";
+
+    private void BuildMain()
+    {
+        MenuButton("Settings", 95, () => Open(Page.Settings));
+        if (InBattle)
+        {
+            Button surrender = MenuButton("Surrender", 30, Surrender);
+            surrender.interactable =
+                GameManager.Instance != null && !GameManager.Instance.IsGameOver;
+        }
+        else
+        {
+            Button icon = MenuButton("Player Icon", 30, () => Open(Page.Icons));
+            icon.interactable =
+                LocalAccountSession.IsLoggedIn && catalog != null && catalog.icons.Length > 0;
+        }
+        MenuButton("Quit to Login", -35, Quit);
+        MenuButton("Close", -100, Close);
+    }
+
+    private void BuildSettings()
+    {
+        VolumeRow(
+            Korean ? "음악" : "Music",
+            170,
+            () => GameSettings.MusicVolume,
+            v => GameSettings.MusicVolume = v
+        );
+        VolumeRow(
+            Korean ? "효과음" : "Sound Effects",
+            100,
+            () => GameSettings.SfxVolume,
+            v => GameSettings.SfxVolume = v
+        );
+
+        bool fullscreen = chosenFullscreen ?? GameSettings.Fullscreen;
+        MenuButton(
+            Korean
+                ? (fullscreen ? "화면: 전체 화면" : "화면: 창 모드")
+                : (fullscreen ? "Display: Fullscreen" : "Display: Windowed"),
+            30,
+            () =>
+            {
+                GameSettings.Fullscreen = !fullscreen;
+                chosenFullscreen = !fullscreen;
+                Build();
+            }
+        );
+
+        Vector2Int resolution = chosenResolution ?? GameSettings.CurrentResolution;
+        Button resolutionButton = MenuButton(
+            (Korean ? "해상도: " : "Resolution: ") + $"{resolution.x} x {resolution.y}",
+            -40,
+            NextResolution
+        );
+        resolutionButton.interactable = GameSettings.AvailableResolutions().Count > 1;
+
         MenuButton(
             Korean ? "언어: 한국어" : "Language: English",
-            55,
+            -110,
             () =>
             {
                 LocalizationManager.Instance.SetLanguage(
@@ -145,28 +224,51 @@ public class EscapeMenu : MonoBehaviour
                 Build();
             }
         );
-        if (InBattle)
+        MenuButton("Back", -220, () => Open(Page.Main));
+    }
+
+    // Label on the left, then - value + in 10% steps.
+    private void VolumeRow(string label, float y, System.Func<float> get, System.Action<float> set)
+    {
+        RectTransform row = Element(label, panel, new Vector2(0, y), new Vector2(460, 52));
+        TextMeshProUGUI name = Text(row, label, new Vector2(-115, 0), new Vector2(220, 48), 23);
+        name.alignment = TextAlignmentOptions.Left;
+        TextMeshProUGUI value = Text(
+            row,
+            Percent(get()),
+            new Vector2(125, 0),
+            new Vector2(90, 48),
+            23
+        );
+        SmallButton(row, "-", new Vector2(45, 0), () => Step(-.1f));
+        SmallButton(row, "+", new Vector2(205, 0), () => Step(.1f));
+
+        void Step(float amount)
         {
-            Button surrender = MenuButton("Surrender", -10, Surrender);
-            surrender.interactable =
-                GameManager.Instance != null && !GameManager.Instance.IsGameOver;
+            set(get() + amount);
+            value.text = Percent(get());
         }
-        else
-        {
-            Button icon = MenuButton(
-                "Player Icon",
-                -10,
-                () =>
-                {
-                    choosingIcons = true;
-                    Build();
-                }
-            );
-            icon.interactable =
-                LocalAccountSession.IsLoggedIn && catalog != null && catalog.icons.Length > 0;
-        }
-        MenuButton("Quit to Login", -75, Quit);
-        MenuButton("Close", -140, Close);
+    }
+
+    private static string Percent(float volume) => Mathf.RoundToInt(volume * 100) + "%";
+
+    private void NextResolution()
+    {
+        var sizes = GameSettings.AvailableResolutions();
+        int index = sizes.IndexOf(chosenResolution ?? GameSettings.CurrentResolution);
+        Vector2Int next = sizes[(index + 1) % sizes.Count];
+        GameSettings.SetResolution(next);
+        chosenResolution = next;
+        Build();
+    }
+
+    private void Open(Page target)
+    {
+        current = target;
+        page = 0;
+        chosenFullscreen = null;
+        chosenResolution = null;
+        Build();
     }
 
     private void BuildIcons()
@@ -186,8 +288,7 @@ public class EscapeMenu : MonoBehaviour
                         PlayerView view in FindObjectsByType<PlayerView>(FindObjectsSortMode.None)
                     )
                         view.RefreshPlayerIcon();
-                    choosingIcons = false;
-                    Build();
+                    Open(Page.Main);
                 }
             );
             Image image = Element(
@@ -219,15 +320,7 @@ public class EscapeMenu : MonoBehaviour
                 Build();
             }
         ).interactable = start + PageSize < total;
-        MenuButton(
-            "Back",
-            -300,
-            () =>
-            {
-                choosingIcons = false;
-                Build();
-            }
-        );
+        MenuButton("Back", -300, () => Open(Page.Main));
     }
 
     private void Surrender()
@@ -247,19 +340,50 @@ public class EscapeMenu : MonoBehaviour
         LocalAccountSession.LogoutAndOpenLogin();
     }
 
-    private Button MenuButton(string text, float y, UnityEngine.Events.UnityAction action)
+    private Button MenuButton(string text, float y, UnityEngine.Events.UnityAction action) =>
+        CreateButton(panel, text, new Vector2(0, y), new Vector2(460, 52), action);
+
+    private Button SmallButton(
+        Transform parent,
+        string text,
+        Vector2 position,
+        UnityEngine.Events.UnityAction action
+    ) => CreateButton(parent, text, position, new Vector2(52, 52), action);
+
+    private Button CreateButton(
+        Transform parent,
+        string text,
+        Vector2 position,
+        Vector2 size,
+        UnityEngine.Events.UnityAction action
+    )
     {
-        RectTransform rect = Element(text, panel, new Vector2(0, y), new Vector2(460, 52));
+        RectTransform rect = Element(text, parent, position, size);
         Image image = rect.gameObject.AddComponent<Image>();
         image.color = new Color(.28f, .34f, .43f);
         Button button = rect.gameObject.AddComponent<Button>();
         button.targetGraphic = image;
+        button.onClick.AddListener(() => GameAudio.PlaySfx(GameAudio.Clips?.buttonClickSound));
         button.onClick.AddListener(action);
-        Label(rect, text, Vector2.zero, new Vector2(440, 48), 23);
+        Label(rect, text, Vector2.zero, size - new Vector2(20, 4), 23);
         return button;
     }
 
-    private void Label(Transform parent, string value, Vector2 position, Vector2 size, int fontSize)
+    private void Label(
+        Transform parent,
+        string value,
+        Vector2 position,
+        Vector2 size,
+        int fontSize
+    ) => Text(parent, value, position, size, fontSize);
+
+    private TextMeshProUGUI Text(
+        Transform parent,
+        string value,
+        Vector2 position,
+        Vector2 size,
+        int fontSize
+    )
     {
         TextMeshProUGUI text = Element("Label", parent, position, size)
             .gameObject.AddComponent<TextMeshProUGUI>();
@@ -269,6 +393,7 @@ public class EscapeMenu : MonoBehaviour
         text.color = Color.white;
         text.alignment = TextAlignmentOptions.Center;
         text.raycastTarget = false;
+        return text;
     }
 
     private bool Korean =>
