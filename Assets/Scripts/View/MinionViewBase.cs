@@ -19,6 +19,11 @@ public abstract class MinionViewBase : MonoBehaviour
     protected RuntimeCard runtimeCard;
     public RuntimeCard RuntimeCard => runtimeCard;
 
+    // Last values drawn, so a change can be announced (null until the first draw of a card).
+    private int? shownHealth;
+    private int? shownAttack;
+    public int ShownHealth => shownHealth ?? 0;
+
     private bool isSelected;
     public bool IsSelected => isSelected;
 
@@ -35,6 +40,9 @@ public abstract class MinionViewBase : MonoBehaviour
 
             return;
         }
+
+        if (runtimeCard != card)
+            shownHealth = shownAttack = null;
 
         runtimeCard = card;
 
@@ -98,6 +106,27 @@ public abstract class MinionViewBase : MonoBehaviour
 
         if (healthText != null)
             healthText.text = runtimeCard.CurrentHealth.ToString();
+
+        AnnounceStatChanges();
+    }
+
+    private void AnnounceStatChanges()
+    {
+        int health = runtimeCard.CurrentHealth;
+        int attack = runtimeCard.GetAttack();
+
+        if (shownHealth.HasValue && shownHealth.Value != health)
+        {
+            BattleFeedback.HealthChanged(transform, health - shownHealth.Value);
+            if (healthText != null)
+                BattleFeedback.Punch(healthText.transform);
+        }
+
+        if (shownAttack.HasValue && shownAttack.Value != attack && attackText != null)
+            BattleFeedback.Punch(attackText.transform);
+
+        shownHealth = health;
+        shownAttack = attack;
     }
 
     public void RefreshArtifacts()

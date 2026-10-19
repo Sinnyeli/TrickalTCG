@@ -60,6 +60,7 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
     {
         side = newSide;
         currentHealth = maxHealth;
+        shownHealth = null;
 
         RefreshView();
         RefreshPlayerIcon();
@@ -88,9 +89,19 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    // Last value drawn, so damage and healing can be announced (null until the first draw).
+    private int? shownHealth;
+
     private void RefreshHealth()
     {
         healthText.text = currentHealth.ToString();
+
+        if (shownHealth.HasValue && shownHealth.Value != currentHealth)
+        {
+            BattleFeedback.HealthChanged(transform, currentHealth - shownHealth.Value);
+            BattleFeedback.Punch(healthText.transform);
+        }
+        shownHealth = currentHealth;
     }
 
     public void TakeDamage(int damage)

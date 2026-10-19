@@ -19,6 +19,8 @@ public class CardView
     private void Awake()
     {
         battlefieldDropZone = FindFirstObjectByType<BattlefieldDropZone>();
+        gameObject.AddComponent<ActionHighlight>().Condition = () =>
+            !isDragging && BattleFeedback.CanPlayNow(runtimeCard);
     }
 
     public void OnPointerClick(PointerEventData eventData)

@@ -122,9 +122,10 @@ public class BattlefieldManager : MonoBehaviour
 
     public void ApplyRemoteField(List<RuntimeCard> cards)
     {
+        // The guest only sees that a unit is gone, not why, so it fades out without the death effect.
         foreach (var old in new List<RuntimeCard>(minions))
             if (!cards.Contains(old))
-                RemoveMinionView(old);
+                RemoveMinionView(old, died: false);
         foreach (var card in cards)
         {
             if (!minionViews.ContainsKey(card))
@@ -152,6 +153,7 @@ public class BattlefieldManager : MonoBehaviour
         minionView.SetMinion(card);
 
         minionViews[card] = minionView;
+        BattleFeedback.UnitEntered();
     }
 
     public void RefreshMinionView(RuntimeCard card)
@@ -173,13 +175,16 @@ public class BattlefieldManager : MonoBehaviour
         );
     }
 
-    private void RemoveMinionView(RuntimeCard card)
+    private void RemoveMinionView(RuntimeCard card, bool died)
     {
         if (!minionViews.TryGetValue(card, out MinionView view))
             return;
 
         if (view != null)
+        {
+            BattleFeedback.UnitRemoved(view, died);
             Destroy(view.gameObject);
+        }
 
         minionViews.Remove(card);
     }
@@ -222,7 +227,7 @@ public class BattlefieldManager : MonoBehaviour
         minions.Remove(card);
         card.ChangeZone(CardZone.Graveyard);
 
-        RemoveMinionView(card);
+        RemoveMinionView(card, died: true);
         RuntimeCard.PublishTrigger(CardTriggerType.UnitDied, killer, card, defeatedStats);
         if (killer != null && killer.Owner != card.Owner)
             RuntimeCard.PublishTrigger(CardTriggerType.UnitKilled, killer, card, defeatedStats);
@@ -342,7 +347,7 @@ public class BattlefieldManager : MonoBehaviour
 
         minions.Remove(card);
 
-        RemoveMinionView(card);
+        RemoveMinionView(card, died: false);
 
         // =====================================================
         // RESET FIELD STATE

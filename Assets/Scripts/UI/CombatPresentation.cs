@@ -102,6 +102,7 @@ public class CombatPresentation : MonoBehaviour
                 );
                 yield return null;
             }
+            BattleFeedback.AttackLanded();
             elapsed = 0;
             while (elapsed < .20f)
             {
@@ -125,7 +126,7 @@ public class CombatPresentation : MonoBehaviour
 
     // Build fresh graphics instead of instantiating card scripts, hover Canvases
     // and Raycasters. Missing scripts on a source prefab are never cloned.
-    private static GameObject CopyVisuals(Transform source, Transform parent)
+    internal static GameObject CopyVisuals(Transform source, Transform parent)
     {
         GameObject copy = new GameObject(source.name + " Visual", typeof(RectTransform));
         RectTransform rect = (RectTransform)copy.transform;
