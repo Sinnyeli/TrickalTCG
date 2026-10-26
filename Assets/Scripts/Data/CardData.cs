@@ -18,6 +18,9 @@ public abstract class CardData : ScriptableObject
     [Header("Visuals")]
     public Sprite artwork;
 
+    // The card's own artwork, or a generated stand-in for cards whose art isn't drawn yet.
+    public Sprite DisplayArtwork => artwork != null ? artwork : CardArtFallback.For(this);
+
     [Header("On Draw")]
     [SerializeField]
     private List<CardEffect> onDrawEffects = new List<CardEffect>();

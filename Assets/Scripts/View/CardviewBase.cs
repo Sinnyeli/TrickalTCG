@@ -38,7 +38,7 @@ public abstract class CardviewBase : MonoBehaviour
 
         if (artworkImage != null)
         {
-            artworkImage.sprite = data.artwork;
+            artworkImage.sprite = data.DisplayArtwork;
         }
 
         attackText.gameObject.SetActive(false);

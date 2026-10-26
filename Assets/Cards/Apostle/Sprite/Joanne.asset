@@ -25,7 +25,7 @@ MonoBehaviour:
   cardRace: 0
   additionalRaces: 
   keywords: 
-  battlecry: {fileID: 0}
+  battlecry: {fileID: 11400000, guid: b2f9c877f757680968c3a060dd5d843d, type: 2}
   deathrattle: {fileID: 0}
   passive: {fileID: 0}
   additionalPassives:

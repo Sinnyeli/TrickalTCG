@@ -72,8 +72,8 @@ public abstract class MinionViewBase : MonoBehaviour
             nameText.text = runtimeCard.Data.cardName;
         }
 
-        if (data.artwork != null)
-            artworkImage.sprite = data.artwork;
+        if (artworkImage != null)
+            artworkImage.sprite = data.DisplayArtwork;
 
         if (frameBand != null)
             frameBand.color = card.Owner == PlayerSide.Player ? playerFrameColor : enemyFrameColor;
@@ -171,7 +171,7 @@ public abstract class MinionViewBase : MonoBehaviour
             if (slot == null)
                 continue;
 
-            slot.sprite = artifact.Data.artwork;
+            slot.sprite = artifact.Data.DisplayArtwork;
             slot.gameObject.SetActive(true);
         }
     }
