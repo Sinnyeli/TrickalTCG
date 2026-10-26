@@ -98,7 +98,7 @@ Apostle,A_POLANG,Polang,Battlecry: Summon 3 Sprite Soldiers. Your other Sprites 
 Apostle,A_RICOTA,Ricota,"At the end of the turn, create a Bread in your hand",3,2,3,Sprite,,true,false,,,,3
 Apostle,A_RONNIE,Ronnie,Deathrattle: Create a Broken Recorder in your hand.,3,4,3,Sprite,,true,false,,,,3
 Apostle,A_SASHA,Sasha,Battlecry: Create a Tumbler in your hand. ,4,3,3,Sprite,,true,false,,,,3
-Apostle,A_SHUPANG,Shupang,"Rush. At the end of your turn, if this didn't attack, draw a card.",3,2,1,Sprite,Rush,true,false,,,,3
+Apostle,A_SHUPANG,Shupang,"Rush. Battlecry: Draw a card. At the end of your turn, return to hand.",3,2,1,Sprite,Rush,true,false,,,,3
 Apostle,A_SKIA,Skia,Battlecry: Create a Vow of Silence in your hand,4,3,4,Sprite,,true,false,,,,3
 Apostle,A_ASANA,Asana,Resonance: Restore 1 Health to Asana and give her +1 Attack.,3,3,4,Witch,,true,false,,,,3
 Apostle,A_AYA,Aya,"Resonance: After every 3rd spell you cast while Aya is on field, draw a card.",1,1,2,Witch,,true,false,,,,3

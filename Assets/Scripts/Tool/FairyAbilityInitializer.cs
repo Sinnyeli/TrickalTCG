@@ -51,14 +51,10 @@ public static class FairyAbilityInitializer
         var aura = Make<PolangAuraEffect>("FX_PolangSpriteAura");
         Edit(aura, s => Target(s, EffectTargetType.None));
         Edit(polang, s => s.FindProperty("passive").objectReferenceValue = aura);
-        var shupangDraw = Make<ShupangTurnEndDrawEffect>("FX_ShupangNoAttackDraw");
-        Edit(shupangDraw, s => Target(s, EffectTargetType.None));
         Edit(
             shupang,
             s =>
             {
-                s.FindProperty("battlecry").objectReferenceValue = null;
-                s.FindProperty("turnEnd").objectReferenceValue = shupangDraw;
                 var list = s.FindProperty("keywords");
                 for (int i = 0; i < list.arraySize; i++)
                     if (list.GetArrayElementAtIndex(i).enumValueIndex == (int)CardKeyword.Rush)
@@ -168,8 +164,8 @@ public static class FairyAbilityInitializer
         Text(
             shupang,
             rows,
-            "Rush. At the end of your turn, if this didn't attack, draw a card.",
-            "속공. 내 턴 종료 시 이번 턴에 공격하지 않았다면 카드 1장 뽑기."
+            "Rush. Battlecry: Draw a card. At the end of your turn, return to hand.",
+            "속공. 등장: 카드 1장 뽑기. 턴 종료: 패로 복귀."
         );
         var csv = new StringBuilder();
         foreach (var row in rows)

@@ -267,6 +267,16 @@ public static class CardInitializationBuilder
             Wire("A_THYST", "battlecry", cheapArtifact);
             Wire("A_ORE", "battlecry", randomMachine);
             Wire("A_PATRA", "battlecry", Create("FX_CreateMintBread", "S_MINT"));
+            Wire(
+                "A_SHUPANG",
+                "battlecry",
+                NumberEffect<DrawCardEffect>("FX_Draw1", EffectTargetType.None, 1)
+            );
+            Wire(
+                "A_SHUPANG",
+                "turnEnd",
+                Effect<BounceEffect>("FX_BounceSelf", EffectTargetType.Self)
+            );
             Wire("M_BULHYOJASON", "deathrattle", charm);
             Wire("M_LOW_SUGAR_FAIRY", "battlecry", randomVegetable);
             Wire("M_HIGH_SUGAR_FAIRY", "battlecry", bread);

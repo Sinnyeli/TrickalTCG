@@ -198,7 +198,7 @@
 "A_SHERUM_NAME","Sherum","셰럼"
 "A_SHERUM_TEXT","Every third Resonance: Create a copy of the last Spell you cast.","공명 3회마다 마지막으로 쓴 마법 복사."
 "A_SHUPANG_NAME","Shupang","슈팡"
-"A_SHUPANG_TEXT","Rush. At the end of your turn, if this didn't attack, draw a card.","속공. 내 턴 종료 시 이번 턴에 공격하지 않았다면 카드 1장 뽑기."
+"A_SHUPANG_TEXT","Rush. Battlecry: Draw a card. At the end of your turn, return to hand.","속공. 등장: 카드 1장 뽑기. 턴 종료: 패로 복귀."
 "A_SHURO_NAME","Shuro","슈로"
 "A_SHURO_TEXT","Whenever this unit kills a unit, gain +2/+2. If its attack or hp reaches 7, transform into Ouros","유닛 처치 시 +2/+2. 공격력이나 체력이 7에 도달하면 우로스로 변신."
 "A_SKIA_NAME","Skia","스키아"
