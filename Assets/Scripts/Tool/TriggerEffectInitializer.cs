@@ -288,14 +288,14 @@ public static class TriggerEffectInitializer
             rows,
             "A_LEVI_TEXT",
             levi.description,
-            "필드에 있는 동안 한 턴에 마법 5번 사용 시 졸업. 이번 게임 동안 내 마법 비용 −1."
+            "필드에 있는 동안 한 턴에 마법 5번 사용 시 졸업. 이번 게임 동안 내 마법 비용 -1."
         );
         PutTranslation(rows, "A_LEVI_2_NAME", "Levi (Graduated)", "레비(졸업)");
         PutTranslation(
             rows,
             "A_LEVI_2_TEXT",
             upgraded.description,
-            "졸업 완료: 이번 게임 동안 내 마법 비용 −1."
+            "졸업 완료: 이번 게임 동안 내 마법 비용 -1."
         );
         var csv = new StringBuilder();
         foreach (var row in rows)

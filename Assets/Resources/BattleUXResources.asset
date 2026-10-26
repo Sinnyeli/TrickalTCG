@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1350f5a6a6d5440ea6cea7decb2af2cb, type: 3}
   m_Name: BattleUXResources
   m_EditorClassIdentifier: 
-  menuFont: {fileID: 11400000, guid: 85b619137e9192e5dbe78b7c4757ba30, type: 2}
+  menuFont: {fileID: 11400000, guid: 0d53726b6d8ba3e7b830bf59a2ac70bf, type: 2}
   localization: {fileID: 4900000, guid: dc349cf10d263417e8eb20e30f5456d6, type: 3}

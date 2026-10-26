@@ -549,7 +549,7 @@ public static class CardInitializationBuilder
             s =>
             {
                 Objects(s, "spellEffects", new UnityEngine.Object[] { effect });
-                s.FindProperty("description").stringValue = "Restore 0–2 available mana at random.";
+                s.FindProperty("description").stringValue = "Restore 0-2 available mana at random.";
             }
         );
         var rows = CardDataCsv.ReadLocalizationRows();
@@ -560,7 +560,7 @@ public static class CardInitializationBuilder
             row = new List<string> { key, "", "" };
             rows.Add(row);
         }
-        row[1] = "Restore 0–2 available mana at random.";
+        row[1] = "Restore 0-2 available mana at random.";
         row[2] = "마나를 무작위로 0~2 회복합니다.";
         var csv = new StringBuilder();
         foreach (var entry in rows)
@@ -568,7 +568,7 @@ public static class CardInitializationBuilder
         File.WriteAllText(CardDataCsv.LocalizationPath, csv.ToString(), new UTF8Encoding(true));
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("S_COIN initialized: restore 0–2 available mana; maximum mana is unchanged.");
+        Debug.Log("S_COIN initialized: restore 0-2 available mana; maximum mana is unchanged.");
     }
 
     private static void Spell(string id, CardEffect effect) =>

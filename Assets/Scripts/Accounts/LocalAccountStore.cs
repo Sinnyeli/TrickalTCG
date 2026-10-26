@@ -32,7 +32,7 @@ public sealed class LocalAccountStore
         string id = (input ?? "").Trim().Normalize(NormalizationForm.FormC);
         if (id.Length < 1 || id.Length > 32)
         {
-            error = "ID must be 1–32 characters.";
+            error = "ID must be 1-32 characters.";
             return false;
         }
         foreach (char c in id)
@@ -62,7 +62,7 @@ public sealed class LocalAccountStore
             return false;
         if (string.IsNullOrEmpty(password) || password.Length > 128)
         {
-            error = "Password must be 1–128 characters.";
+            error = "Password must be 1-128 characters.";
             return false;
         }
         string path = AccountPath(canonical);
