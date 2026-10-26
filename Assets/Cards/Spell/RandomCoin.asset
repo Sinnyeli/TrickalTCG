@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: S_COIN
   cardName: RandomCoin
-  description: "Restore 0\u20132 available mana at random."
+  description: "Restore 0-2 available mana at random."
   manaCost: 2
   artwork: {fileID: 21300000, guid: 0ef45d2bab742af14b873d32b55d0c98, type: 3}
   onDrawEffects: []

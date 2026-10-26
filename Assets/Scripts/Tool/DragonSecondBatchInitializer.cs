@@ -34,7 +34,7 @@ public static class DragonSecondBatchInitializer
                 s.FindProperty("health").intValue = 3;
             }
         );
-        Text(pyra, rows, "Battlecry: Your next card costs 2 less.", "등장: 다음 카드 비용 −2.");
+        Text(pyra, rows, "Battlecry: Your next card costs 2 less.", "등장: 다음 카드 비용 -2.");
         Text(
             ritz,
             rows,

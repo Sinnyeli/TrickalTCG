@@ -174,7 +174,6 @@ public class MenuTheme : MonoBehaviour
         foreach (TMP_Text label in button.GetComponentsInChildren<TMP_Text>(true))
         {
             label.color = primary ? UiPalette.DarkText : Color.white;
-            label.fontStyle |= FontStyles.Bold;
             Mark(label);
         }
     }

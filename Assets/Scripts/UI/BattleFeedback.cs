@@ -447,7 +447,7 @@ public class BattleFeedback : MonoBehaviour
             .gameObject.AddComponent<TextMeshProUGUI>();
         text.font = font;
         text.fontSize = size;
-        text.fontStyle = FontStyles.Bold;
+        text.fontStyle = FontStyles.Normal;
         text.color = color;
         text.alignment = TextAlignmentOptions.Center;
         text.raycastTarget = false;
