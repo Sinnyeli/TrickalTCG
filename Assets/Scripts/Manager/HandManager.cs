@@ -138,24 +138,8 @@ public class HandManager : MonoBehaviour
         if (view != null)
         {
             view.SetCard(card);
-            if (
-                owner == PlayerSide.Opponent
-                && BattleSession.OpponentType == BattleOpponentType.RemotePlayer
-            )
-            {
-                if (view.artworkImage != null)
-                    view.artworkImage.enabled = false;
-                if (view.nameText != null)
-                    view.nameText.text = "";
-                if (view.descriptionText != null)
-                    view.descriptionText.text = "";
-                if (view.costText != null)
-                    view.costText.gameObject.SetActive(false);
-                if (view.attackText != null)
-                    view.attackText.gameObject.SetActive(false);
-                if (view.healthText != null)
-                    view.healthText.gameObject.SetActive(false);
-            }
+            if (view is OpponentCardView opponentView)
+                opponentView.SetFaceDown(owner == PlayerSide.Opponent);
         }
         else
         {
@@ -180,6 +164,9 @@ public class HandManager : MonoBehaviour
         if (view != null)
         {
             view.SetCard(commander);
+            // Commanders are public, so they stay face up.
+            if (view is OpponentCardView opponentView)
+                opponentView.SetFaceDown(false);
         }
         else
         {
