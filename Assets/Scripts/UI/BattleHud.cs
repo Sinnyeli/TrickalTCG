@@ -10,12 +10,12 @@ using UnityEngine.UI;
 // Gameplay objects and their layouts are untouched; decorations are added as siblings behind them.
 public class BattleHud : MonoBehaviour
 {
-    private static readonly Color Gold = new Color(.95f, .76f, .31f);
-    private static readonly Color Navy = new Color(.11f, .14f, .22f, .92f);
-    private static readonly Color HealthRed = new Color(.86f, .24f, .24f);
-    private static readonly Color ManaBlue = new Color(.24f, .55f, 1f);
-    private static readonly Color ReadyGreen = new Color(.36f, .82f, .42f);
-    private static readonly Color Muted = new Color(.62f, .66f, .74f);
+    private static readonly Color Gold = UiPalette.Gold;
+    private static readonly Color Navy = UiPalette.Navy;
+    private static readonly Color HealthRed = UiPalette.HealthRed;
+    private static readonly Color ManaBlue = UiPalette.ManaBlue;
+    private static readonly Color ReadyGreen = UiPalette.ReadyGreen;
+    private static readonly Color Muted = UiPalette.Muted;
 
     private static BattleHud instance;
     private TMP_FontAsset font;
@@ -132,7 +132,7 @@ public class BattleHud : MonoBehaviour
         Image backdrop = Panel(
             "Board Backdrop",
             root,
-            UiSprites.VerticalGradient(new Color(.16f, .24f, .36f), new Color(.29f, .22f, .17f)),
+            UiSprites.VerticalGradient(UiPalette.BackdropTop, UiPalette.BackdropBottom),
             Color.white
         );
         backdrop.type = Image.Type.Simple;
