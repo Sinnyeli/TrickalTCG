@@ -16,6 +16,14 @@ public abstract class MinionViewBase : MonoBehaviour
     public Image artifactTwo;
     public Image artifactThree;
 
+    [Header("Frame")]
+    // Scalloped band around the portrait, tinted by side to match the board.
+    public Image frameBand;
+    public Sprite frameGlow;
+    public GameObject raceBadge;
+    public Color playerFrameColor = new Color(.55f, .75f, 1f);
+    public Color enemyFrameColor = new Color(1f, .62f, .7f);
+
     protected RuntimeCard runtimeCard;
     public RuntimeCard RuntimeCard => runtimeCard;
 
@@ -67,9 +75,12 @@ public abstract class MinionViewBase : MonoBehaviour
         if (data.artwork != null)
             artworkImage.sprite = data.artwork;
 
+        if (frameBand != null)
+            frameBand.color = card.Owner == PlayerSide.Player ? playerFrameColor : enemyFrameColor;
+
         attackText.gameObject.SetActive(false);
         healthText.gameObject.SetActive(false);
-        raceImage.gameObject.SetActive(false);
+        SetRaceVisible(false);
 
         if (data is MonsterData monster)
         {
@@ -83,7 +94,7 @@ public abstract class MinionViewBase : MonoBehaviour
         {
             attackText.gameObject.SetActive(true);
             healthText.gameObject.SetActive(true);
-            raceImage.gameObject.SetActive(true);
+            SetRaceVisible(true);
 
             RefreshStats();
             raceImage.sprite = apostle.TypeIcon;
@@ -94,6 +105,14 @@ public abstract class MinionViewBase : MonoBehaviour
 
         Debug.Log($"MinionView created for {data.cardName}");
         RefreshArtifacts();
+    }
+
+    private void SetRaceVisible(bool visible)
+    {
+        raceImage.gameObject.SetActive(visible);
+
+        if (raceBadge != null)
+            raceBadge.SetActive(visible);
     }
 
     public void RefreshStats()

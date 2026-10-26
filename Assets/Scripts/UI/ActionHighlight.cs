@@ -10,6 +10,10 @@ public class ActionHighlight : MonoBehaviour
 
     public System.Func<bool> Condition { get; set; }
 
+    // Optional glow outline (instead of the square panel) and the child rect it should hug.
+    public Sprite Shape { get; set; }
+    public RectTransform ShapeArea { get; set; }
+
     private Image glow;
 
     private void Start()
@@ -20,13 +24,23 @@ public class ActionHighlight : MonoBehaviour
         ).GetComponent<RectTransform>();
         rect.SetParent(transform, false);
         rect.SetAsFirstSibling(); // drawn behind the card art
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = new Vector2(-Padding, -Padding);
-        rect.offsetMax = new Vector2(Padding, Padding);
         glow = rect.gameObject.AddComponent<Image>();
-        glow.sprite = UiSprites.Panel;
-        glow.type = Image.Type.Sliced;
+        if (Shape != null && ShapeArea != null)
+        {
+            rect.anchorMin = rect.anchorMax = new Vector2(.5f, .5f);
+            rect.anchoredPosition = ShapeArea.anchoredPosition;
+            rect.sizeDelta = ShapeArea.sizeDelta + new Vector2(2 * Padding, 2 * Padding);
+            glow.sprite = Shape;
+        }
+        else
+        {
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = new Vector2(-Padding, -Padding);
+            rect.offsetMax = new Vector2(Padding, Padding);
+            glow.sprite = UiSprites.Panel;
+            glow.type = Image.Type.Sliced;
+        }
         glow.raycastTarget = false;
         glow.gameObject.SetActive(false);
     }
