@@ -21,8 +21,13 @@ public class MinionView
         originalScale = transform.localScale;
         if (GetComponent<CardHoverZoom>() == null)
             gameObject.AddComponent<CardHoverZoom>();
-        gameObject.AddComponent<ActionHighlight>().Condition = () =>
-            BattleFeedback.CanAttackNow(runtimeCard);
+        ActionHighlight highlight = gameObject.AddComponent<ActionHighlight>();
+        highlight.Condition = () => BattleFeedback.CanAttackNow(runtimeCard);
+        if (frameBand != null)
+        {
+            highlight.Shape = frameGlow;
+            highlight.ShapeArea = frameBand.rectTransform;
+        }
     }
 
     private bool draggedAttack;
