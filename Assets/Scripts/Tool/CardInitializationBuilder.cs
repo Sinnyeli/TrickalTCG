@@ -267,16 +267,6 @@ public static class CardInitializationBuilder
             Wire("A_THYST", "battlecry", cheapArtifact);
             Wire("A_ORE", "battlecry", randomMachine);
             Wire("A_PATRA", "battlecry", Create("FX_CreateMintBread", "S_MINT"));
-            Wire(
-                "A_SHUPANG",
-                "battlecry",
-                NumberEffect<DrawCardEffect>("FX_Draw1", EffectTargetType.None, 1)
-            );
-            Wire(
-                "A_SHUPANG",
-                "turnEnd",
-                Effect<BounceEffect>("FX_BounceSelf", EffectTargetType.Self)
-            );
             Wire("M_BULHYOJASON", "deathrattle", charm);
             Wire("M_LOW_SUGAR_FAIRY", "battlecry", randomVegetable);
             Wire("M_HIGH_SUGAR_FAIRY", "battlecry", bread);
@@ -290,7 +280,7 @@ public static class CardInitializationBuilder
                 NumberEffect<DamageEffect>("FX_DamageAnyTarget1", EffectTargetType.AnyTarget, 1)
             );
             report.Add(
-                "Pending latest-design abilities: Mayo collectible pool; Polang Fairy aura; Joanne Fairy-enter trigger; Ricota enemy-death cooking; Ashur Bread-use Fireball; Shupang attack draw."
+                "Pending latest-design abilities: Joanne Fairy-enter trigger; Ricota enemy-death cooking."
             );
             report.Add(
                 "Cheap artifacts currently means collectible cost <= 2; center targeting chooses the left center on an even board. Review these provisional conventions."

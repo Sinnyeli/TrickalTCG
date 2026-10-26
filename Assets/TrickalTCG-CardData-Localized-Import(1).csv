@@ -91,15 +91,14 @@ Apostle,A_KAREN,Karen,On Damage Taken: Summon a Carrot,3,2,4,Sprite,,true,false,
 Apostle,A_KYAROT,Kyarot,Battlecry: Buff all Friendly Vegetables by +2/+2,4,3,4,Sprite,Rush;Taunt,true,false,,,,4,Kyarot,캬롯,Battlecry: Buff all Friendly Vegetables by +2/+2,등장: 모든 아군 채소에게 +2/+2 부여.
 Apostle,A_KYURI,Kyuri,All cucumbers have 5/2 statline,5,5,2,Sprite,,true,false,,,,3,Kyuri,큐리,All cucumbers have 5/2 statline,모든 오이의 공격력·체력은 5/2.
 Apostle,A_MARIE,Marie,Battlecry: Shuffle 3 Bombs into Opponent's Deck,3,3,3,Sprite,,true,false,,,,3,Marie,마리,Battlecry: Shuffle 3 Bombs into Opponent's Deck,등장: 폭탄 3장을 상대 덱에 섞기.
-Apostle,A_MAYO,Mayo,Battlecry: Create a random Artifact in your hand. ,3,2,4,Sprite,,true,false,,,,3,Mayo,마요,Battlecry: Create a random Artifact in your hand.,등장: 무작위 아티팩트 하나를 패에 생성.
+Apostle,A_MAYO,Mayo,Battlecry: Create a random Artifact from Mayo's collection.,3,2,4,Sprite,,true,false,,,,3,Mayo,마요,Battlecry: Create a random Artifact from Mayo's collection.,등장: 마요의 수집품 중 무작위 아티팩트 1장을 생성합니다.
 Apostle,A_NERE,Nere,Your sprites have +1 Health,4,3,3,Sprite,,true,false,,,,3,Nere,네르,Your sprites have +1 Health,아군 요정 방어 +1.
 Apostle,A_PATRA,Patra,Battlecry: Create a Mint Bread in your hand. ,3,3,2,Sprite,,true,false,,,,3,Patra,파트라,Battlecry: Create a Mint Bread in your hand.,등장: 민트빵을 패에 생성.
-Apostle,A_POLANG,Polang,Battlecry: Summon 3 Sprite Soldiers,6,3,4,Sprite,,true,false,,,,3,Polang,폴랑,Battlecry: Summon 3 Sprite Soldiers,등장: 요정 병사 3명 소환.
+Apostle,A_POLANG,Polang,Battlecry: Summon 3 Sprite Soldiers. Your other Sprites have +1/+1.,6,3,4,Sprite,,true,false,,,,3,Polang,폴랑,Battlecry: Summon 3 Sprite Soldiers. Your other Sprites have +1/+1.,등장: 요정 병사 3명 소환. 다른 아군 요정은 +1/+1.
 Apostle,A_RICOTA,Ricota,"At the end of the turn, create a Bread in your hand",3,2,3,Sprite,,true,false,,,,3,Ricota,리코타,"At the end of the turn, create a Bread in your hand",턴 종료: 빵을 패에 생성.
 Apostle,A_RONNIE,Ronnie,Deathrattle: Create a Broken Recorder in your hand.,3,4,3,Sprite,,true,false,,,,3,Ronnie,로니,Deathrattle: Create a Broken Recorder in your hand.,퇴장: 망가진 녹음기를 패에 생성.
 Apostle,A_SASHA,Sasha,Battlecry: Create a Tumbler in your hand. ,4,3,3,Sprite,,true,false,,,,3,Sasha,사샤,Battlecry: Create a Tumbler in your hand.,등장: 텀블러를 패에 생성.
-Apostle,A_SHUPANG,Shupang,"Battlecry: Draw 1 Card
-At the end of turn, return to hand. ",3,2,1,Sprite,Rush,true,false,,,,3,Shupang,슈팡,"Battlecry: Draw 1 Card At the end of turn, return to hand.",등장: 카드 1장 뽑기. 턴 종료: 패로 복귀.
+Apostle,A_SHUPANG,Shupang,"Rush. At the end of your turn, if this didn't attack, draw a card.",3,2,1,Sprite,Rush,true,false,,,,3,Shupang,슈팡,"Rush. At the end of your turn, if this didn't attack, draw a card.",속공. 내 턴 종료 시 이번 턴에 공격하지 않았다면 카드 1장 뽑기.
 Apostle,A_SKIA,Skia,Battlecry: Create a Vow of Silence in your hand,4,3,4,Sprite,,true,false,,,,3,Skia,스키아,Battlecry: Create a Vow of Silence in your hand,등장: 침묵의 수행을 패에 생성.
 Apostle,A_ASANA,Asana,Resonance: Restore 1 Health to Asana and give her +1 Attack.,3,3,4,Witch,,true,false,,,,3,Asana,아사나,Resonance: Restore 1 Health to Asana and give her +1 Attack.,공명: 자신 체력 1 회복 및 공격 +1.
 Apostle,A_AYA,Aya,"Resonance: After every 3rd spell you cast while Aya is on field, draw a card.",1,1,2,Witch,,true,false,,,,3,Aya,아야,"Resonance: After every 3rd spell you cast while Aya is on field, draw a card.",공명: 필드에 있는 동안 마법 3번 사용마다 카드 1장 뽑기.
