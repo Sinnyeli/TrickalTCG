@@ -229,7 +229,7 @@ public class BattleHud : MonoBehaviour
         {
             endTurnLabel.font = font;
             endTurnLabel.fontSize = 30;
-            endTurnLabel.fontStyle = FontStyles.Bold;
+            endTurnLabel.fontStyle = FontStyles.Normal;
             endTurnLabel.alignment = TextAlignmentOptions.Center;
             endTurnLabel.transform.SetAsLastSibling();
         }
@@ -275,7 +275,7 @@ public class BattleHud : MonoBehaviour
             Stretch(text);
             health.font = font;
             health.fontSize = 36;
-            health.fontStyle = FontStyles.Bold;
+            health.fontStyle = FontStyles.Normal;
             health.color = Color.white;
             health.alignment = TextAlignmentOptions.Center;
             health.enableAutoSizing = false;
@@ -462,7 +462,7 @@ public class BattleHud : MonoBehaviour
         TextMeshProUGUI text = rect.gameObject.AddComponent<TextMeshProUGUI>();
         text.font = font;
         text.fontSize = size;
-        text.fontStyle = FontStyles.Bold;
+        text.fontStyle = FontStyles.Normal;
         text.color = color;
         text.alignment = TextAlignmentOptions.Center;
         text.raycastTarget = false;
