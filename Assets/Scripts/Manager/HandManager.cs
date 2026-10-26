@@ -31,6 +31,7 @@ public class HandManager : MonoBehaviour
     private PlayerSide owner;
 
     public Transform HandContainer => handContainer;
+    public Transform CommanderContainer => commanderContainer;
     private List<RuntimeCard> hand = new List<RuntimeCard>();
 
     // This holds the list of cards in hand.

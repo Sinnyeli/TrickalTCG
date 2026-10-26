@@ -23,6 +23,7 @@ public class PlayerView : MonoBehaviour, IPointerClickHandler
 
     [SerializeField]
     private TMP_Text healthText;
+    public TMP_Text HealthText => healthText;
 
     [SerializeField]
     private Image playerIcon;

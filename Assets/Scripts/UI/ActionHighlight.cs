@@ -25,6 +25,8 @@ public class ActionHighlight : MonoBehaviour
         rect.offsetMin = new Vector2(-Padding, -Padding);
         rect.offsetMax = new Vector2(Padding, Padding);
         glow = rect.gameObject.AddComponent<Image>();
+        glow.sprite = UiSprites.Panel;
+        glow.type = Image.Type.Sliced;
         glow.raycastTarget = false;
         glow.gameObject.SetActive(false);
     }

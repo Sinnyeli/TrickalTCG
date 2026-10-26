@@ -11,6 +11,7 @@ public class BattlefieldManager : MonoBehaviour
     [Header("UI")]
     [SerializeField]
     private Transform minionContainer;
+    public Transform MinionContainer => minionContainer;
 
     [SerializeField]
     private GameObject minionPrefab;

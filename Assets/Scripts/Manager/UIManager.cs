@@ -30,6 +30,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Button endTurnButton;
 
+    public Button EndTurnButton => endTurnButton;
+
     private void Update()
     {
         RefreshUI();

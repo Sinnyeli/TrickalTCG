@@ -13,6 +13,7 @@ public class TurnManager : MonoBehaviour
     private bool timerRunning;
     private bool endingTurn;
     public float RemainingTurnSeconds => remainingTurnSeconds;
+    public float TurnDurationSeconds => turnDurationSeconds;
     public bool CanPlayerEndTurn =>
         timerRunning
         && !endingTurn
