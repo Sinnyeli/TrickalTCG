@@ -58,6 +58,7 @@ on-screen notice, which needs the battle UI.
 | BUG-06 | The two commanders were set up in a different order | `GameManager.SetUpCommander` used for both sides | `CommandersAreSetUpConsistently` | Fixed |
 | BUG-07 | On-draw effects must fire even for cards burnt from a full hand | Already worked; now documented and tested | `BurntCardStillFiresOnDraw` | Protected |
 | BUG-08 | Jubee's unlimited copies relied on the card name | `DeckRules.GetCopyLimit` checks card ID `A_JUBEE` | `JubeeLimitUsesCardID` | Fixed |
+| BUG-09 | Pressing Play crashed Unity: `GameAudio.Awake` started music, which called `Get()` before the instance was registered and created another `GameAudio`, forever | `GameAudio.Awake` registers the instance first; empty clips return before `Get()` | Manual: press Play in any scene (play-mode only, so no EditMode scenario) | Fixed |
 
 ## Core rules
 
