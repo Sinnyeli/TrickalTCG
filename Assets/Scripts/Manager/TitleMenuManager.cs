@@ -9,17 +9,17 @@ public class TitleMenuManager : MonoBehaviour
 
     public void OpenDeckEditor()
     {
-        if (!LocalAccountSession.RequireLogin()) return;
-        SceneManager.LoadScene(
-            "DeckLoader"
-        );
+        if (!LocalAccountSession.RequireLogin())
+            return;
+        SceneManager.LoadScene("DeckLoader");
     }
-       public void OpenDeckSelector()
+
+    public void OpenDeckSelector()
     {
-        if (!LocalAccountSession.RequireLogin()) return;
-        SceneManager.LoadScene(
-            "DeckSelector"
-        );
+        if (!LocalAccountSession.RequireLogin())
+            return;
+        SceneManager.LoadScene("DeckSelector");
     }
+
     public void Logout() => LocalAccountSession.LogoutAndOpenLogin();
 }

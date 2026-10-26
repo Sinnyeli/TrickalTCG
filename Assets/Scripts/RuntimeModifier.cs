@@ -13,15 +13,21 @@ public class RuntimeModifier
     public ModifierDuration Duration { get; private set; }
     public int RemainingTurns { get; private set; }
 
-public RuntimeModifier(int attackBonus, int healthBonus, bool canBeSilenced, RuntimeCard source = null, bool isPassive = false)
-{
-    AttackBonus = attackBonus;
-    HealthBonus = healthBonus;
-    CanBeSilenced = canBeSilenced;
-    Source = source;
-    IsPassive = isPassive;
-}
+    public RuntimeModifier(
+        int attackBonus,
+        int healthBonus,
+        bool canBeSilenced,
+        RuntimeCard source = null,
+        bool isPassive = false
+    )
+    {
+        AttackBonus = attackBonus;
+        HealthBonus = healthBonus;
+        CanBeSilenced = canBeSilenced;
+        Source = source;
+        IsPassive = isPassive;
+    }
 }
 
 
-// Basically here to set what can be silence dand what can't. 
+// Basically here to set what can be silence dand what can't.

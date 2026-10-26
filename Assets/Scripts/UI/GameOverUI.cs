@@ -1,26 +1,30 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameOverUI : MonoBehaviour
 {
-    [SerializeField] private TMP_Text resultText;
+    [SerializeField]
+    private TMP_Text resultText;
 
-
-    [SerializeField, Min(0f)] private float returnDelaySeconds = 3f;
+    [SerializeField, Min(0f)]
+    private float returnDelaySeconds = 3f;
     private float returnCountdown;
     private bool returning;
 
     private void Update()
     {
-        if (!returning) return;
+        if (!returning)
+            return;
         returnCountdown -= Time.unscaledDeltaTime;
-        if (returnCountdown <= 0f) ReturnToDeckSelector();
+        if (returnCountdown <= 0f)
+            ReturnToDeckSelector();
     }
 
     public void ReturnToDeckSelector()
     {
-        if (!returning) return;
+        if (!returning)
+            return;
         returning = false;
         BattleSession.Clear();
         Time.timeScale = 1f;

@@ -1,37 +1,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(
-    fileName = "CostModifierEffect",
-    menuName = "Card Effects/Cost Modifier"
-)]
+[CreateAssetMenu(fileName = "CostModifierEffect", menuName = "Card Effects/Cost Modifier")]
 public class CostModifierEffect : CardEffect
 {
     [Header("Cost Modification")]
-    [SerializeField] private int amount = -1;
+    [SerializeField]
+    private int amount = -1;
 
     [Header("Hand Selection")]
     [SerializeField]
-    private HandCardSelection selection =
-        HandCardSelection.AllMatching;
+    private HandCardSelection selection = HandCardSelection.AllMatching;
 
-    public override void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets)
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
         if (source == null)
             return;
 
-        HandManager handManager =
-            GameManager.Instance.GetHandManager(
-                source.Owner
-            );
+        HandManager handManager = GameManager.Instance.GetHandManager(source.Owner);
 
         if (handManager == null)
             return;
 
-        List<RuntimeCard> validCards =
-            new List<RuntimeCard>();
+        List<RuntimeCard> validCards = new List<RuntimeCard>();
 
         foreach (RuntimeCard card in handManager.Hand)
         {
@@ -50,70 +41,45 @@ public class CostModifierEffect : CardEffect
         switch (selection)
         {
             case HandCardSelection.AllMatching:
-                ModifyAll(
-                    handManager,
-                    validCards
-                );
+                ModifyAll(handManager, validCards);
                 break;
 
             case HandCardSelection.RandomMatching:
-                ModifyRandom(
-                    handManager,
-                    validCards
-                );
+                ModifyRandom(handManager, validCards);
                 break;
         }
     }
 
-    private void ModifyAll(
-        HandManager handManager,
-        List<RuntimeCard> cards)
+    private void ModifyAll(HandManager handManager, List<RuntimeCard> cards)
     {
         foreach (RuntimeCard card in cards)
         {
-            ModifyCard(
-                handManager,
-                card
-            );
+            ModifyCard(handManager, card);
         }
     }
 
-    private void ModifyRandom(
-        HandManager handManager,
-        List<RuntimeCard> cards)
+    private void ModifyRandom(HandManager handManager, List<RuntimeCard> cards)
     {
-        int index =
-            Random.Range(0, cards.Count);
+        int index = Random.Range(0, cards.Count);
 
-        RuntimeCard selected =
-            cards[index];
+        RuntimeCard selected = cards[index];
 
-        ModifyCard(
-            handManager,
-            selected
-        );
+        ModifyCard(handManager, selected);
     }
 
-    private void ModifyCard(
-        HandManager handManager,
-        RuntimeCard card)
+    private void ModifyCard(HandManager handManager, RuntimeCard card)
     {
         if (card == null)
             return;
 
-        int oldCost =
-            card.GetManaCost();
+        int oldCost = card.GetManaCost();
 
         card.ModifyManaCost(amount);
 
-        int newCost =
-            card.GetManaCost();
+        int newCost = card.GetManaCost();
 
         handManager.RefreshCardView(card);
 
-        Debug.Log(
-            $"{card.Data.cardName} cost changed " +
-            $"from {oldCost} to {newCost}."
-        );
+        Debug.Log($"{card.Data.cardName} cost changed " + $"from {oldCost} to {newCost}.");
     }
 }

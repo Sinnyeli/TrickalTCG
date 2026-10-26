@@ -6,80 +6,119 @@ public enum GameState
     Loading,
     Playing,
     Paused,
-    GameOver
+    GameOver,
 }
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    private readonly Dictionary<PlayerSide, int> nextCardDiscounts = new Dictionary<PlayerSide, int>();
-    private readonly Dictionary<PlayerSide, int> temporaryNextCardDiscounts = new Dictionary<PlayerSide, int>();
+    private readonly Dictionary<PlayerSide, int> nextCardDiscounts =
+        new Dictionary<PlayerSide, int>();
+    private readonly Dictionary<PlayerSide, int> temporaryNextCardDiscounts =
+        new Dictionary<PlayerSide, int>();
+
     public int GetNextCardDiscount(PlayerSide side) =>
-        (nextCardDiscounts.TryGetValue(side, out int amount) ? amount : 0) +
-        (temporaryNextCardDiscounts.TryGetValue(side, out int temporary) ? temporary : 0);
+        (nextCardDiscounts.TryGetValue(side, out int amount) ? amount : 0)
+        + (temporaryNextCardDiscounts.TryGetValue(side, out int temporary) ? temporary : 0);
+
     public void AddTemporaryNextCardDiscount(PlayerSide side, int amount)
     {
         temporaryNextCardDiscounts.TryGetValue(side, out int previous);
         temporaryNextCardDiscounts[side] = previous + Mathf.Max(0, amount);
         GetHandManager(side)?.RefreshAllCardViews();
     }
+
     public void ExpireTemporaryNextCardDiscount(PlayerSide side)
     {
         temporaryNextCardDiscounts.Remove(side);
         GetHandManager(side)?.RefreshAllCardViews();
     }
+
     public void AddNextCardDiscount(PlayerSide side, int amount)
     {
         nextCardDiscounts.TryGetValue(side, out int previous);
         nextCardDiscounts[side] = previous + Mathf.Max(0, amount);
         GetHandManager(side)?.RefreshAllCardViews();
     }
+
     public int ConsumeNextCardDiscount(PlayerSide side)
     {
-        int amount = GetNextCardDiscount(side); nextCardDiscounts.Remove(side); temporaryNextCardDiscounts.Remove(side); return amount;
+        int amount = GetNextCardDiscount(side);
+        nextCardDiscounts.Remove(side);
+        temporaryNextCardDiscounts.Remove(side);
+        return amount;
     }
 
-    private readonly Dictionary<PlayerSide, int> permanentSpellDiscounts = new Dictionary<PlayerSide, int>();
+    private readonly Dictionary<PlayerSide, int> permanentSpellDiscounts =
+        new Dictionary<PlayerSide, int>();
     private readonly HashSet<string> claimedSpellRewards = new HashSet<string>();
-    public int GetPermanentSpellDiscount(PlayerSide side)
-        => permanentSpellDiscounts.TryGetValue(side, out int amount) ? amount : 0;
+
+    public int GetPermanentSpellDiscount(PlayerSide side) =>
+        permanentSpellDiscounts.TryGetValue(side, out int amount) ? amount : 0;
+
     public void GrantPermanentSpellDiscount(PlayerSide side, int amount, string rewardID)
     {
-        if (amount <= 0 || !claimedSpellRewards.Add(side + ":" + rewardID)) return;
+        if (amount <= 0 || !claimedSpellRewards.Add(side + ":" + rewardID))
+            return;
         permanentSpellDiscounts[side] = GetPermanentSpellDiscount(side) + amount;
         GetHandManager(side)?.RefreshAllCardViews();
     }
 
     [Header("Game Systems")]
-    [SerializeField] private DeckManager deckManager;
-    [SerializeField] private HandManager handManager;
-    [SerializeField] private BattlefieldManager playerBattlefieldManager;
-    [SerializeField] private DeckManager opponentDeckManager;
-    [SerializeField] private HandManager opponentHandManager;
-    [SerializeField] private CombatManager combatManager;
-    [SerializeField] private EffectManager effectManager;
+    [SerializeField]
+    private DeckManager deckManager;
 
+    [SerializeField]
+    private HandManager handManager;
 
+    [SerializeField]
+    private BattlefieldManager playerBattlefieldManager;
+
+    [SerializeField]
+    private DeckManager opponentDeckManager;
+
+    [SerializeField]
+    private HandManager opponentHandManager;
+
+    [SerializeField]
+    private CombatManager combatManager;
+
+    [SerializeField]
+    private EffectManager effectManager;
 
     [Header("Player Views")]
-    [SerializeField] private GameObject playerViewPrefab;
-    [SerializeField] private Transform playerPosition;
-    [SerializeField] private Transform opponentPosition;
+    [SerializeField]
+    private GameObject playerViewPrefab;
 
+    [SerializeField]
+    private Transform playerPosition;
+
+    [SerializeField]
+    private Transform opponentPosition;
 
     [Header("Other UIs")]
-    [SerializeField] private GameOverUI gameOverUI;
+    [SerializeField]
+    private GameOverUI gameOverUI;
 
-    private List<RuntimeCard> opponentHand = new List<RuntimeCard>(); // Temp List for OpponentHand. 
-    [SerializeField] private BattlefieldManager opponentBattlefieldManager;
-    [SerializeField] private TurnManager turnManager;
+    [SerializeField]
+    private BattlefieldManager opponentBattlefieldManager;
+
+    [SerializeField]
+    private TurnManager turnManager;
 
     [Header("Game Setup")]
-    [SerializeField] private int startingHandSize = 0;
+    [SerializeField]
+    private int startingHandSize = 0;
     private GameState currentGameState = GameState.Playing;
 
     public PlayerSide WinnerSide { get; private set; }
-    public void PrepareRemotePresentation() { gameOverUI.Hide(); CreatePlayerViews(); }
+
+    public void PrepareRemotePresentation()
+    {
+        gameOverUI.Hide();
+        CreatePlayerViews();
+    }
+
     public GameState CurrentGameState => currentGameState;
 
     private PlayerView playerView;
@@ -90,80 +129,64 @@ public class GameManager : MonoBehaviour
     public CombatManager CombatManager => combatManager;
     public EffectManager EffectManager => effectManager;
 
-    public bool IsGameOver =>
-        currentGameState == GameState.GameOver;
-    public bool IsPlayerTurn =>
-    turnManager.IsMyTurn(PlayerSide.Player);
-    public bool CanPlayerAct =>
-        currentGameState == GameState.Playing &&
-        IsPlayerTurn;
+    public bool IsGameOver => currentGameState == GameState.GameOver;
+    public bool IsPlayerTurn => turnManager.IsMyTurn(PlayerSide.Player);
+    public bool CanPlayerAct => currentGameState == GameState.Playing && IsPlayerTurn;
 
-    // Get; Return function because I keep forgetting 
-    public BattlefieldManager PlayerBattlefieldManager =>
-        playerBattlefieldManager;
+    // Get; Return function because I keep forgetting
+    public BattlefieldManager PlayerBattlefieldManager => playerBattlefieldManager;
 
-    public BattlefieldManager OpponentBattlefieldManager =>
-        opponentBattlefieldManager;
+    public BattlefieldManager OpponentBattlefieldManager => opponentBattlefieldManager;
 
-
-private void Awake()
-{
-    Debug.Log(
-        $"GameManager Awake | ID: {GetInstanceID()} | " +
-        $"GameOverUI: {gameOverUI}"
-    );
-
-    if (Instance != null && Instance != this)
+    private void Awake()
     {
-        Destroy(gameObject);
-        return;
+        Debug.Log($"GameManager Awake | ID: {GetInstanceID()} | " + $"GameOverUI: {gameOverUI}");
+
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
     }
-
-    Instance = this;
-}
-
-
 
     public void StartGame()
     {
-         gameOverUI.Hide();
-    // Player
+        gameOverUI.Hide();
+        // Player
         CreatePlayerViews();
-        
- 
-        RuntimeCard playerCommander = deckManager.GetCommander();
 
-        if (playerCommander != null)
-        {
-            playerCommander.SetOwner(PlayerSide.Player);
-            handManager.AddCommander(playerCommander);
-        }
+        SetUpCommander(PlayerSide.Player);
+        DrawStartingHand();
 
-            DrawStartingHand();
-    // Opponent (Testing)
-
+        // Opponent
         opponentDeckManager.InitializeDeck();
-        RuntimeCard opponentCommander = opponentDeckManager.GetCommander();
-
-       if (opponentCommander != null)
-        {
-            opponentHandManager.AddCommander(opponentCommander);
-            opponentCommander.SetOwner(PlayerSide.Opponent);
-            // Add to list above
-        }
-        int opponentStartingCards = BattleSession.OpponentType == BattleOpponentType.RemotePlayer ? startingHandSize : 1;
-        for (int i = 0; i < opponentStartingCards; i++) DrawCard(PlayerSide.Opponent);
+        SetUpCommander(PlayerSide.Opponent);
+        int opponentStartingCards =
+            BattleSession.OpponentType == BattleOpponentType.RemotePlayer ? startingHandSize : 1;
+        for (int i = 0; i < opponentStartingCards; i++)
+            DrawCard(PlayerSide.Opponent);
     }
-        public void SetGameState(GameState newState)
+
+    // Both sides place their commander the same way: owner first, then the commander slot in hand.
+    private void SetUpCommander(PlayerSide side)
+    {
+        RuntimeCard commander = GetDeck(side).GetCommander();
+        if (commander == null)
+            return;
+
+        commander.SetOwner(side);
+        GetHandManager(side).AddCommander(commander);
+    }
+
+    public void SetGameState(GameState newState)
     {
         currentGameState = newState;
 
-        Debug.Log(
-            $"Game State changed to: {currentGameState}"
-        );
+        Debug.Log($"Game State changed to: {currentGameState}");
     }
 
-       
     private void DrawStartingHand()
     {
         for (int i = 0; i < startingHandSize; i++)
@@ -172,101 +195,54 @@ private void Awake()
         }
     }
 
-       public void DrawCard(PlayerSide side)
-{
-    DeckManager deck;
-    HandManager hand;
-
-    if (side == PlayerSide.Player)
+    public void DrawCard(PlayerSide side)
     {
-        deck = deckManager;
-        hand = handManager;
+        RuntimeCard card = GetDeck(side).DrawCard();
+
+        if (card == null)
+        {
+            Debug.Log($"{side} cannot draw. Deck is empty.");
+            return;
+        }
+
+        HandleDrawnCard(card, side);
     }
-    else
+
+    public void HandleDrawnCard(RuntimeCard card, PlayerSide side)
     {
-        deck = opponentDeckManager;
-        hand = opponentHandManager;
+        if (card == null)
+            return;
+
+        card.SetOwner(side);
+        bool added = GetHandManager(side).AddCard(card);
+
+        // On-draw effects fire even when the hand is full and the card is burnt.
+        EffectManager.ResolveOnDraw(card);
+
+        if (!added)
+            GetDeck(side).Discard(card);
     }
 
-    RuntimeCard card =
-        deck.DrawCard();
-
-    if (card == null)
+    //// //////////////////
+    ///  Create Player Views
+    /// ///////////////////
+    ///
+    private void CreatePlayerViews()
     {
-        Debug.Log(
-            $"{side} cannot draw. Deck is empty."
-        );
+        CreatePlayerView(PlayerSide.Player, playerPosition);
+        playerView.SetSide(PlayerSide.Player);
 
-        return;
+        CreatePlayerView(PlayerSide.Opponent, opponentPosition);
+        opponentView.SetSide(PlayerSide.Opponent);
     }
 
-    HandleDrawnCard(
-        card,
-        side
-    );
-}
-
-public void HandleDrawnCard(
-    RuntimeCard card,
-    PlayerSide side)
-{
-    if (card == null)
-        return;
-
-    DeckManager deck;
-    HandManager hand;
-
-    if (side == PlayerSide.Player)
-    {
-        deck = deckManager;
-        hand = handManager;
-    }
-    else
-    {
-        deck = opponentDeckManager;
-        hand = opponentHandManager;
-    }
-
-    card.SetOwner(side);
-
-    bool added =
-        hand.AddCard(card);
-
-    EffectManager.ResolveOnDraw(card);
-
-    if (!added)
-    {
-        deck.Discard(card);
-    }
-}
-//// //////////////////
-///  Create Player Views
-/// ///////////////////
-/// 
-private void CreatePlayerViews()
-{
-    CreatePlayerView(
-        PlayerSide.Player,
-        playerPosition
-    );
-    playerView.SetSide(PlayerSide.Player);
-
-    CreatePlayerView(
-        PlayerSide.Opponent,
-        opponentPosition
-    );
-    opponentView.SetSide(PlayerSide.Opponent);
-    }
     private void CreatePlayerView(PlayerSide side, Transform position)
     {
-        GameObject viewObject =
-            Instantiate(playerViewPrefab, position);
+        GameObject viewObject = Instantiate(playerViewPrefab, position);
 
-        RectTransform viewRect =
-            viewObject.GetComponent<RectTransform>();
+        RectTransform viewRect = viewObject.GetComponent<RectTransform>();
 
-        RectTransform positionRect =
-            position.GetComponent<RectTransform>();
+        RectTransform positionRect = position.GetComponent<RectTransform>();
 
         if (viewRect == null || positionRect == null)
         {
@@ -279,14 +255,11 @@ private void CreatePlayerViews()
         viewRect.localRotation = Quaternion.identity;
         viewRect.localScale = Vector3.one;
 
-        PlayerView view =
-            viewObject.GetComponent<PlayerView>();
+        PlayerView view = viewObject.GetComponent<PlayerView>();
 
         if (view == null)
         {
-            Debug.LogError(
-                "PlayerView prefab is missing PlayerView component."
-            );
+            Debug.LogError("PlayerView prefab is missing PlayerView component.");
 
             Destroy(viewObject);
             return;
@@ -304,25 +277,22 @@ private void CreatePlayerViews()
         }
     }
 
-/////////////
-/// Get Card/Battlefield
-/// ////////
-
-
-
+    /////////////
+    /// Get Card/Battlefield
+    /// ////////
     public BattlefieldManager GetBattlefield(PlayerSide side)
     {
-    switch (side)
-    {
-        case PlayerSide.Player:
-            return PlayerBattlefieldManager;
+        switch (side)
+        {
+            case PlayerSide.Player:
+                return PlayerBattlefieldManager;
 
-        case PlayerSide.Opponent:
-            return OpponentBattlefieldManager;
+            case PlayerSide.Opponent:
+                return OpponentBattlefieldManager;
 
-        default:
-            return null;
-    }
+            default:
+                return null;
+        }
     }
 
     public DeckManager GetDeck(PlayerSide side)
@@ -332,7 +302,8 @@ private void CreatePlayerViews()
 
         return opponentDeckManager;
     }
-        public PlayerView GetPlayerView(PlayerSide side)
+
+    public PlayerView GetPlayerView(PlayerSide side)
     {
         if (side == PlayerSide.Player)
             return playerView;
@@ -340,7 +311,7 @@ private void CreatePlayerViews()
         return opponentView;
     }
 
-        public HandManager GetOpponentHand()
+    public HandManager GetOpponentHand()
     {
         return opponentHandManager;
     }
@@ -348,10 +319,7 @@ private void CreatePlayerViews()
     //////////////////////////
     /// Player Turn
     /// /////////////////////
-
-
-
-       public bool EndPlayerTurn()
+    public bool EndPlayerTurn()
     {
         if (!CanPlayerAct)
         {
@@ -359,109 +327,93 @@ private void CreatePlayerViews()
             return false;
         }
 
-        GameManager.Instance.EndPlayerTurn();
+        turnManager.EndPlayerTurn();
         return true;
     }
+
     //////////////////////////
     /// Win/Lose
     /// /////////////////////
-
-     public void PlayerDefeated(PlayerSide defeatedSide)
-        {
-            if (IsGameOver)
-                return;
-
-            PlayerSide winner =
-                defeatedSide == PlayerSide.Player
-                    ? PlayerSide.Opponent
-                    : PlayerSide.Player;
-
-            SetGameState(GameState.GameOver);
-
-            Debug.Log(
-                $"{defeatedSide} has been defeated!"
-            );
-
-            Debug.Log(
-                $"{winner} wins!"
-            );
-
-            WinnerSide = winner;
-            gameOverUI.Show(winner);
-        }
- 
-public HandManager GetHandManager(
-    PlayerSide side)
-{
-    if (side == PlayerSide.Player)
-        return handManager;
-
-    return opponentHandManager;
-}
-
-////////////////////////////
-    // Test Area. 
-///////////////////////////
-    public void TestOpponentPlay()
+    public void PlayerDefeated(PlayerSide defeatedSide)
     {
-        RuntimeCard card =
-            opponentHandManager.GetFirstNormalCard();
-            if (card == null)
-            {
-                Debug.Log("Opponent has no normal cards to play.");
-                return;
-            }
+        if (IsGameOver)
+            return;
 
-            Debug.Log(
-                $"Opponent attempting to play {card.Data.cardName}"
-            );
+        PlayerSide winner =
+            defeatedSide == PlayerSide.Player ? PlayerSide.Opponent : PlayerSide.Player;
 
-            bool played =
-                opponentHandManager.PlayCardFromHand(card);
+        SetGameState(GameState.GameOver);
 
-            if (!played)
-            {
-                Debug.Log(
-                    $"Opponent could not play {card.Data.cardName}"
-                );
-            }
-        }
-    public void TestDraw()
-    {
-        DrawCard(PlayerSide.Player);
+        Debug.Log($"{defeatedSide} has been defeated!");
+
+        Debug.Log($"{winner} wins!");
+
+        WinnerSide = winner;
+        gameOverUI.Show(winner);
     }
 
-    private readonly Dictionary<PlayerSide, int> destinyCounters = new Dictionary<PlayerSide, int>();
-    private readonly Dictionary<PlayerSide, int> destinyDrawnKinds = new Dictionary<PlayerSide, int>();
-    public int GetDestinyCounter(PlayerSide side) => destinyCounters.TryGetValue(side, out int count) ? count : 0;
+    public HandManager GetHandManager(PlayerSide side)
+    {
+        if (side == PlayerSide.Player)
+            return handManager;
+
+        return opponentHandManager;
+    }
+
+    private readonly Dictionary<PlayerSide, int> destinyCounters =
+        new Dictionary<PlayerSide, int>();
+    private readonly Dictionary<PlayerSide, int> destinyDrawnKinds =
+        new Dictionary<PlayerSide, int>();
+
+    public int GetDestinyCounter(PlayerSide side) =>
+        destinyCounters.TryGetValue(side, out int count) ? count : 0;
+
     public void ResetDestiny(PlayerSide side)
     {
-        destinyCounters.Remove(side); destinyDrawnKinds.Remove(side);
+        destinyCounters.Remove(side);
+        destinyDrawnKinds.Remove(side);
     }
+
     public void RecordDestinyDraw(PlayerSide side, int kind)
     {
-        if (IsGameOver || kind < 0 || kind > 2) return;
+        if (IsGameOver || kind < 0 || kind > 2)
+            return;
         destinyCounters[side] = GetDestinyCounter(side) + 1;
         destinyDrawnKinds.TryGetValue(side, out int mask);
-        mask |= 1 << kind; destinyDrawnKinds[side] = mask;
+        mask |= 1 << kind;
+        destinyDrawnKinds[side] = mask;
         Debug.Log(side + " Destiny: " + destinyCounters[side]);
-        if (mask == 7) PlayerDefeated(side == PlayerSide.Player ? PlayerSide.Opponent : PlayerSide.Player);
+        if (mask == 7)
+            PlayerDefeated(side == PlayerSide.Player ? PlayerSide.Opponent : PlayerSide.Player);
     }
-    private readonly Dictionary<PlayerSide, SpellData> lastCastSpells = new Dictionary<PlayerSide, SpellData>();
+
+    private readonly Dictionary<PlayerSide, SpellData> lastCastSpells =
+        new Dictionary<PlayerSide, SpellData>();
+
     public void RecordLastCastSpell(RuntimeCard card)
     {
-        if (card != null && card.Data is SpellData spell) lastCastSpells[card.Owner] = spell;
+        if (card != null && card.Data is SpellData spell)
+            lastCastSpells[card.Owner] = spell;
     }
-    public SpellData GetLastCastSpell(PlayerSide side) => lastCastSpells.TryGetValue(side, out var spell) ? spell : null;
+
+    public SpellData GetLastCastSpell(PlayerSide side) =>
+        lastCastSpells.TryGetValue(side, out var spell) ? spell : null;
+
     public void ResetSpellHistory(PlayerSide side) => lastCastSpells.Remove(side);
+
     public int GetWitchSpellAuraDiscount(PlayerSide side)
     {
-        int amount = 0; var field = GetBattlefield(side);
-        if (field == null) return 0;
+        int amount = 0;
+        var field = GetBattlefield(side);
+        if (field == null)
+            return 0;
         foreach (var unit in field.Minions)
         {
-            if (unit.IsSilenced || unit.CurrentHealth <= 0 || !(unit.Data is MinionData data)) continue;
-            foreach (var effect in data.Passives) if (effect is WitchSpellCostAuraEffect aura) amount += aura.Amount;
+            if (unit.IsSilenced || unit.CurrentHealth <= 0 || !(unit.Data is MinionData data))
+                continue;
+            foreach (var effect in data.Passives)
+                if (effect is WitchSpellCostAuraEffect aura)
+                    amount += aura.Amount;
         }
         return amount;
     }

@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class MinionArray : MonoBehaviour
 {
-    [SerializeField] private float spacing = 180f;
-    [SerializeField] private int maxMinions = 6;
+    [SerializeField]
+    private float spacing = 180f;
+
+    [SerializeField]
+    private int maxMinions = 6;
 
     private List<MinionView> minions = new List<MinionView>();
 
@@ -47,12 +50,7 @@ public class MinionArray : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            minions[i].transform.localPosition =
-                new Vector3(
-                    startX + i * spacing,
-                    0f,
-                    0f
-                );
+            minions[i].transform.localPosition = new Vector3(startX + i * spacing, 0f, 0f);
         }
     }
 }

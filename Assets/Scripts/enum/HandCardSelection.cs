@@ -5,5 +5,5 @@ using UnityEngine;
 public enum HandCardSelection
 {
     AllMatching,
-    RandomMatching
+    RandomMatching,
 }

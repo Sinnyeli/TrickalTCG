@@ -1,6 +1,19 @@
 using System;
 
-public enum BattleActionKind { PlayCard, PlaySpellOnUnit, PlaySpellOnHero, EquipArtifact, AttackUnit, AttackHero, EndTurn, Surrender, ChooseUnit, ChooseHero, ChooseCard }
+public enum BattleActionKind
+{
+    PlayCard,
+    PlaySpellOnUnit,
+    PlaySpellOnHero,
+    EquipArtifact,
+    AttackUnit,
+    AttackHero,
+    EndTurn,
+    Surrender,
+    ChooseUnit,
+    ChooseHero,
+    ChooseCard,
+}
 
 [Serializable]
 public class BattleActionRequest

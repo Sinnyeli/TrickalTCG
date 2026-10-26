@@ -4,33 +4,20 @@ using UnityEngine;
 
 public class LocalizationManager : MonoBehaviour
 {
-    public static LocalizationManager Instance
-    {
-        get;
-        private set;
-    }
-
+    public static LocalizationManager Instance { get; private set; }
 
     [Header("Localization")]
     [SerializeField]
     private TextAsset localizationCSV;
 
+    private Dictionary<string, LocalizationEntry> entries =
+        new Dictionary<string, LocalizationEntry>();
 
-    private Dictionary<string, LocalizationEntry>
-        entries =
-            new Dictionary<string, LocalizationEntry>();
+    private GameLanguage currentLanguage = GameLanguage.English;
 
-
-    private GameLanguage currentLanguage =
-        GameLanguage.English;
-
-
-    public GameLanguage CurrentLanguage =>
-        currentLanguage;
-
+    public GameLanguage CurrentLanguage => currentLanguage;
 
     public event Action OnLanguageChanged;
-
 
     private void Awake()
     {
@@ -38,8 +25,7 @@ public class LocalizationManager : MonoBehaviour
         // SINGLETON
         // =========================================
 
-        if (Instance != null &&
-            Instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
@@ -47,24 +33,15 @@ public class LocalizationManager : MonoBehaviour
 
         Instance = this;
 
-        DontDestroyOnLoad(
-            gameObject
-        );
-
+        DontDestroyOnLoad(gameObject);
 
         // =========================================
         // LOAD LANGUAGE SETTING
         // =========================================
 
-        int savedLanguage =
-            PlayerPrefs.GetInt(
-                "GameLanguage",
-                (int)GameLanguage.English
-            );
+        int savedLanguage = PlayerPrefs.GetInt("GameLanguage", (int)GameLanguage.English);
 
-        currentLanguage =
-            (GameLanguage)savedLanguage;
-
+        currentLanguage = (GameLanguage)savedLanguage;
 
         // =========================================
         // LOAD CSV
@@ -73,11 +50,11 @@ public class LocalizationManager : MonoBehaviour
         if (localizationCSV == null)
         {
             var resources = Resources.Load<BattleUXResources>("BattleUXResources");
-            if (resources != null) localizationCSV = resources.localization;
+            if (resources != null)
+                localizationCSV = resources.localization;
         }
         LoadLocalizationCSV();
     }
-
 
     // =========================================================
     // LOAD CSV
@@ -94,8 +71,13 @@ public class LocalizationManager : MonoBehaviour
         try
         {
             var rows = CsvText.Parse(localizationCSV.text);
-            if (rows.Count == 0 || rows[0].Count != 3 ||
-                rows[0][0] != "Key" || rows[0][1] != "English" || rows[0][2] != "Korean")
+            if (
+                rows.Count == 0
+                || rows[0].Count != 3
+                || rows[0][0] != "Key"
+                || rows[0][1] != "English"
+                || rows[0][2] != "Korean"
+            )
                 throw new FormatException("Localization CSV must begin with Key,English,Korean.");
 
             var loaded = new Dictionary<string, LocalizationEntry>(StringComparer.Ordinal);
@@ -105,13 +87,19 @@ public class LocalizationManager : MonoBehaviour
                 if (values.Count != 3)
                     throw new FormatException($"Localization row {i + 1} must have three columns.");
                 string key = values[0].Trim();
-                if (string.IsNullOrWhiteSpace(key)) continue;
+                if (string.IsNullOrWhiteSpace(key))
+                    continue;
                 if (loaded.ContainsKey(key))
                     throw new FormatException($"Duplicate localization key: {key}.");
-                loaded.Add(key, new LocalizationEntry
-                {
-                    Key = key, English = values[1], Korean = values[2]
-                });
+                loaded.Add(
+                    key,
+                    new LocalizationEntry
+                    {
+                        Key = key,
+                        English = values[1],
+                        Korean = values[2],
+                    }
+                );
             }
             entries = loaded;
             Debug.Log($"Loaded {entries.Count} localization entries.");
@@ -126,82 +114,53 @@ public class LocalizationManager : MonoBehaviour
     // GET TEXT
     // =========================================================
 
-    public string Get(
-        string key)
+    public string Get(string key)
     {
         if (string.IsNullOrWhiteSpace(key))
             return "";
 
-
-        if (entries.TryGetValue(
-                key,
-                out LocalizationEntry entry))
+        if (entries.TryGetValue(key, out LocalizationEntry entry))
         {
-            return entry.GetText(
-                currentLanguage
-            );
+            return entry.GetText(currentLanguage);
         }
 
-
-        Debug.LogWarning(
-            $"Missing localization key: {key}"
-        );
-
+        Debug.LogWarning($"Missing localization key: {key}");
 
         // Returning the key makes missing
         // translations obvious during development.
         return $"[{key}]";
     }
 
-
     // =========================================================
     // SET LANGUAGE
     // =========================================================
 
-    public void SetLanguage(
-        GameLanguage language)
+    public void SetLanguage(GameLanguage language)
     {
         if (currentLanguage == language)
             return;
 
+        currentLanguage = language;
 
-        currentLanguage =
-            language;
-
-
-        PlayerPrefs.SetInt(
-            "GameLanguage",
-            (int)language
-        );
+        PlayerPrefs.SetInt("GameLanguage", (int)language);
 
         PlayerPrefs.Save();
         LocalStorageSync.Flush();
 
-
         OnLanguageChanged?.Invoke();
 
-
-        Debug.Log(
-            $"Language changed to: {language}"
-        );
+        Debug.Log($"Language changed to: {language}");
     }
-
 
     public void SetEnglish()
     {
-        SetLanguage(
-            GameLanguage.English
-        );
+        SetLanguage(GameLanguage.English);
     }
-
 
     public void SetKorean()
     {
-        SetLanguage(
-            GameLanguage.Korean
-        );
+        SetLanguage(GameLanguage.Korean);
     }
-
 
     public string GetCardName(CardData card)
     {
@@ -211,7 +170,8 @@ public class LocalizationManager : MonoBehaviour
         if (entries.TryGetValue(key, out LocalizationEntry entry))
         {
             string localized = entry.GetText(currentLanguage);
-            if (!string.IsNullOrWhiteSpace(localized)) return localized;
+            if (!string.IsNullOrWhiteSpace(localized))
+                return localized;
         }
         return card.cardName;
     }
@@ -224,7 +184,8 @@ public class LocalizationManager : MonoBehaviour
         if (entries.TryGetValue(key, out LocalizationEntry entry))
         {
             string localized = entry.GetText(currentLanguage);
-            if (!string.IsNullOrWhiteSpace(localized)) return localized;
+            if (!string.IsNullOrWhiteSpace(localized))
+                return localized;
         }
         return card.description;
     }

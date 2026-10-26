@@ -5,8 +5,7 @@ public class LocalizationEntry
     public string English;
     public string Korean;
 
-    public string GetText(
-        GameLanguage language)
+    public string GetText(GameLanguage language)
     {
         switch (language)
         {

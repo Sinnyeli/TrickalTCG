@@ -29,41 +29,30 @@ public class CardLibraryFilter : MonoBehaviour
     [SerializeField]
     private TMP_Dropdown costDropdown;
 
+    private readonly Dictionary<CardData, DeckEditorCardView> cardViews =
+        new Dictionary<CardData, DeckEditorCardView>();
 
-    private readonly Dictionary<CardData, DeckEditorCardView>
-        cardViews =
-            new Dictionary<CardData, DeckEditorCardView>();
+    private void Start()
+    {
+        Debug.Log(
+            $"CardLibraryFilter START in scene: "
+                + $"{UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}"
+        );
 
+        Debug.Log($"Database assigned: {cardDatabase != null}");
 
-private void Start()
-{
-    Debug.Log(
-        $"CardLibraryFilter START in scene: " +
-        $"{UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}"
-    );
+        Debug.Log($"Content assigned: {cardContent != null}");
 
-    Debug.Log(
-        $"Database assigned: {cardDatabase != null}"
-    );
+        Debug.Log($"Prefab assigned: {cardViewPrefab != null}");
 
-    Debug.Log(
-        $"Content assigned: {cardContent != null}"
-    );
+        SetupDropdowns();
 
-    Debug.Log(
-        $"Prefab assigned: {cardViewPrefab != null}"
-    );
+        CreateCardLibrary();
 
-    SetupDropdowns();
+        Debug.Log($"Card views created: {cardViews.Count}");
 
-    CreateCardLibrary();
-
-    Debug.Log(
-        $"Card views created: {cardViews.Count}"
-    );
-
-    ApplyFilters();
-}
+        ApplyFilters();
+    }
 
     // =========================================================
     // SETUP FILTERS
@@ -77,49 +66,32 @@ private void Start()
 
         if (searchInput != null)
         {
-            searchInput.onValueChanged.RemoveListener(
-                OnSearchChanged
-            );
+            searchInput.onValueChanged.RemoveListener(OnSearchChanged);
 
-            searchInput.onValueChanged.AddListener(
-                OnSearchChanged
-            );
+            searchInput.onValueChanged.AddListener(OnSearchChanged);
         }
 
         if (typeDropdown != null)
         {
-            typeDropdown.onValueChanged.RemoveListener(
-                OnTypeChanged
-            );
+            typeDropdown.onValueChanged.RemoveListener(OnTypeChanged);
 
-            typeDropdown.onValueChanged.AddListener(
-                OnTypeChanged
-            );
+            typeDropdown.onValueChanged.AddListener(OnTypeChanged);
         }
 
         if (raceDropdown != null)
         {
-            raceDropdown.onValueChanged.RemoveListener(
-                OnRaceChanged
-            );
+            raceDropdown.onValueChanged.RemoveListener(OnRaceChanged);
 
-            raceDropdown.onValueChanged.AddListener(
-                OnRaceChanged
-            );
+            raceDropdown.onValueChanged.AddListener(OnRaceChanged);
         }
 
         if (costDropdown != null)
         {
-            costDropdown.onValueChanged.RemoveListener(
-                OnCostChanged
-            );
+            costDropdown.onValueChanged.RemoveListener(OnCostChanged);
 
-            costDropdown.onValueChanged.AddListener(
-                OnCostChanged
-            );
+            costDropdown.onValueChanged.AddListener(OnCostChanged);
         }
     }
-
 
     // =========================================================
     // TYPE DROPDOWN
@@ -133,20 +105,12 @@ private void Start()
         typeDropdown.ClearOptions();
 
         typeDropdown.AddOptions(
-            new List<string>
-            {
-                "All Types",
-                "Apostle",
-                "Monster",
-                "Spell",
-                "Artifact"
-            }
+            new List<string> { "All Types", "Apostle", "Monster", "Spell", "Artifact" }
         );
 
         typeDropdown.value = 0;
         typeDropdown.RefreshShownValue();
     }
-
 
     // =========================================================
     // RACE DROPDOWN
@@ -159,13 +123,11 @@ private void Start()
 
         raceDropdown.ClearOptions();
 
-        List<string> options =
-            new List<string>();
+        List<string> options = new List<string>();
 
         options.Add("All Races");
 
-        string[] raceNames =
-            Enum.GetNames(typeof(CardRace));
+        string[] raceNames = Enum.GetNames(typeof(CardRace));
 
         foreach (string raceName in raceNames)
         {
@@ -177,7 +139,6 @@ private void Start()
         raceDropdown.value = 0;
         raceDropdown.RefreshShownValue();
     }
-
 
     // =========================================================
     // COST DROPDOWN
@@ -204,14 +165,13 @@ private void Start()
                 "7",
                 "8",
                 "9",
-                "10+"
+                "10+",
             }
         );
 
         costDropdown.value = 0;
         costDropdown.RefreshShownValue();
     }
-
 
     // =========================================================
     // CREATE LIBRARY
@@ -221,34 +181,26 @@ private void Start()
     {
         if (cardDatabase == null)
         {
-            Debug.LogError(
-                "CardLibraryFilter has no CardDatabase."
-            );
+            Debug.LogError("CardLibraryFilter has no CardDatabase.");
 
             return;
         }
 
         if (cardContent == null)
         {
-            Debug.LogError(
-                "CardLibraryFilter has no Card Content."
-            );
+            Debug.LogError("CardLibraryFilter has no Card Content.");
 
             return;
         }
 
         if (cardViewPrefab == null)
         {
-            Debug.LogError(
-                "CardLibraryFilter has no Card View Prefab."
-            );
+            Debug.LogError("CardLibraryFilter has no Card View Prefab.");
 
             return;
         }
 
-
-        foreach (CardData card
-                 in cardDatabase.AllCards)
+        foreach (CardData card in cardDatabase.AllCards)
         {
             if (card == null)
                 continue;
@@ -258,54 +210,37 @@ private void Start()
             if (!card.Collectible)
                 continue;
 
-
-            DeckEditorCardView view =
-                Instantiate(
-                    cardViewPrefab,
-                    cardContent
-                );
+            DeckEditorCardView view = Instantiate(cardViewPrefab, cardContent);
 
             view.SetCard(card);
 
-            cardViews.Add(
-                card,
-                view
-            );
+            cardViews.Add(card, view);
         }
     }
-
 
     // =========================================================
     // FILTER EVENTS
     // =========================================================
 
-    private void OnSearchChanged(
-        string value)
+    private void OnSearchChanged(string value)
     {
         ApplyFilters();
     }
 
-
-    private void OnTypeChanged(
-        int value)
+    private void OnTypeChanged(int value)
     {
         ApplyFilters();
     }
 
-
-    private void OnRaceChanged(
-        int value)
+    private void OnRaceChanged(int value)
     {
         ApplyFilters();
     }
 
-
-    private void OnCostChanged(
-        int value)
+    private void OnCostChanged(int value)
     {
         ApplyFilters();
     }
-
 
     // =========================================================
     // APPLY FILTERS
@@ -313,71 +248,47 @@ private void Start()
 
     public void ApplyFilters()
     {
-        foreach (
-            KeyValuePair<CardData, DeckEditorCardView>
-            pair in cardViews)
+        foreach (KeyValuePair<CardData, DeckEditorCardView> pair in cardViews)
         {
-            CardData card =
-                pair.Key;
+            CardData card = pair.Key;
 
-            DeckEditorCardView view =
-                pair.Value;
+            DeckEditorCardView view = pair.Value;
 
-            if (card == null ||
-                view == null)
+            if (card == null || view == null)
                 continue;
 
-
             bool visible =
-                MatchesSearch(card) &&
-                MatchesType(card) &&
-                MatchesRace(card) &&
-                MatchesCost(card);
+                MatchesSearch(card) && MatchesType(card) && MatchesRace(card) && MatchesCost(card);
 
-
-            view.gameObject.SetActive(
-                visible
-            );
+            view.gameObject.SetActive(visible);
         }
     }
-
 
     // =========================================================
     // SEARCH
     // =========================================================
 
-    private bool MatchesSearch(
-        CardData card)
+    private bool MatchesSearch(CardData card)
     {
         if (searchInput == null)
             return true;
 
-
-        string search =
-            searchInput.text.Trim();
-
+        string search = searchInput.text.Trim();
 
         if (string.IsNullOrWhiteSpace(search))
             return true;
 
-
-        return card.cardName.IndexOf(
-            search,
-            StringComparison.OrdinalIgnoreCase
-        ) >= 0;
+        return card.cardName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0;
     }
-
 
     // =========================================================
     // TYPE
     // =========================================================
 
-    private bool MatchesType(
-        CardData card)
+    private bool MatchesType(CardData card)
     {
         if (typeDropdown == null)
             return true;
-
 
         switch (typeDropdown.value)
         {
@@ -391,8 +302,7 @@ private void Start()
 
             // Monster
             case 2:
-                return card is MonsterData &&
-                       !(card is ApostleData);
+                return card is MonsterData && !(card is ApostleData);
 
             // Spell
             case 3:
@@ -403,65 +313,50 @@ private void Start()
                 return card is ArtifactData;
         }
 
-
         return true;
     }
-
 
     // =========================================================
     // RACE
     // =========================================================
 
-    private bool MatchesRace(
-        CardData card)
+    private bool MatchesRace(CardData card)
     {
         if (raceDropdown == null)
             return true;
-
 
         // All Races
         if (raceDropdown.value == 0)
             return true;
 
-
         if (!(card is MinionData minion))
             return false;
 
+        int raceIndex = raceDropdown.value - 1;
 
-        int raceIndex =
-            raceDropdown.value - 1;
-
-
-        CardRace selectedRace =
-            (CardRace)raceIndex;
-
+        CardRace selectedRace = (CardRace)raceIndex;
 
         return minion.HasRace(selectedRace);
     }
-
 
     // =========================================================
     // COST
     // =========================================================
 
-    private bool MatchesCost(
-        CardData card)
+    private bool MatchesCost(CardData card)
     {
         if (costDropdown == null)
             return true;
 
-
         // All Costs
         if (costDropdown.value == 0)
             return true;
-
 
         // Last option = 10+
         if (costDropdown.value == 11)
         {
             return card.manaCost >= 10;
         }
-
 
         // Dropdown:
         //
@@ -471,14 +366,10 @@ private void Start()
         //
         // Therefore subtract 1.
 
-        int selectedCost =
-            costDropdown.value - 1;
+        int selectedCost = costDropdown.value - 1;
 
-
-        return card.manaCost ==
-               selectedCost;
+        return card.manaCost == selectedCost;
     }
-
 
     // =========================================================
     // RESET

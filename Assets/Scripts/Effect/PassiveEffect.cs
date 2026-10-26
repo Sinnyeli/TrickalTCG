@@ -1,19 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(
-    fileName = "PassiveEffect",
-    menuName = "Card Effects/Passive"
-)]
+[CreateAssetMenu(fileName = "PassiveEffect", menuName = "Card Effects/Passive")]
 public class PassiveEffect : CardEffect
 {
-    [SerializeField] private int attackAmount = 1;
-    [SerializeField] private int healthAmount = 1;
-    [SerializeField] private bool affectSelf = false;
+    [SerializeField]
+    private int attackAmount = 1;
 
-    public override void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets)
+    [SerializeField]
+    private int healthAmount = 1;
+
+    [SerializeField]
+    private bool affectSelf = false;
+
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
         if (source == null || targets == null)
             return;
@@ -24,9 +24,7 @@ public class PassiveEffect : CardEffect
         }
     }
 
-    public void Apply(
-        RuntimeCard source,
-        RuntimeCard target)
+    public void Apply(RuntimeCard source, RuntimeCard target)
     {
         if (source == null || target == null)
             return;
@@ -34,14 +32,13 @@ public class PassiveEffect : CardEffect
         if (!affectSelf && target == source)
             return;
 
-        RuntimeModifier modifier =
-            new RuntimeModifier(
-                attackAmount,
-                healthAmount,
-                false,
-                source,
-                true
-            );
+        RuntimeModifier modifier = new RuntimeModifier(
+            attackAmount,
+            healthAmount,
+            false,
+            source,
+            true
+        );
 
         target.AddModifier(modifier);
     }

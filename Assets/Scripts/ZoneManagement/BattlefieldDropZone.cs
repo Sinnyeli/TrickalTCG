@@ -5,8 +5,7 @@ public class BattlefieldDropZone : MonoBehaviour
 {
     public bool IsPointerInside(PointerEventData eventData)
     {
-        RectTransform rectTransform =
-            GetComponent<RectTransform>();
+        RectTransform rectTransform = GetComponent<RectTransform>();
 
         return RectTransformUtility.RectangleContainsScreenPoint(
             rectTransform,

@@ -1,17 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(
-    fileName = "DamageEffect",
-    menuName = "Card Effects/Damage"
-)]
+[CreateAssetMenu(fileName = "DamageEffect", menuName = "Card Effects/Damage")]
 public class DamageEffect : CardEffect
 {
-    [SerializeField] private int amount = 1;
+    [SerializeField]
+    private int amount = 1;
 
-      public override void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets)
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
         if (source == null || targets == null)
             return;
@@ -21,51 +17,36 @@ public class DamageEffect : CardEffect
             if (target == null)
                 continue;
 
-            bool tookDamage =
-                target.TakeDamage(amount, source);
+            bool tookDamage = target.TakeDamage(amount, source);
 
             Debug.Log(
-                $"{source.Data.cardName} dealt {amount} damage to " +
-                $"{target.Data.cardName}."
+                $"{source.Data.cardName} dealt {amount} damage to " + $"{target.Data.cardName}."
             );
 
-            if (tookDamage &&
-                target.CurrentHealth > 0)
+            if (tookDamage && target.CurrentHealth > 0)
             {
-                GameManager.Instance
-                    .EffectManager
-                    .ResolveOnDamageTaken(target);
+                GameManager.Instance.EffectManager.ResolveOnDamageTaken(target);
             }
 
-            BattlefieldManager battlefield =
-                GameManager.Instance.GetBattlefield(
-                    target.Owner
-                );
+            BattlefieldManager battlefield = GameManager.Instance.GetBattlefield(target.Owner);
 
             if (battlefield != null)
             {
                 battlefield.RefreshMinionView(target);
             }
 
-            GameManager.Instance
-                .CombatManager
-                .CheckDeath(target);
+            GameManager.Instance.CombatManager.CheckDeath(target);
         }
     }
 
-       // Hero targeting
-    public void ResolveHero(
-        RuntimeCard source,
-        PlayerView target)
+    // Hero targeting
+    public void ResolveHero(RuntimeCard source, PlayerView target)
     {
         if (source == null || target == null)
             return;
 
         target.TakeDamage(amount);
 
-        Debug.Log(
-            $"{source.Data.cardName} dealt {amount} damage to " +
-            $"{target.Side} Hero."
-        );
+        Debug.Log($"{source.Data.cardName} dealt {amount} damage to " + $"{target.Side} Hero.");
     }
 }

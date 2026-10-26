@@ -21,28 +21,23 @@ public class CardDatabaseEditor : Editor
     {
         CardDatabase database = (CardDatabase)target;
 
-        string[] guids =
-            AssetDatabase.FindAssets("t:CardData");
+        string[] guids = AssetDatabase.FindAssets("t:CardData");
 
         List<CardData> cards = new List<CardData>();
 
         foreach (string guid in guids)
         {
-            string path =
-                AssetDatabase.GUIDToAssetPath(guid);
+            string path = AssetDatabase.GUIDToAssetPath(guid);
 
-            CardData card =
-                AssetDatabase.LoadAssetAtPath<CardData>(path);
+            CardData card = AssetDatabase.LoadAssetAtPath<CardData>(path);
 
             if (card != null)
                 cards.Add(card);
         }
 
-        SerializedObject serializedDatabase =
-            new SerializedObject(database);
+        SerializedObject serializedDatabase = new SerializedObject(database);
 
-        SerializedProperty allCardsProperty =
-            serializedDatabase.FindProperty("allCards");
+        SerializedProperty allCardsProperty = serializedDatabase.FindProperty("allCards");
 
         allCardsProperty.ClearArray();
 
@@ -50,9 +45,7 @@ public class CardDatabaseEditor : Editor
         {
             allCardsProperty.InsertArrayElementAtIndex(i);
 
-            allCardsProperty
-                .GetArrayElementAtIndex(i)
-                .objectReferenceValue = cards[i];
+            allCardsProperty.GetArrayElementAtIndex(i).objectReferenceValue = cards[i];
         }
 
         serializedDatabase.ApplyModifiedProperties();
@@ -60,8 +53,6 @@ public class CardDatabaseEditor : Editor
         EditorUtility.SetDirty(database);
         AssetDatabase.SaveAssets();
 
-        Debug.Log(
-            $"Card Database updated: {cards.Count} cards found."
-        );
+        Debug.Log($"Card Database updated: {cards.Count} cards found.");
     }
 }

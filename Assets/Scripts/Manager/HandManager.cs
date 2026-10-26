@@ -4,26 +4,36 @@ using UnityEngine;
 public class HandManager : MonoBehaviour
 {
     [Header("Game Manager")]
-    [SerializeField] private GameManager gameManager;
+    [SerializeField]
+    private GameManager gameManager;
 
     [Header("Hand Settings")]
-    [SerializeField] private int maxHandSize = 7;
+    [SerializeField]
+    private int maxHandSize = 7;
 
     [Header("UI")]
-    [SerializeField] public Transform handContainer;
-    [SerializeField] private Transform commanderContainer;
-    [SerializeField] private GameObject cardPrefab;
-    [SerializeField] private HandLayout handLayout;
-    [SerializeField] private HandLayout commanderHandLayout;
+    [SerializeField]
+    public Transform handContainer;
+
+    [SerializeField]
+    private Transform commanderContainer;
+
+    [SerializeField]
+    private GameObject cardPrefab;
+
+    [SerializeField]
+    private HandLayout handLayout;
+
+    [SerializeField]
+    private HandLayout commanderHandLayout;
 
     [SerializeField]
     private PlayerSide owner;
 
     public Transform HandContainer => handContainer;
-    // Runtime card. Essentially represent card hand is holding.
-    private RuntimeCard runtimeCard;
-    public RuntimeCard RuntimeCard => runtimeCard;
+    public Transform CommanderContainer => commanderContainer;
     private List<RuntimeCard> hand = new List<RuntimeCard>();
+
     // This holds the list of cards in hand.
 
     public IReadOnlyList<RuntimeCard> Hand => hand;
@@ -34,87 +44,82 @@ public class HandManager : MonoBehaviour
     // ADD CARD
     // =========================================================
 
-
-
-   public bool AddCard(RuntimeCard card)
-{
-    if (card == null)
-        return false;
-
-    if (card.Zone != CardZone.Hand)
+    public bool AddCard(RuntimeCard card)
     {
-        Debug.LogWarning(
-            $"{card.Data.cardName} cannot be added to Hand. " +
-            $"Current Zone: {card.Zone}"
-        );
+        if (card == null)
+            return false;
 
-        return false;
-    }
+        if (card.Zone != CardZone.Hand)
+        {
+            Debug.LogWarning(
+                $"{card.Data.cardName} cannot be added to Hand. " + $"Current Zone: {card.Zone}"
+            );
 
-    if (card.IsCommander)
-    {
-        AddCommander(card);
+            return false;
+        }
+
+        if (card.IsCommander)
+        {
+            AddCommander(card);
+            return true;
+        }
+
+        if (NormalCardCount() >= maxHandSize)
+        {
+            Debug.Log($"Hand full! {card.Data.cardName} was exhausted.");
+
+            return false;
+        }
+
+        hand.Add(card);
+
+        RefreshHandLayout();
+        CreateCardView(card);
+
         return true;
     }
 
-    if (NormalCardCount() >= maxHandSize)
-    {
-        Debug.Log(
-            $"Hand full! {card.Data.cardName} was exhausted."
-        );
-
-        return false;
-    }
-
-    hand.Add(card);
-
-    RefreshHandLayout();
-    CreateCardView(card);
-
-    return true;
-}
     // =========================================================
     // ADD GENERATED CARD
     // =========================================================
 
+    public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
+    {
+        if (cardData == null)
+            return false;
 
-public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
-{
-    if (cardData == null)
-        return false;
+        RuntimeCard card = new RuntimeCard(cardData);
 
-    RuntimeCard card = new RuntimeCard(cardData);
+        card.SetOwner(owner);
+        card.ChangeZone(CardZone.Hand);
 
-    card.SetOwner(owner);
-    card.ChangeZone(CardZone.Hand);
-
-    return AddCard(card);
-}
+        return AddCard(card);
+    }
 
     // =========================================================
-    // Add Commander to hand 
+    // Add Commander to hand
     // =========================================================
     public void AddCommander(RuntimeCard commander)
-{
-    if (commander == null)
-        return;
-
-    if (!commander.IsCommander)
     {
-        Debug.LogError("This card is not a Commander!");
-        return;
-    }
+        if (commander == null)
+            return;
 
-    if (hand.Contains(commander))
-    {
-        Debug.Log("Commander is already in hand.");
-        return;
-    }
+        if (!commander.IsCommander)
+        {
+            Debug.LogError("This card is not a Commander!");
+            return;
+        }
 
-    hand.Add(commander);
-    CreateCommanderView(commander);
-    RefreshCommanderLayout();
-}
+        if (hand.Contains(commander))
+        {
+            Debug.Log("Commander is already in hand.");
+            return;
+        }
+
+        hand.Add(commander);
+        CreateCommanderView(commander);
+        RefreshCommanderLayout();
+    }
 
     // =========================================================
     // CREATE NORMAL CARD UI
@@ -122,58 +127,55 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
 
     private void CreateCardView(RuntimeCard card)
     {
-         GameObject obj =
-        Instantiate(cardPrefab, handContainer);
+        // Headless battles (automated tests) have no prefab and run without views.
+        if (cardPrefab == null)
+            return;
 
-        CardviewBase view =
-            obj.GetComponent<CardviewBase>();
+        GameObject obj = Instantiate(cardPrefab, handContainer);
 
+        CardviewBase view = obj.GetComponent<CardviewBase>();
 
         if (view != null)
         {
             view.SetCard(card);
-            if (owner == PlayerSide.Opponent && BattleSession.OpponentType == BattleOpponentType.RemotePlayer)
+            if (
+                owner == PlayerSide.Opponent
+                && BattleSession.OpponentType == BattleOpponentType.RemotePlayer
+            )
             {
-                if (view.artworkImage != null) view.artworkImage.enabled = false;
-                if (view.nameText != null) view.nameText.text = "";
-                if (view.descriptionText != null) view.descriptionText.text = "";
-                if (view.costText != null) view.costText.gameObject.SetActive(false);
-                if (view.attackText != null) view.attackText.gameObject.SetActive(false);
-                if (view.healthText != null) view.healthText.gameObject.SetActive(false);
+                if (view.artworkImage != null)
+                    view.artworkImage.enabled = false;
+                if (view.nameText != null)
+                    view.nameText.text = "";
+                if (view.descriptionText != null)
+                    view.descriptionText.text = "";
+                if (view.costText != null)
+                    view.costText.gameObject.SetActive(false);
+                if (view.attackText != null)
+                    view.attackText.gameObject.SetActive(false);
+                if (view.healthText != null)
+                    view.healthText.gameObject.SetActive(false);
             }
         }
         else
         {
-            Debug.LogError(
-                "Card Prefab is missing CardView component!"
-            );
+            Debug.LogError("Card Prefab is missing CardView component!");
         }
 
         RefreshHandLayout();
     }
 
     // =========================================================
-    // Set Card UI
-    // =========================================================
-
-    public void SetCard(RuntimeCard card)
-        {
-            runtimeCard = card;
-
-        }
-    // =========================================================
     // CREATE COMMANDER UI
     // =========================================================
 
     private void CreateCommanderView(RuntimeCard commander)
     {
-        GameObject obj = Instantiate(
-            cardPrefab,
-            commanderContainer
-        );
-        CardviewBase view =
-                    obj.GetComponent<CardviewBase>();
+        if (cardPrefab == null)
+            return;
 
+        GameObject obj = Instantiate(cardPrefab, commanderContainer);
+        CardviewBase view = obj.GetComponent<CardviewBase>();
 
         if (view != null)
         {
@@ -181,11 +183,10 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
         }
         else
         {
-            Debug.LogError(
-                "Card Prefab is missing CardView component!"
-            );
+            Debug.LogError("Card Prefab is missing CardView component!");
         }
     }
+
     // =========================================================
     // Destroy COMMANDER UI
     // =========================================================
@@ -198,11 +199,13 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
 
     private void DestroyViewInContainer(Transform container, RuntimeCard card)
     {
-        if (container == null) return;
+        if (container == null)
+            return;
         foreach (Transform child in container)
         {
             CardviewBase view = child.GetComponent<CardviewBase>();
-            if (view == null || view.runtimeCard != card) continue;
+            if (view == null || view.runtimeCard != card)
+                continue;
             // Detach immediately so layout and raycasts no longer include it.
             child.gameObject.SetActive(false);
             child.SetParent(null, false);
@@ -217,14 +220,22 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
 
     public void ApplyRemoteHand(List<RuntimeCard> cards)
     {
-        foreach (var old in new List<RuntimeCard>(hand)) if (!cards.Contains(old)) RemoveCardFromHand(old);
+        foreach (var old in new List<RuntimeCard>(hand))
+            if (!cards.Contains(old))
+                RemoveCardFromHand(old);
         foreach (var card in cards)
         {
-            if (!hand.Contains(card)) AddCard(card);
-            else RefreshCardView(card);
+            if (!hand.Contains(card))
+                AddCard(card);
+            else
+                RefreshCardView(card);
         }
-        hand.Clear(); hand.AddRange(cards); RefreshHandLayout(); RefreshCommanderLayout();
+        hand.Clear();
+        hand.AddRange(cards);
+        RefreshHandLayout();
+        RefreshCommanderLayout();
     }
+
     public void RefreshHandLayout()
     {
         if (handLayout != null)
@@ -232,10 +243,11 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
             handLayout.RefreshLayout();
         }
     }
+
     public void RefreshCommanderLayout()
     {
-    if (commanderHandLayout != null)
-        commanderHandLayout.RefreshLayout();
+        if (commanderHandLayout != null)
+            commanderHandLayout.RefreshLayout();
     }
 
     // =========================================================
@@ -258,179 +270,107 @@ public bool AddGeneratedCard(CardData cardData, PlayerSide owner)
     }
 
     // =========================================================
-    // DRAW TEST (used with button OnClick())
+    // Play Card from Hand here.
     // =========================================================
 
-    public void DrawTestCard()
+    public bool PlayCardFromHand(RuntimeCard card)
     {
-        DeckManager deckManager =
-            FindFirstObjectByType<DeckManager>();
-
-        if (deckManager == null)
-        {
-            Debug.LogError(
-                "DeckManager not found!"
-            );
-
-            return;
-        }
-
-        RuntimeCard card =
-            deckManager.DrawCard();
-
-        if (card == null)
-            return;
-
-        bool added = AddCard(card);
-
-        // If the card couldn't be added because the hand
-        // is full, discard/exhaust it.
-        if (!added)
-        {
-            deckManager.Discard(card);
-        }
-    }
-
-    // =========================================================
-    // Remove Card Here
-    // =========================================================
-
-    public bool RemoveCard(RuntimeCard card)
-    {
+        if (!BattleActions.Executing && card != null)
+            return BattleActions.Submit(card.Owner, BattleActionKind.PlayCard, card);
         if (card == null)
             return false;
 
-        if (!hand.Contains(card))
-            return false;
-
-        hand.Remove(card);
-
-        RefreshHandLayout();
-
-        return true;
-    }
-
-    // =========================================================
-    // Play Card from Hand here. 
-    // =========================================================
-
-  
-public bool PlayCardFromHand(RuntimeCard card)
-{
-    if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlayCard, card);
-    if (card == null)
-        return false;
-
-    if (card.IsCommander)
-    {
-        return PlayCommanderFromHand(card);
-    }
-
-    /// Turn Manager and Mana
-    TurnManager turnManager =
-        GameManager.Instance.TurnManager;
-
-    if (turnManager == null)
-        return false;
-
-    if (!turnManager.IsMyTurn(card.Owner))
-    {
-        Debug.Log(
-            $"{card.Data.cardName} cannot be played. " +
-            $"It is not {card.Owner}'s turn."
-        );
-
-        return false;
-    }
-
-    int cost = card.GetManaCost();
-
-    if (!turnManager.CanSpendMana(card.Owner, cost))
-    {
-        Debug.Log(
-            $"{card.Data.cardName} cannot be played. " +
-            $"Not enough mana."
-        );
-
-        return false;
-    }
-
-    // Spell cards do not enter the Battlefield.
-    if (card.Data is SpellData)
-    {
-        return PlaySpellFromHand(card);
-    }
-
-
-
-    // Playing Card on Battlefield
-    BattlefieldManager battlefield = GameManager.Instance.GetBattlefield(card.Owner);
-
-    if (battlefield == null)
-        return false;
-
-    if (!battlefield.HasAvailableMinionSlot) return false;
-    if (card.Data is ApostleData playData && playData.PlayRule != null &&
-        !playData.PlayRule.ApplyBeforeHandPlay(card)) return false;
-    int usedDiscount = GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
-    bool success =
-        battlefield.PlayCard(card);
-
-    if (!success)
-    {
-        GameManager.Instance.AddNextCardDiscount(card.Owner, usedDiscount);
-        return false;
-    }
-   // Only spend mana after the card successfully enters the field.
-        turnManager.SpendMana(
-            card.Owner,
-            cost
-        );
-    SparrotDeckAbility.NotifyApostlePlayed(card);
-
-    return true;
-}
-
-    public bool PlayCommanderFromHand(RuntimeCard card)
-    {
-        if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlayCard, card);
-        if (card == null)
-            return false;
-
-        if (!card.IsCommander)
+        if (card.IsCommander)
         {
-            Debug.LogWarning(
-                $"{card.Data.cardName} is not a Commander."
-            );
-
-            return false;
+            return PlayCommanderFromHand(card);
         }
 
-                /// Turn Manager and Mana
-        TurnManager turnManager =
-            GameManager.Instance.TurnManager;
+        /// Turn Manager and Mana
+        TurnManager turnManager = GameManager.Instance.TurnManager;
 
         if (turnManager == null)
             return false;
 
         if (!turnManager.IsMyTurn(card.Owner))
         {
-        Debug.Log(
-            $"{card.Data.cardName} cannot be played. " +
-            $"It is not {card.Owner}'s turn."
-        );
+            Debug.Log(
+                $"{card.Data.cardName} cannot be played. " + $"It is not {card.Owner}'s turn."
+            );
 
-        return false;
+            return false;
         }
 
         int cost = card.GetManaCost();
 
         if (!turnManager.CanSpendMana(card.Owner, cost))
         {
+            Debug.Log($"{card.Data.cardName} cannot be played. " + $"Not enough mana.");
+
+            return false;
+        }
+
+        // Spell cards do not enter the Battlefield.
+        if (card.Data is SpellData)
+        {
+            return PlaySpellFromHand(card);
+        }
+
+        // Playing Card on Battlefield
+        BattlefieldManager battlefield = GameManager.Instance.GetBattlefield(card.Owner);
+
+        if (battlefield == null)
+            return false;
+
+        if (!battlefield.HasAvailableMinionSlot)
+            return false;
+        if (
+            card.Data is ApostleData playData
+            && playData.PlayRule != null
+            && !playData.PlayRule.ApplyBeforeHandPlay(card)
+        )
+            return false;
+        if (!PayAndPlayUnit(card, cost, battlefield))
+            return false;
+
+        SparrotDeckAbility.NotifyApostlePlayed(card);
+
+        return true;
+    }
+
+    public bool PlayCommanderFromHand(RuntimeCard card)
+    {
+        if (!BattleActions.Executing && card != null)
+            return BattleActions.Submit(card.Owner, BattleActionKind.PlayCard, card);
+        if (card == null)
+            return false;
+
+        if (!card.IsCommander)
+        {
+            Debug.LogWarning($"{card.Data.cardName} is not a Commander.");
+
+            return false;
+        }
+
+        /// Turn Manager and Mana
+        TurnManager turnManager = GameManager.Instance.TurnManager;
+
+        if (turnManager == null)
+            return false;
+
+        if (!turnManager.IsMyTurn(card.Owner))
+        {
             Debug.Log(
-                $"{card.Data.cardName} cannot be played. " +
-                $"Not enough mana."
+                $"{card.Data.cardName} cannot be played. " + $"It is not {card.Owner}'s turn."
             );
+
+            return false;
+        }
+
+        int cost = card.GetManaCost();
+
+        if (!turnManager.CanSpendMana(card.Owner, cost))
+        {
+            Debug.Log($"{card.Data.cardName} cannot be played. " + $"Not enough mana.");
 
             return false;
         }
@@ -439,594 +379,523 @@ public bool PlayCardFromHand(RuntimeCard card)
 
         if (battlefield == null)
         {
-            Debug.LogError(
-                $"No BattlefieldManager found for {card.Owner}."
-            );
+            Debug.LogError($"No BattlefieldManager found for {card.Owner}.");
 
             return false;
         }
 
-        if (!battlefield.HasAvailableMinionSlot) return false;
-        if (card.Data is ApostleData playData && playData.PlayRule != null &&
-            !playData.PlayRule.ApplyBeforeHandPlay(card)) return false;
-        int usedDiscount = GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
-        bool success =
-            battlefield.PlayCard(card);
-
-        if (!success)
-        {
-            GameManager.Instance.AddNextCardDiscount(card.Owner, usedDiscount);
+        if (!battlefield.HasAvailableMinionSlot)
             return false;
-        }
-    // Only spend mana after the card successfully enters the field.
-        turnManager.SpendMana(card.Owner, cost);
+        if (
+            card.Data is ApostleData playData
+            && playData.PlayRule != null
+            && !playData.PlayRule.ApplyBeforeHandPlay(card)
+        )
+            return false;
+        if (!PayAndPlayUnit(card, cost, battlefield))
+            return false;
+
         SparrotDeckAbility.NotifyApostlePlayed(card);
 
         return true;
     }
 
-
-
-    // =========================================================
-    // Find card from hand. 
-    // =========================================================
-
-private CardviewBase FindCardView(RuntimeCard card)
-{
-    foreach (Transform child in handContainer)
+    // Units pay before entering the field, like spells, so a Battlecry sees the mana left after the cost.
+    // If the card cannot enter the field, the mana and next-card discount are refunded.
+    private bool PayAndPlayUnit(RuntimeCard card, int cost, BattlefieldManager battlefield)
     {
-        CardviewBase cardView =
-            child.GetComponent<CardviewBase>();
+        TurnManager turnManager = GameManager.Instance.TurnManager;
 
-        if (cardView == null)
-            continue;
+        if (!turnManager.SpendMana(card.Owner, cost))
+            return false;
 
-        if (cardView.runtimeCard == card)
-            return cardView;
+        int usedDiscount = GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
+
+        if (battlefield.PlayCard(card))
+            return true;
+
+        turnManager.RefundMana(card.Owner, cost);
+        GameManager.Instance.AddNextCardDiscount(card.Owner, usedDiscount);
+        return false;
     }
 
-    return null;
-}
+    // =========================================================
+    // Find card from hand.
+    // =========================================================
+
+    private CardviewBase FindCardView(RuntimeCard card)
+    {
+        if (handContainer == null)
+            return null;
+
+        foreach (Transform child in handContainer)
+        {
+            CardviewBase cardView = child.GetComponent<CardviewBase>();
+
+            if (cardView == null)
+                continue;
+
+            if (cardView.runtimeCard == card)
+                return cardView;
+        }
+
+        return null;
+    }
+
     // =========================================================
     // Delete card from hand
     // =========================================================
 
-public bool RemoveCardFromHand(RuntimeCard card)
-{
-    if (!hand.Contains(card))
-        return false;
-
-    hand.Remove(card);
-
-    if (card.IsCommander)
+    public bool RemoveCardFromHand(RuntimeCard card)
     {
-        DestroyCommanderView(card);
-    }
-    else
-    {
-        DestroyHandView(card);
-    }
+        if (!hand.Contains(card))
+            return false;
 
-    RefreshHandLayout();
+        hand.Remove(card);
 
-    return true;
-}
-
-private void DestroyHandView(RuntimeCard card)
-{
-    DestroyViewInContainer(handContainer, card);
-}
-
-private bool PlaySpellFromHand(RuntimeCard card)
-{
-    if (card == null)
-        return false;
-
-    if (!(card.Data is SpellData spellData))
-        return false;
-
-    if (spellData.SpellEffects == null ||
-        spellData.SpellEffects.Count == 0)
-    {
-        Debug.Log(
-            $"{card.Data.cardName} cannot be cast. " +
-            "It has no Spell Effects."
-        );
-
-        return false;
-    }
-
-    TurnManager turnManager =
-        GameManager.Instance.TurnManager;
-
-    if (turnManager == null)
-        return false;
-
-    int cost = card.GetManaCost();
-
-    // Check whether any effect requires
-    // manual target selection.
-    foreach (CardEffect effect in spellData.SpellEffects)
-    {
-        if (effect == null)
-            continue;
-
-        switch (effect.TargetType)
+        if (card.IsCommander)
         {
-            case EffectTargetType.EnemyUnit:
-            case EffectTargetType.EnemyTarget:
-            case EffectTargetType.FriendlyUnit:
-            case EffectTargetType.AnyUnit:
-            case EffectTargetType.AnyTarget:
-
-                // Targeted spells are handled
-                // by PlayTargetedSpellFromHand.
-                return false;
+            DestroyCommanderView(card);
         }
+        else
+        {
+            DestroyHandView(card);
+        }
+
+        RefreshHandLayout();
+
+        return true;
     }
 
-    Debug.Log(
-        $"{card.Owner} casts {card.Data.cardName}!"
-    );
+    private void DestroyHandView(RuntimeCard card)
+    {
+        DestroyViewInContainer(handContainer, card);
+    }
 
-    foreach (var effect in spellData.SpellEffects)
-        if (effect is DescribedSpellEffect described && !described.CanPlay(card)) return false;
-
-    // The spell leaves the hand BEFORE
-    // its effects resolve.
-    if (!turnManager.SpendMana(card.Owner, cost))
-        return false;
-    GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
-    RemoveCardFromHand(card);
-
-    GameManager.Instance
-        .EffectManager
-        .ResolveSpell(card);
-
-    CompleteSpellCast(
-        card,
-        cost
-    );
-
-    return true;
-}
-// Test Area
-
-public RuntimeCard GetFirstNormalCard()
-{
-    foreach (RuntimeCard card in hand)
+    private bool PlaySpellFromHand(RuntimeCard card)
     {
         if (card == null)
-            continue;
+            return false;
 
-        if (!card.IsCommander)
-            return card;
-    }
+        if (!(card.Data is SpellData spellData))
+            return false;
 
-    return null;
-}
-
-private void CompleteSpellCast(
-    RuntimeCard card,
-    int cost)
-{
-    if (card == null)
-        return;
-
-    TurnManager turnManager =
-        GameManager.Instance.TurnManager;
-
-    if (turnManager == null)
-        return;
-
-    GameManager.Instance.RecordLastCastSpell(card);
-    RuntimeCard.PublishTrigger(CardTriggerType.SpellCast, card, card);
-    Debug.Log(
-        $"{card.Data.cardName} finished casting."
-    );
-    
-    GameManager.Instance
-        .EffectManager
-        .TriggerResonance(card.Owner);
-
-    DeckManager deck =
-        GameManager.Instance.GetDeck(card.Owner);
-
-    if (deck != null)
-    {
-        deck.Discard(card);
-    }
-}
-
-public bool PlayTargetedSpellFromHand(
-    RuntimeCard card,
-    RuntimeCard unitTarget)
-{
-    if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlaySpellOnUnit, card, unitTarget);
-    if (card == null || unitTarget == null)
-        return false;
-
-    if (!(card.Data is SpellData spellData))
-        return false;
-
-    if (spellData.SpellEffects == null ||
-        spellData.SpellEffects.Count == 0)
-        return false;
-
-    TurnManager turnManager =
-        GameManager.Instance.TurnManager;
-
-    if (turnManager == null)
-        return false;
-
-    if (!turnManager.IsMyTurn(card.Owner))
-        return false;
-
-    int cost = card.GetManaCost();
-
-    if (!turnManager.CanSpendMana(
-            card.Owner,
-            cost))
-        return false;
-
-    // =========================================
-    // VALIDATE TARGETED EFFECTS FIRST
-    // =========================================
-
-    bool hasUnitTargetEffect = false;
-
-    foreach (CardEffect effect
-             in spellData.SpellEffects)
-    {
-        if (effect == null)
-            continue;
-
-        switch (effect.TargetType)
+        if (spellData.SpellEffects == null || spellData.SpellEffects.Count == 0)
         {
-            case EffectTargetType.EnemyUnit:
-            case EffectTargetType.EnemyTarget:
+            Debug.Log($"{card.Data.cardName} cannot be cast. " + "It has no Spell Effects.");
 
-                hasUnitTargetEffect = true;
+            return false;
+        }
 
-                if (unitTarget.Owner == card.Owner)
+        TurnManager turnManager = GameManager.Instance.TurnManager;
+
+        if (turnManager == null)
+            return false;
+
+        int cost = card.GetManaCost();
+
+        // Check whether any effect requires
+        // manual target selection.
+        foreach (CardEffect effect in spellData.SpellEffects)
+        {
+            if (effect == null)
+                continue;
+
+            switch (effect.TargetType)
+            {
+                case EffectTargetType.EnemyUnit:
+                case EffectTargetType.EnemyTarget:
+                case EffectTargetType.FriendlyUnit:
+                case EffectTargetType.AnyUnit:
+                case EffectTargetType.AnyTarget:
+
+                    // Targeted spells are handled
+                    // by PlayTargetedSpellFromHand.
                     return false;
+            }
+        }
 
-                if (unitTarget.IsStealthed)
-                    return false;
+        Debug.Log($"{card.Owner} casts {card.Data.cardName}!");
 
-                if (!effect.MatchesTargetFilter(unitTarget))
-                    return false;
+        foreach (var effect in spellData.SpellEffects)
+            if (effect is DescribedSpellEffect described && !described.CanPlay(card))
+                return false;
 
-                break;
+        // The spell leaves the hand BEFORE
+        // its effects resolve.
+        if (!turnManager.SpendMana(card.Owner, cost))
+            return false;
+        GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
+        RemoveCardFromHand(card);
 
-            case EffectTargetType.FriendlyUnit:
+        GameManager.Instance.EffectManager.ResolveSpell(card);
 
-                hasUnitTargetEffect = true;
+        CompleteSpellCast(card, cost);
 
-                if (unitTarget.Owner != card.Owner)
-                    return false;
+        return true;
+    }
 
-                if (unitTarget.IsStealthed)
-                    return false;
+    private void CompleteSpellCast(RuntimeCard card, int cost)
+    {
+        if (card == null)
+            return;
 
-                if (!effect.MatchesTargetFilter(unitTarget))
-                    return false;
+        TurnManager turnManager = GameManager.Instance.TurnManager;
 
-                break;
+        if (turnManager == null)
+            return;
 
-            case EffectTargetType.AnyUnit:
+        GameManager.Instance.RecordLastCastSpell(card);
+        RuntimeCard.PublishTrigger(CardTriggerType.SpellCast, card, card);
+        Debug.Log($"{card.Data.cardName} finished casting.");
 
-                hasUnitTargetEffect = true;
+        GameManager.Instance.EffectManager.TriggerResonance(card.Owner);
 
-                if (unitTarget.IsStealthed)
-                    return false;
+        DeckManager deck = GameManager.Instance.GetDeck(card.Owner);
 
-                if (!effect.MatchesTargetFilter(unitTarget))
-                    return false;
-
-                break;
-
-            case EffectTargetType.AnyTarget:
-
-                hasUnitTargetEffect = true;
-
-                if (unitTarget.IsStealthed)
-                    return false;
-
-                if (!effect.MatchesTargetFilter(unitTarget))
-                    return false;
-
-                break;
+        if (deck != null)
+        {
+            deck.Discard(card);
         }
     }
 
-    foreach (var effect in spellData.SpellEffects)
-        if (effect != null && (effect.TargetType == EffectTargetType.FriendlyUnit ||
-            effect.TargetType == EffectTargetType.EnemyUnit || effect.TargetType == EffectTargetType.AnyUnit ||
-            effect.TargetType == EffectTargetType.AnyTarget || effect.TargetType == EffectTargetType.EnemyTarget) &&
-            !effect.CanTarget(card, unitTarget)) return false;
-
-    // This spell doesn't actually have an effect
-    // that can target a unit.
-    if (!hasUnitTargetEffect)
-        return false;
-
-    Debug.Log(
-        $"{card.Owner} casts " +
-        $"{card.Data.cardName} on " +
-        $"{unitTarget.Data.cardName}."
-    );
-
-    // All validation succeeded.
-    // The spell leaves the hand before resolving.
-    if (!turnManager.SpendMana(card.Owner, cost))
-        return false;
-    GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
-    RemoveCardFromHand(card);
-
-    List<RuntimeCard> targets =
-        new List<RuntimeCard>
-        {
-            unitTarget
-        };
-
-    // =========================================
-    // RESOLVE EVERY SPELL EFFECT
-    // =========================================
-
-    foreach (CardEffect effect
-             in spellData.SpellEffects)
+    public bool PlayTargetedSpellFromHand(RuntimeCard card, RuntimeCard unitTarget)
     {
-        if (effect == null)
-            continue;
+        if (!BattleActions.Executing && card != null)
+            return BattleActions.Submit(
+                card.Owner,
+                BattleActionKind.PlaySpellOnUnit,
+                card,
+                unitTarget
+            );
+        if (card == null || unitTarget == null)
+            return false;
 
-        switch (effect.TargetType)
+        if (!(card.Data is SpellData spellData))
+            return false;
+
+        if (spellData.SpellEffects == null || spellData.SpellEffects.Count == 0)
+            return false;
+
+        TurnManager turnManager = GameManager.Instance.TurnManager;
+
+        if (turnManager == null)
+            return false;
+
+        if (!turnManager.IsMyTurn(card.Owner))
+            return false;
+
+        int cost = card.GetManaCost();
+
+        if (!turnManager.CanSpendMana(card.Owner, cost))
+            return false;
+
+        // =========================================
+        // VALIDATE TARGETED EFFECTS FIRST
+        // =========================================
+
+        bool hasUnitTargetEffect = false;
+
+        foreach (CardEffect effect in spellData.SpellEffects)
         {
-            // These use the manually selected unit.
-            case EffectTargetType.EnemyUnit:
-            case EffectTargetType.EnemyTarget:
-            case EffectTargetType.FriendlyUnit:
-            case EffectTargetType.AnyUnit:
-            case EffectTargetType.AnyTarget:
+            if (effect == null)
+                continue;
 
-                effect.Resolve(
-                    card,
-                    targets
-                );
+            switch (effect.TargetType)
+            {
+                case EffectTargetType.EnemyUnit:
+                case EffectTargetType.EnemyTarget:
 
-                break;
+                    hasUnitTargetEffect = true;
 
-            // Everything else uses the normal
-            // EffectManager targeting pipeline.
-            default:
+                    if (unitTarget.Owner == card.Owner)
+                        return false;
 
-                GameManager.Instance
-                    .EffectManager
-                    .ResolveCardEffect(
-                        card,
-                        effect
-                    );
+                    if (unitTarget.IsStealthed)
+                        return false;
 
-                break;
+                    if (!effect.MatchesTargetFilter(unitTarget))
+                        return false;
+
+                    break;
+
+                case EffectTargetType.FriendlyUnit:
+
+                    hasUnitTargetEffect = true;
+
+                    if (unitTarget.Owner != card.Owner)
+                        return false;
+
+                    if (unitTarget.IsStealthed)
+                        return false;
+
+                    if (!effect.MatchesTargetFilter(unitTarget))
+                        return false;
+
+                    break;
+
+                case EffectTargetType.AnyUnit:
+
+                    hasUnitTargetEffect = true;
+
+                    if (unitTarget.IsStealthed)
+                        return false;
+
+                    if (!effect.MatchesTargetFilter(unitTarget))
+                        return false;
+
+                    break;
+
+                case EffectTargetType.AnyTarget:
+
+                    hasUnitTargetEffect = true;
+
+                    if (unitTarget.IsStealthed)
+                        return false;
+
+                    if (!effect.MatchesTargetFilter(unitTarget))
+                        return false;
+
+                    break;
+            }
         }
+
+        foreach (var effect in spellData.SpellEffects)
+            if (
+                effect != null
+                && (
+                    effect.TargetType == EffectTargetType.FriendlyUnit
+                    || effect.TargetType == EffectTargetType.EnemyUnit
+                    || effect.TargetType == EffectTargetType.AnyUnit
+                    || effect.TargetType == EffectTargetType.AnyTarget
+                    || effect.TargetType == EffectTargetType.EnemyTarget
+                )
+                && !effect.CanTarget(card, unitTarget)
+            )
+                return false;
+
+        // This spell doesn't actually have an effect
+        // that can target a unit.
+        if (!hasUnitTargetEffect)
+            return false;
+
+        Debug.Log(
+            $"{card.Owner} casts " + $"{card.Data.cardName} on " + $"{unitTarget.Data.cardName}."
+        );
+
+        // All validation succeeded.
+        // The spell leaves the hand before resolving.
+        if (!turnManager.SpendMana(card.Owner, cost))
+            return false;
+        GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
+        RemoveCardFromHand(card);
+
+        List<RuntimeCard> targets = new List<RuntimeCard> { unitTarget };
+
+        // =========================================
+        // RESOLVE EVERY SPELL EFFECT
+        // =========================================
+
+        foreach (CardEffect effect in spellData.SpellEffects)
+        {
+            if (effect == null)
+                continue;
+
+            switch (effect.TargetType)
+            {
+                // These use the manually selected unit.
+                case EffectTargetType.EnemyUnit:
+                case EffectTargetType.EnemyTarget:
+                case EffectTargetType.FriendlyUnit:
+                case EffectTargetType.AnyUnit:
+                case EffectTargetType.AnyTarget:
+
+                    effect.Resolve(card, targets);
+
+                    break;
+
+                // Everything else uses the normal
+                // EffectManager targeting pipeline.
+                default:
+
+                    GameManager.Instance.EffectManager.ResolveCardEffect(card, effect);
+
+                    break;
+            }
+        }
+
+        CompleteSpellCast(card, cost);
+
+        return true;
     }
 
-    CompleteSpellCast(
-        card,
-        cost
-    );
-
-    return true;
-}
-public bool PlayTargetedSpellFromHand(
-    RuntimeCard card,
-    PlayerView heroTarget)
-{
-    if (heroTarget == null) return false;
-    if (!BattleActions.Executing && card != null) return BattleActions.Submit(card.Owner, BattleActionKind.PlaySpellOnHero, card, hero: heroTarget == null ? PlayerSide.Opponent : heroTarget.Side);
-    if (card == null || heroTarget == null)
-        return false;
-
-    if (!(card.Data is SpellData spellData))
-        return false;
-
-    if (spellData.SpellEffects == null ||
-        spellData.SpellEffects.Count == 0)
-        return false;
-
-    TurnManager turnManager =
-        GameManager.Instance.TurnManager;
-
-    if (turnManager == null)
-        return false;
-
-    if (!turnManager.IsMyTurn(card.Owner))
-        return false;
-
-    int cost = card.GetManaCost();
-
-    if (!turnManager.CanSpendMana(
-            card.Owner,
-            cost))
-        return false;
-
-    // =========================================
-    // VALIDATE HERO-TARGETED EFFECTS
-    // =========================================
-
-    bool hasHeroTargetEffect = false;
-
-    foreach (CardEffect effect
-             in spellData.SpellEffects)
+    public bool PlayTargetedSpellFromHand(RuntimeCard card, PlayerView heroTarget)
     {
-        if (effect == null)
-            continue;
+        if (heroTarget == null)
+            return false;
+        if (!BattleActions.Executing && card != null)
+            return BattleActions.Submit(
+                card.Owner,
+                BattleActionKind.PlaySpellOnHero,
+                card,
+                hero: heroTarget.Side
+            );
+        if (card == null || heroTarget == null)
+            return false;
 
-        switch (effect.TargetType)
+        if (!(card.Data is SpellData spellData))
+            return false;
+
+        if (spellData.SpellEffects == null || spellData.SpellEffects.Count == 0)
+            return false;
+
+        TurnManager turnManager = GameManager.Instance.TurnManager;
+
+        if (turnManager == null)
+            return false;
+
+        if (!turnManager.IsMyTurn(card.Owner))
+            return false;
+
+        int cost = card.GetManaCost();
+
+        if (!turnManager.CanSpendMana(card.Owner, cost))
+            return false;
+
+        // =========================================
+        // VALIDATE HERO-TARGETED EFFECTS
+        // =========================================
+
+        bool hasHeroTargetEffect = false;
+
+        foreach (CardEffect effect in spellData.SpellEffects)
         {
-            case EffectTargetType.EnemyHero:
-            case EffectTargetType.EnemyTarget:
+            if (effect == null)
+                continue;
 
-                hasHeroTargetEffect = true;
+            switch (effect.TargetType)
+            {
+                case EffectTargetType.EnemyHero:
+                case EffectTargetType.EnemyTarget:
 
-                if (heroTarget.Side == card.Owner)
-                    return false;
+                    hasHeroTargetEffect = true;
 
-                break;
+                    if (heroTarget.Side == card.Owner)
+                        return false;
 
-            case EffectTargetType.FriendlyHero:
+                    break;
 
-                hasHeroTargetEffect = true;
+                case EffectTargetType.FriendlyHero:
 
-                if (heroTarget.Side != card.Owner)
-                    return false;
+                    hasHeroTargetEffect = true;
 
-                break;
+                    if (heroTarget.Side != card.Owner)
+                        return false;
 
-            case EffectTargetType.AnyTarget:
+                    break;
 
-                hasHeroTargetEffect = true;
-                break;
+                case EffectTargetType.AnyTarget:
+
+                    hasHeroTargetEffect = true;
+                    break;
+            }
         }
+
+        if (!hasHeroTargetEffect)
+            return false;
+
+        Debug.Log(
+            $"{card.Owner} casts " + $"{card.Data.cardName} on " + $"{heroTarget.Side} Hero."
+        );
+
+        // Spell is now committed.
+        if (!turnManager.SpendMana(card.Owner, cost))
+            return false;
+        GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
+        RemoveCardFromHand(card);
+
+        // =========================================
+        // RESOLVE EVERY SPELL EFFECT
+        // =========================================
+
+        foreach (CardEffect effect in spellData.SpellEffects)
+        {
+            if (effect == null)
+                continue;
+
+            switch (effect.TargetType)
+            {
+                case EffectTargetType.EnemyHero:
+                case EffectTargetType.EnemyTarget:
+                case EffectTargetType.FriendlyHero:
+                case EffectTargetType.AnyTarget:
+
+                    ResolveSpellEffectOnHero(card, effect, heroTarget);
+
+                    break;
+
+                default:
+
+                    GameManager.Instance.EffectManager.ResolveCardEffect(card, effect);
+
+                    break;
+            }
+        }
+
+        CompleteSpellCast(card, cost);
+
+        return true;
     }
 
-    if (!hasHeroTargetEffect)
-        return false;
-
-    Debug.Log(
-        $"{card.Owner} casts " +
-        $"{card.Data.cardName} on " +
-        $"{heroTarget.Side} Hero."
-    );
-
-    // Spell is now committed.
-    if (!turnManager.SpendMana(card.Owner, cost))
-        return false;
-    GameManager.Instance.ConsumeNextCardDiscount(card.Owner);
-    RemoveCardFromHand(card);
-
-    // =========================================
-    // RESOLVE EVERY SPELL EFFECT
-    // =========================================
-
-    foreach (CardEffect effect
-             in spellData.SpellEffects)
+    public void RefreshCardView(RuntimeCard card)
     {
-        if (effect == null)
-            continue;
+        if (card == null)
+            return;
 
-        switch (effect.TargetType)
-        {
-            case EffectTargetType.EnemyHero:
-            case EffectTargetType.EnemyTarget:
-            case EffectTargetType.FriendlyHero:
-            case EffectTargetType.AnyTarget:
-
-                ResolveSpellEffectOnHero(
-                    card,
-                    effect,
-                    heroTarget
-                );
-
-                break;
-
-            default:
-
-                GameManager.Instance
-                    .EffectManager
-                    .ResolveCardEffect(
-                        card,
-                        effect
-                    );
-
-                break;
-        }
-    }
-
-    CompleteSpellCast(
-        card,
-        cost
-    );
-
-    return true;
-}
-
-public void RefreshCardView(RuntimeCard card)
-{
-    if (card == null)
-        return;
-
-    CardviewBase view =
-        FindCardView(card);
-
-    if (view == null)
-        return;
-
-    view.RefreshCardView();
-}
-
-public void RefreshAllCardViews()
-{
-    foreach (Transform child in handContainer)
-    {
-        CardviewBase view =
-            child.GetComponent<CardviewBase>();
+        CardviewBase view = FindCardView(card);
 
         if (view == null)
-            continue;
+            return;
 
         view.RefreshCardView();
     }
-}
 
-public void TestReduceFirstCardCost()
-{
-    RuntimeCard card =
-        GetFirstNormalCard();
-
-    if (card == null)
-        return;
-
-    Debug.Log(
-        $"Before: {card.GetManaCost()}"
-    );
-
-    card.ModifyManaCost(-2);
-
-    Debug.Log(
-        $"After: {card.GetManaCost()}"
-    );
-
-    RefreshCardView(card);
-}
-private void ResolveSpellEffectOnHero(
-    RuntimeCard card,
-    CardEffect effect,
-    PlayerView heroTarget)
-{
-    if (effect is DamageEffect damageEffect)
+    public void RefreshAllCardViews()
     {
-        damageEffect.ResolveHero(
-            card,
-            heroTarget
-        );
+        if (handContainer == null)
+            return;
 
-        return;
+        foreach (Transform child in handContainer)
+        {
+            CardviewBase view = child.GetComponent<CardviewBase>();
+
+            if (view == null)
+                continue;
+
+            view.RefreshCardView();
+        }
     }
 
-    if (effect is HealEffect healEffect)
+    private void ResolveSpellEffectOnHero(
+        RuntimeCard card,
+        CardEffect effect,
+        PlayerView heroTarget
+    )
     {
-        healEffect.ResolveHero(
-            card,
-            heroTarget
-        );
+        if (effect is DamageEffect damageEffect)
+        {
+            damageEffect.ResolveHero(card, heroTarget);
 
-        return;
+            return;
+        }
+
+        if (effect is HealEffect healEffect)
+        {
+            healEffect.ResolveHero(card, heroTarget);
+
+            return;
+        }
+
+        Debug.LogWarning($"{effect.name} does not support Hero targeting.");
     }
-
-    Debug.LogWarning(
-        $"{effect.name} does not support Hero targeting."
-    );
-}
-
 }

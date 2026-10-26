@@ -5,12 +5,12 @@ using UnityEngine;
 public enum SummonSelectionType
 {
     Selected,
-    Random
+    Random,
 }
 
 public enum SummonSideMode
 {
     SourceOwner,
     Player,
-    Opponent
+    Opponent,
 }

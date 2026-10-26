@@ -6,5 +6,5 @@ public enum DrawType
 {
     Top,
     RandomMatching,
-    Specific
+    Specific,
 }

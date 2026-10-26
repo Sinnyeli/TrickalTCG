@@ -5,5 +5,5 @@ using UnityEngine;
 public enum PlayerSide
 {
     Player,
-    Opponent
+    Opponent,
 }

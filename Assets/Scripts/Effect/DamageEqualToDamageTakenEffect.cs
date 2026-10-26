@@ -7,9 +7,7 @@ using UnityEngine;
 )]
 public class DamageEqualToDamageTakenEffect : CardEffect
 {
-    public override void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets)
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
         if (source == null || targets == null)
             return;
@@ -27,20 +25,16 @@ public class DamageEqualToDamageTakenEffect : CardEffect
             target.TakeDamage(amount);
 
             Debug.Log(
-                $"Ayla Deathrattle | " +
-                $"DamageTaken: {source.DamageTaken} | " +
-                $"Target: {target.Data.cardName} | " +
-                $"Target HP Before: {target.CurrentHealth} | " +
-                $"Damage: {amount}"
+                $"Ayla Deathrattle | "
+                    + $"DamageTaken: {source.DamageTaken} | "
+                    + $"Target: {target.Data.cardName} | "
+                    + $"Target HP Before: {target.CurrentHealth} | "
+                    + $"Damage: {amount}"
             );
 
-            GameManager.Instance
-                .GetBattlefield(target.Owner)
-                .RefreshMinionView(target);
+            GameManager.Instance.GetBattlefield(target.Owner).RefreshMinionView(target);
 
-            GameManager.Instance
-                .CombatManager
-                .CheckDeath(target);
+            GameManager.Instance.CombatManager.CheckDeath(target);
         }
     }
 }

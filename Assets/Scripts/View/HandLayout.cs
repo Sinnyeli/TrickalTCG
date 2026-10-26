@@ -3,21 +3,30 @@ using UnityEngine;
 public class HandLayout : MonoBehaviour
 {
     [Header("Card Scale")]
-    [SerializeField] private float minimumScale = 0.55f;
-    [SerializeField] private float maximumScale = 1.0f;
+    [SerializeField]
+    private float minimumScale = 0.55f;
+
+    [SerializeField]
+    private float maximumScale = 1.0f;
 
     [Header("Spacing")]
-    [SerializeField] private float cardSpacing = 100f;
+    [SerializeField]
+    private float cardSpacing = 100f;
 
     [Header("Fan")]
-    [SerializeField] private float maxFanAngle = 12f;
-    [SerializeField] private float fanHeight = 35f;
+    [SerializeField]
+    private float maxFanAngle = 12f;
+
+    [SerializeField]
+    private float fanHeight = 35f;
 
     [Header("Position")]
-    [SerializeField] private float centerY = 0f;
+    [SerializeField]
+    private float centerY = 0f;
 
     [Header("Layout Mode")]
-    [SerializeField] private bool isCommander = false;
+    [SerializeField]
+    private bool isCommander = false;
 
     private RectTransform handRect;
 
@@ -29,7 +38,6 @@ public class HandLayout : MonoBehaviour
     public void RefreshLayout()
     {
         int cardCount = transform.childCount;
-        
 
         if (isCommander)
         {
@@ -40,8 +48,7 @@ public class HandLayout : MonoBehaviour
         if (cardCount == 0)
             return;
 
-        RectTransform firstCard =
-            transform.GetChild(0) as RectTransform;
+        RectTransform firstCard = transform.GetChild(0) as RectTransform;
 
         if (firstCard == null)
             return;
@@ -59,9 +66,7 @@ public class HandLayout : MonoBehaviour
 
         float spacing = cardSpacing;
 
-        float requiredWidth =
-            cardWidth +
-            spacing * (cardCount - 1);
+        float requiredWidth = cardWidth + spacing * (cardCount - 1);
 
         // -----------------------------------------
         // Calculate scale
@@ -71,15 +76,10 @@ public class HandLayout : MonoBehaviour
 
         if (requiredWidth > availableWidth)
         {
-            scale =
-                availableWidth / requiredWidth;
+            scale = availableWidth / requiredWidth;
         }
 
-        scale = Mathf.Clamp(
-            scale,
-            minimumScale,
-            maximumScale
-        );
+        scale = Mathf.Clamp(scale, minimumScale, maximumScale);
 
         // -----------------------------------------
         // Calculate final spacing
@@ -88,37 +88,32 @@ public class HandLayout : MonoBehaviour
         spacing *= scale;
         // Overlap cards further when the hand reaches its minimum scale.
         if (cardCount > 1)
-            spacing = Mathf.Min(spacing,
-                Mathf.Max(0f, (availableWidth - cardWidth * scale) / (cardCount - 1)));
+            spacing = Mathf.Min(
+                spacing,
+                Mathf.Max(0f, (availableWidth - cardWidth * scale) / (cardCount - 1))
+            );
 
-        float scaledWidth =
-            cardWidth * scale;
+        float scaledWidth = cardWidth * scale;
 
-        float totalWidth =
-            scaledWidth +
-            spacing * (cardCount - 1);
+        float totalWidth = scaledWidth + spacing * (cardCount - 1);
 
         // Start so the entire hand is centered.
-        float startX =
-            -(totalWidth / 2f) +
-            (scaledWidth / 2f);
+        float startX = -(totalWidth / 2f) + (scaledWidth / 2f);
 
         // -----------------------------------------
         // Position cards
         // -----------------------------------------
 
-                for (int i = 0; i < cardCount; i++)
+        for (int i = 0; i < cardCount; i++)
         {
-            RectTransform card =
-                transform.GetChild(i) as RectTransform;
+            RectTransform card = transform.GetChild(i) as RectTransform;
 
-            if (card == null) continue;
+            if (card == null)
+                continue;
 
-            CardView cardView =
-                card.GetComponent<CardView>();
+            CardView cardView = card.GetComponent<CardView>();
 
-            if (cardView != null &&
-                cardView.IsDragging)
+            if (cardView != null && cardView.IsDragging)
             {
                 continue;
             }
@@ -138,71 +133,48 @@ public class HandLayout : MonoBehaviour
             }
             else
             {
-                normalizedPosition =
-                    (float)i / (cardCount - 1);
+                normalizedPosition = (float)i / (cardCount - 1);
             }
 
             // -------------------------------------
             // X
             // -------------------------------------
 
-            float x =
-                startX +
-                spacing * i;
+            float x = startX + spacing * i;
 
             // -------------------------------------
             // Fan rotation
             // -------------------------------------
 
-            float angle =
-                Mathf.Lerp(
-                    maxFanAngle,
-                    -maxFanAngle,
-                    normalizedPosition
-                );
+            float angle = Mathf.Lerp(maxFanAngle, -maxFanAngle, normalizedPosition);
 
             // -------------------------------------
             // Fan height
             // -------------------------------------
 
-            float distanceFromCenter =
-                Mathf.Abs(
-                    normalizedPosition - 0.5f
-                ) * 2f;
+            float distanceFromCenter = Mathf.Abs(normalizedPosition - 0.5f) * 2f;
 
-            float y =
-                centerY +
-                (1f - distanceFromCenter)
-                * fanHeight
-                * scale;
+            float y = centerY + (1f - distanceFromCenter) * fanHeight * scale;
 
             // -------------------------------------
             // Apply
             // -------------------------------------
 
-            card.anchoredPosition =
-                new Vector2(x, y);
+            card.anchoredPosition = new Vector2(x, y);
 
-            card.localRotation =
-                Quaternion.Euler(
-                    0f,
-                    0f,
-                    angle
-                );
+            card.localRotation = Quaternion.Euler(0f, 0f, angle);
 
-            card.localScale =
-                Vector3.one * scale;
+            card.localScale = Vector3.one * scale;
         }
     }
 
-// SPecial Layout for Commander
-        private void LayoutCommander()
+    // SPecial Layout for Commander
+    private void LayoutCommander()
     {
         if (transform.childCount == 0)
             return;
 
-        RectTransform card =
-            transform.GetChild(0) as RectTransform;
+        RectTransform card = transform.GetChild(0) as RectTransform;
 
         if (card == null)
             return;
@@ -211,13 +183,13 @@ public class HandLayout : MonoBehaviour
 
         card.localRotation = Quaternion.identity;
 
-        card.localScale =
-            Vector3.one * maximumScale;
+        card.localScale = Vector3.one * maximumScale;
     }
 
     private void OnRectTransformDimensionsChange()
     {
-        if (handRect != null) RefreshLayout();
+        if (handRect != null)
+            RefreshLayout();
     }
 
     private void Start()

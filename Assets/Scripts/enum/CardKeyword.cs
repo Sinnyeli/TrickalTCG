@@ -10,5 +10,5 @@ public enum CardKeyword
     Stealth,
     Endure,
     Shock,
-    FirstStrike
+    FirstStrike,
 }

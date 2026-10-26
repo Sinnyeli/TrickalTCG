@@ -18,13 +18,15 @@ public static class WebGLBuild
 
         Directory.CreateDirectory(OutputDirectory);
 
-        BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
-        {
-            scenes = scenes,
-            locationPathName = OutputDirectory,
-            target = BuildTarget.WebGL,
-            options = BuildOptions.None
-        });
+        BuildReport report = BuildPipeline.BuildPlayer(
+            new BuildPlayerOptions
+            {
+                scenes = scenes,
+                locationPathName = OutputDirectory,
+                target = BuildTarget.WebGL,
+                options = BuildOptions.None,
+            }
+        );
 
         if (report.summary.result != BuildResult.Succeeded)
             throw new BuildFailedException("WebGL build failed. Check the Editor log for details.");

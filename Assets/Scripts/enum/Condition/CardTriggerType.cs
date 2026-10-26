@@ -10,5 +10,5 @@ public enum CardTriggerType
     DamageDealt = 6,
     DamageTaken = 7,
     AttackStarted = 8,
-    SpellCast = 9
+    SpellCast = 9,
 }

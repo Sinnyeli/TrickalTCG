@@ -6,11 +6,9 @@ public class MatchSetup : MonoBehaviour
     [SerializeField]
     private DeckManager opponentDeckManager;
 
-
     [Header("AI Decks")]
     [SerializeField]
     private DeckData jubeeDeck;
-
 
     // =========================================================
     // SETUP OPPONENT
@@ -24,31 +22,25 @@ public class MatchSetup : MonoBehaviour
 
                 return SetupAI();
 
-
             case BattleOpponentType.RemotePlayer:
 
-                Debug.Log(
-                    "Remote player match selected."
-                );
+                Debug.Log("Remote player match selected.");
 
-                if (UnityRemoteMatch.Instance == null || opponentDeckManager == null) return false;
+                if (UnityRemoteMatch.Instance == null || opponentDeckManager == null)
+                    return false;
                 DeckData remote = UnityRemoteMatch.Instance.RemoteDeck;
-                if (remote == null) return false;
+                if (remote == null)
+                    return false;
                 opponentDeckManager.SetDeckData(remote);
                 return true;
 
-
             default:
 
-                Debug.LogError(
-                    "BattleSession has no valid " +
-                    "opponent type."
-                );
+                Debug.LogError("BattleSession has no valid " + "opponent type.");
 
                 return false;
         }
     }
-
 
     // =========================================================
     // SETUP AI
@@ -62,18 +54,13 @@ public class MatchSetup : MonoBehaviour
 
                 return SetupJubee();
 
-
             default:
 
-                Debug.LogError(
-                    $"Unknown AI type: " +
-                    $"{BattleSession.SelectedAI}"
-                );
+                Debug.LogError($"Unknown AI type: " + $"{BattleSession.SelectedAI}");
 
                 return false;
         }
     }
-
 
     // =========================================================
     // JUBEE
@@ -83,33 +70,21 @@ public class MatchSetup : MonoBehaviour
     {
         if (opponentDeckManager == null)
         {
-            Debug.LogError(
-                "MatchSetup has no " +
-                "Opponent DeckManager."
-            );
+            Debug.LogError("MatchSetup has no " + "Opponent DeckManager.");
 
             return false;
         }
-
 
         if (jubeeDeck == null)
         {
-            Debug.LogError(
-                "MatchSetup has no Jubee DeckData."
-            );
+            Debug.LogError("MatchSetup has no Jubee DeckData.");
 
             return false;
         }
 
+        opponentDeckManager.SetDeckData(jubeeDeck);
 
-        opponentDeckManager.SetDeckData(
-            jubeeDeck
-        );
-
-
-        Debug.Log(
-            "Opponent configured: Jubee AI"
-        );
+        Debug.Log("Opponent configured: Jubee AI");
 
         return true;
     }

@@ -8,13 +8,11 @@ public class CardTriggerCondition : TriggerCondition
 {
     [Header("Relationship")]
     [SerializeField]
-    private TriggerRelationship relationship =
-        TriggerRelationship.Any;
+    private TriggerRelationship relationship = TriggerRelationship.Any;
 
     [Header("Card Filter")]
     [SerializeField]
-    private EffectTargetFilter targetFilter =
-        EffectTargetFilter.None;
+    private EffectTargetFilter targetFilter = EffectTargetFilter.None;
 
     [SerializeField]
     private CardRace cardRace;
@@ -29,29 +27,25 @@ public class CardTriggerCondition : TriggerCondition
     [SerializeField]
     private bool excludeSelf;
 
-
     public override bool IsMet(
         RuntimeCard source,
         RuntimeCard triggerCard,
-        RuntimeModifier modifier)
+        RuntimeModifier modifier
+    )
     {
-        if (source == null ||
-            triggerCard == null)
+        if (source == null || triggerCard == null)
         {
             return false;
         }
-
 
         // =========================================
         // SELF
         // =========================================
 
-        if (excludeSelf &&
-            source == triggerCard)
+        if (excludeSelf && source == triggerCard)
         {
             return false;
         }
-
 
         // =========================================
         // RELATIONSHIP
@@ -61,26 +55,22 @@ public class CardTriggerCondition : TriggerCondition
         {
             case TriggerRelationship.Allied:
 
-                if (source.Owner !=
-                    triggerCard.Owner)
+                if (source.Owner != triggerCard.Owner)
                 {
                     return false;
                 }
 
                 break;
 
-
             case TriggerRelationship.Enemy:
 
-                if (source.Owner ==
-                    triggerCard.Owner)
+                if (source.Owner == triggerCard.Owner)
                 {
                     return false;
                 }
 
                 break;
         }
-
 
         // =========================================
         // CARD FILTER
@@ -92,39 +82,28 @@ public class CardTriggerCondition : TriggerCondition
 
                 return true;
 
-
             case EffectTargetFilter.SpecificCard:
 
-                return triggerCard.Data ==
-                       specificCard;
-
+                return triggerCard.Data == specificCard;
 
             case EffectTargetFilter.CardRace:
 
-                if (triggerCard.Data
-                    is MinionData minion)
+                if (triggerCard.Data is MinionData minion)
                 {
-                    return minion.cardRace ==
-                           cardRace;
+                    return minion.cardRace == cardRace;
                 }
 
                 return false;
 
-
             case EffectTargetFilter.CardType:
 
-                return MatchesCardType(
-                    triggerCard.Data
-                );
+                return MatchesCardType(triggerCard.Data);
         }
-
 
         return false;
     }
 
-
-    private bool MatchesCardType(
-        CardData data)
+    private bool MatchesCardType(CardData data)
     {
         if (data == null)
             return false;

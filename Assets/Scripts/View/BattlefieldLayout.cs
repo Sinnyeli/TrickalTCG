@@ -3,28 +3,32 @@ using UnityEngine;
 public class BattlefieldLayout : MonoBehaviour
 {
     [Header("Spacing")]
-    [SerializeField] private float spacing = 180f;
+    [SerializeField]
+    private float spacing = 180f;
 
     [Header("Position")]
-    [SerializeField] private float centerY = 0f;
+    [SerializeField]
+    private float centerY = 0f;
 
     [Header("Scale")]
-    [SerializeField] private float minScale = 0.7f;
-    [SerializeField] private float maxScale = 1f;
+    [SerializeField]
+    private float minScale = 0.7f;
 
-   
+    [SerializeField]
+    private float maxScale = 1f;
 
     [Header("Rotation")]
-    [SerializeField] private float maxRotation = 0f;
+    [SerializeField]
+    private float maxRotation = 0f;
 
     private RectTransform battlefieldRect;
 
     private void Awake()
     {
-        battlefieldRect =
-            GetComponent<RectTransform>();
+        battlefieldRect = GetComponent<RectTransform>();
     }
-        private void Start()
+
+    private void Start()
     {
         RefreshLayout();
     }
@@ -45,9 +49,7 @@ public class BattlefieldLayout : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            RectTransform minion =
-                transform.GetChild(i)
-                as RectTransform;
+            RectTransform minion = transform.GetChild(i) as RectTransform;
 
             if (minion == null)
                 continue;
@@ -56,57 +58,36 @@ public class BattlefieldLayout : MonoBehaviour
             // Center the entire group
             // -----------------------------------------
 
-            float centerIndex =
-                (count - 1) / 2f;
+            float centerIndex = (count - 1) / 2f;
 
-            float offset =
-                i - centerIndex;
+            float offset = i - centerIndex;
 
-            float x =
-                offset * spacing * scale;
+            float x = offset * spacing * scale;
 
             // -----------------------------------------
             // Rotation
             // -----------------------------------------
 
-            float normalizedPosition =
-                count == 1
-                    ? 0.5f
-                    : (float)i / (count - 1);
+            float normalizedPosition = count == 1 ? 0.5f : (float)i / (count - 1);
 
-            float rotation =
-                Mathf.Lerp(
-                    maxRotation,
-                    -maxRotation,
-                    normalizedPosition
-                );
-
+            float rotation = Mathf.Lerp(maxRotation, -maxRotation, normalizedPosition);
 
             // -----------------------------------------
             // Apply
             // -----------------------------------------
 
-            minion.anchoredPosition =
-                new Vector2(
-                    x,
-                    centerY
-                );
+            minion.anchoredPosition = new Vector2(x, centerY);
 
-            minion.localRotation =
-                Quaternion.Euler(
-                    0f,
-                    0f,
-                    rotation
-                );
+            minion.localRotation = Quaternion.Euler(0f, 0f, rotation);
 
-            minion.localScale =
-                Vector3.one * scale;
+            minion.localScale = Vector3.one * scale;
         }
     }
 
     private void OnRectTransformDimensionsChange()
     {
-        if (battlefieldRect != null) RefreshLayout();
+        if (battlefieldRect != null)
+            RefreshLayout();
     }
 
     private float CalculateScale(int count)
@@ -116,17 +97,19 @@ public class BattlefieldLayout : MonoBehaviour
         foreach (Transform child in transform)
         {
             RectTransform card = child as RectTransform;
-            if (card == null) continue;
+            if (card == null)
+                continue;
             cardWidth = Mathf.Max(cardWidth, card.rect.width);
             cardHeight = Mathf.Max(cardHeight, card.rect.height);
         }
 
         float requiredWidth = cardWidth + spacing * Mathf.Max(0, count - 1);
-        float widthScale = requiredWidth > 0f
-            ? battlefieldRect.rect.width / requiredWidth : maxScale;
-        float heightScale = cardHeight > 0f
-            ? Mathf.Max(0f, battlefieldRect.rect.height - 2f * Mathf.Abs(centerY)) / cardHeight
-            : maxScale;
+        float widthScale =
+            requiredWidth > 0f ? battlefieldRect.rect.width / requiredWidth : maxScale;
+        float heightScale =
+            cardHeight > 0f
+                ? Mathf.Max(0f, battlefieldRect.rect.height - 2f * Mathf.Abs(centerY)) / cardHeight
+                : maxScale;
         return Mathf.Clamp(Mathf.Min(widthScale, heightScale), minScale, maxScale);
     }
 
@@ -141,7 +124,8 @@ public class BattlefieldLayout : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             RectTransform card = transform.GetChild(i) as RectTransform;
-            if (card != null && mouseX < card.anchoredPosition.x) return i;
+            if (card != null && mouseX < card.anchoredPosition.x)
+                return i;
         }
 
         return count;

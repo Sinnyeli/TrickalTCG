@@ -2,74 +2,48 @@ public enum BattleOpponentType
 {
     None,
     AI,
-    RemotePlayer
+    RemotePlayer,
 }
-
 
 public enum AIType
 {
     None,
-    Jubee
+    Jubee,
 }
-
 
 public static class BattleSession
 {
-    public static string PlayerDeckID
-    {
-        get;
-        private set;
-    }
+    public static string PlayerDeckID { get; private set; }
 
-    public static BattleOpponentType OpponentType
-    {
-        get;
-        private set;
-    }
+    public static BattleOpponentType OpponentType { get; private set; }
 
-    public static AIType SelectedAI
-    {
-        get;
-        private set;
-    }
-
+    public static AIType SelectedAI { get; private set; }
 
     // =========================================================
     // CREATE AI MATCH
     // =========================================================
 
-    public static void CreateAIMatch(
-        string playerDeckID,
-        AIType aiType)
+    public static void CreateAIMatch(string playerDeckID, AIType aiType)
     {
-        PlayerDeckID =
-            playerDeckID;
+        PlayerDeckID = playerDeckID;
 
-        OpponentType =
-            BattleOpponentType.AI;
+        OpponentType = BattleOpponentType.AI;
 
-        SelectedAI =
-            aiType;
+        SelectedAI = aiType;
     }
-
 
     // =========================================================
     // CREATE ONLINE MATCH
     // =========================================================
 
-    public static void CreateOnlineMatch(
-        string playerDeckID)
+    public static void CreateOnlineMatch(string playerDeckID)
     {
-        PlayerDeckID =
-            playerDeckID;
+        PlayerDeckID = playerDeckID;
 
-        OpponentType =
-            BattleOpponentType.RemotePlayer;
+        OpponentType = BattleOpponentType.RemotePlayer;
 
-        SelectedAI =
-            AIType.None;
+        SelectedAI = AIType.None;
     }
-
 
     // =========================================================
     // CLEAR
@@ -79,13 +53,10 @@ public static class BattleSession
     {
         PlayerDeckID = null;
 
-        OpponentType =
-            BattleOpponentType.None;
+        OpponentType = BattleOpponentType.None;
 
-        SelectedAI =
-            AIType.None;
+        SelectedAI = AIType.None;
     }
-
 
     // =========================================================
     // VALID
@@ -93,8 +64,6 @@ public static class BattleSession
 
     public static bool HasPlayerDeck()
     {
-        return !string.IsNullOrEmpty(
-            PlayerDeckID
-        );
+        return !string.IsNullOrEmpty(PlayerDeckID);
     }
 }

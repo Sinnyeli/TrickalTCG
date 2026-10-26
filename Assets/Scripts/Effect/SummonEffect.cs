@@ -1,10 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(
-    fileName = "SummonEffect",
-    menuName = "Card Effects/Summon"
-)]
+[CreateAssetMenu(fileName = "SummonEffect", menuName = "Card Effects/Summon")]
 public class SummonEffect : CardEffect
 {
     // =========================================================
@@ -12,21 +9,14 @@ public class SummonEffect : CardEffect
     // =========================================================
 
     [Header("Summon Location")]
-    [Tooltip(
-        "Determines which side of the battlefield " +
-        "receives the summoned creatures."
-    )]
+    [Tooltip("Determines which side of the battlefield " + "receives the summoned creatures.")]
     [SerializeField]
-    private SummonSideMode summonSideMode =
-        SummonSideMode.SourceOwner;
-
+    private SummonSideMode summonSideMode = SummonSideMode.SourceOwner;
 
     [Header("Summon Pool")]
     [Tooltip("Cards that can be summoned by this effect.")]
     [SerializeField]
-    private List<CardData> summonPool =
-        new List<CardData>();
-
+    private List<CardData> summonPool = new List<CardData>();
 
     [Header("Summon Settings")]
     [Tooltip("How many creatures are summoned.")]
@@ -35,50 +25,37 @@ public class SummonEffect : CardEffect
     private int amount = 1;
 
     [Tooltip(
-        "Selected cycles through the list until Amount is reached. " +
-        "Random chooses randomly from the list."
+        "Selected cycles through the list until Amount is reached. "
+            + "Random chooses randomly from the list."
     )]
     [SerializeField]
-    private SummonSelectionType selectionType =
-        SummonSelectionType.Selected;
-
+    private SummonSelectionType selectionType = SummonSelectionType.Selected;
 
     // =========================================================
     // RESOLVE
     // =========================================================
 
-    public override void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets)
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
         if (source == null)
             return;
 
-        if (summonPool == null ||
-            summonPool.Count == 0)
+        if (summonPool == null || summonPool.Count == 0)
         {
             Debug.LogWarning(
-                $"{source.Data.cardName}: " +
-                $"SummonEffect has no cards in its summon pool."
+                $"{source.Data.cardName}: " + $"SummonEffect has no cards in its summon pool."
             );
 
             return;
         }
 
-        PlayerSide summonSide =
-            GetSummonSide(source);
+        PlayerSide summonSide = GetSummonSide(source);
 
-        BattlefieldManager battlefield =
-            GameManager.Instance.GetBattlefield(
-                summonSide
-            );
+        BattlefieldManager battlefield = GameManager.Instance.GetBattlefield(summonSide);
 
         if (battlefield == null)
         {
-            Debug.LogWarning(
-                $"Could not find battlefield for " +
-                $"{summonSide}."
-            );
+            Debug.LogWarning($"Could not find battlefield for " + $"{summonSide}.");
 
             return;
         }
@@ -87,27 +64,17 @@ public class SummonEffect : CardEffect
         {
             case SummonSelectionType.Selected:
 
-                SummonSelected(
-                    source,
-                    battlefield,
-                    summonSide
-                );
+                SummonSelected(source, battlefield, summonSide);
 
                 break;
 
-
             case SummonSelectionType.Random:
 
-                SummonRandom(
-                    source,
-                    battlefield,
-                    summonSide
-                );
+                SummonRandom(source, battlefield, summonSide);
 
                 break;
         }
     }
-
 
     // =========================================================
     // SELECTED
@@ -116,24 +83,18 @@ public class SummonEffect : CardEffect
     private void SummonSelected(
         RuntimeCard source,
         BattlefieldManager battlefield,
-        PlayerSide summonSide)
+        PlayerSide summonSide
+    )
     {
         int summonCount = Mathf.Max(0, amount);
 
         for (int i = 0; i < summonCount; i++)
         {
-            CardData cardData =
-                summonPool[i % summonPool.Count];
+            CardData cardData = summonPool[i % summonPool.Count];
 
-            SummonCard(
-                source,
-                battlefield,
-                summonSide,
-                cardData
-            );
+            SummonCard(source, battlefield, summonSide, cardData);
         }
     }
-
 
     // =========================================================
     // RANDOM
@@ -142,28 +103,18 @@ public class SummonEffect : CardEffect
     private void SummonRandom(
         RuntimeCard source,
         BattlefieldManager battlefield,
-        PlayerSide summonSide)
+        PlayerSide summonSide
+    )
     {
         for (int i = 0; i < amount; i++)
         {
-            int randomIndex =
-                Random.Range(
-                    0,
-                    summonPool.Count
-                );
+            int randomIndex = Random.Range(0, summonPool.Count);
 
-            CardData selectedCard =
-                summonPool[randomIndex];
+            CardData selectedCard = summonPool[randomIndex];
 
-            SummonCard(
-                source,
-                battlefield,
-                summonSide,
-                selectedCard
-            );
+            SummonCard(source, battlefield, summonSide, selectedCard);
         }
     }
-
 
     // =========================================================
     // SUMMON CARD
@@ -173,7 +124,8 @@ public class SummonEffect : CardEffect
         RuntimeCard source,
         BattlefieldManager battlefield,
         PlayerSide summonSide,
-        CardData cardData)
+        CardData cardData
+    )
     {
         if (cardData == null)
             return;
@@ -183,19 +135,15 @@ public class SummonEffect : CardEffect
         if (!(cardData is MinionData))
         {
             Debug.LogWarning(
-                $"{cardData.cardName} cannot be summoned. " +
-                $"Only minions can be summoned."
+                $"{cardData.cardName} cannot be summoned. " + $"Only minions can be summoned."
             );
 
             return;
         }
 
-        RuntimeCard summonedCard =
-            new RuntimeCard(cardData);
+        RuntimeCard summonedCard = new RuntimeCard(cardData);
 
-        summonedCard.SetOwner(
-            summonSide
-        );
+        summonedCard.SetOwner(summonSide);
 
         /*
          * BattlefieldManager.PlayCard currently expects
@@ -204,39 +152,29 @@ public class SummonEffect : CardEffect
          * We can replace this later with a dedicated
          * BattlefieldManager.SummonCard method.
          */
-        summonedCard.ChangeZone(
-            CardZone.Hand
-        );
+        summonedCard.ChangeZone(CardZone.Hand);
 
-        bool summoned =
-            battlefield.PlayCard(
-                summonedCard
-            );
+        bool summoned = battlefield.PlayCard(summonedCard);
 
         if (!summoned)
         {
-            Debug.Log(
-                $"{source.Data.cardName} failed to summon " +
-                $"{cardData.cardName}."
-            );
+            Debug.Log($"{source.Data.cardName} failed to summon " + $"{cardData.cardName}.");
 
             return;
         }
 
         Debug.Log(
-            $"{source.Data.cardName} summoned " +
-            $"{cardData.cardName} onto " +
-            $"{summonSide}'s battlefield."
+            $"{source.Data.cardName} summoned "
+                + $"{cardData.cardName} onto "
+                + $"{summonSide}'s battlefield."
         );
     }
-
 
     // =========================================================
     // SUMMON SIDE
     // =========================================================
 
-    private PlayerSide GetSummonSide(
-        RuntimeCard source)
+    private PlayerSide GetSummonSide(RuntimeCard source)
     {
         switch (summonSideMode)
         {

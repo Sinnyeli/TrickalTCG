@@ -1,15 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(
-    fileName = "DestroyEffect",
-    menuName = "Card Effects/Destroy"
-)]
+[CreateAssetMenu(fileName = "DestroyEffect", menuName = "Card Effects/Destroy")]
 public class DestroyEffect : CardEffect
 {
-    public override void Resolve(
-        RuntimeCard source,
-        List<RuntimeCard> targets)
+    public override void Resolve(RuntimeCard source, List<RuntimeCard> targets)
     {
         if (source == null || targets == null)
             return;
@@ -22,16 +17,11 @@ public class DestroyEffect : CardEffect
             if (target.Zone != CardZone.Field)
                 continue;
 
-            Debug.Log(
-                $"{source.Data.cardName} destroys " +
-                $"{target.Data.cardName}."
-            );
+            Debug.Log($"{source.Data.cardName} destroys " + $"{target.Data.cardName}.");
 
             target.Kill();
 
-            GameManager.Instance
-                .CombatManager
-                .CheckDeath(target);
+            GameManager.Instance.CombatManager.CheckDeath(target);
         }
     }
 }

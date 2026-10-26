@@ -1,29 +1,28 @@
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-
-public class CardView : CardviewBase,
-    IPointerClickHandler,
-    IBeginDragHandler,
-    IDragHandler,
-    IEndDragHandler
+public class CardView
+    : CardviewBase,
+        IPointerClickHandler,
+        IBeginDragHandler,
+        IDragHandler,
+        IEndDragHandler
 {
-    
-
     private bool isDragging = false;
     public bool IsDragging => isDragging;
     private BattlefieldDropZone battlefieldDropZone;
     public RuntimeCard RuntimeCard => runtimeCard;
 
-
     private void Awake()
     {
         battlefieldDropZone = FindFirstObjectByType<BattlefieldDropZone>();
+        gameObject.AddComponent<ActionHighlight>().Condition = () =>
+            !isDragging && BattleFeedback.CanPlayNow(runtimeCard);
     }
-        
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (isDragging)
@@ -32,11 +31,11 @@ public class CardView : CardviewBase,
         if (runtimeCard == null)
             return;
 
-    // GameManager.Instance.HandManager.PlayCardFromHand(runtimeCard);
+        // GameManager.Instance.HandManager.PlayCardFromHand(runtimeCard);
     }
 
     //////////////////////////
-    // Temp Drag and Drop 
+    // Temp Drag and Drop
     /////////////////////////
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -57,152 +56,140 @@ public class CardView : CardviewBase,
     }
 
     public void OnEndDrag(PointerEventData eventData)
-{
-    isDragging = false;
-
-    if (runtimeCard == null)
     {
-        ReturnToHand();
-        return;
-    }
+        isDragging = false;
 
-    // =====================================================
-    // ARTIFACT → APOSTLE
-    // =====================================================
-
-    if (runtimeCard.Data is ArtifactData)
-    {
-        MinionView target =
-            GetMinionUnderPointer(eventData);
-
-        if (target != null)
+        if (runtimeCard == null)
         {
-            bool equipped =
-                target.TryEquipArtifact(runtimeCard);
-
-            if (equipped)
-                return;
+            ReturnToHand();
+            return;
         }
 
-        ReturnToHand();
-        return;
-    }
+        // =====================================================
+        // ARTIFACT → APOSTLE
+        // =====================================================
 
-// =====================================================
-// MANUAL TARGET SPELL
-// =====================================================
-
-if (runtimeCard.Data is SpellData spellData)
-{
-    bool canTargetUnit = false;
-    bool canTargetHero = false;
-
-    foreach (CardEffect effect in spellData.SpellEffects)
-    {
-        if (effect == null)
-            continue;
-
-        switch (effect.TargetType)
+        if (runtimeCard.Data is ArtifactData)
         {
-            case EffectTargetType.EnemyUnit:
-            case EffectTargetType.FriendlyUnit:
-            case EffectTargetType.AnyUnit:
-                canTargetUnit = true;
-                break;
+            MinionView target = GetMinionUnderPointer(eventData);
 
-            case EffectTargetType.EnemyHero:
-            case EffectTargetType.FriendlyHero:
-                canTargetHero = true;
-                break;
+            if (target != null)
+            {
+                bool equipped = target.TryEquipArtifact(runtimeCard);
 
-            case EffectTargetType.AnyTarget:
-            case EffectTargetType.EnemyTarget:
-                canTargetUnit = true;
-                canTargetHero = true;
-                break;
+                if (equipped)
+                    return;
+            }
+
+            ReturnToHand();
+            return;
         }
-    }
 
-    // =================================================
-    // TRY UNIT TARGET
-    // =================================================
+        // =====================================================
+        // MANUAL TARGET SPELL
+        // =====================================================
 
-    if (canTargetUnit)
-    {
-        MinionView targetView =
-            GetMinionUnderPointer(eventData);
-
-        if (targetView != null)
+        if (runtimeCard.Data is SpellData spellData)
         {
-            bool cast =
-                GameManager.Instance.HandManager
-                    .PlayTargetedSpellFromHand(
+            bool canTargetUnit = false;
+            bool canTargetHero = false;
+
+            foreach (CardEffect effect in spellData.SpellEffects)
+            {
+                if (effect == null)
+                    continue;
+
+                switch (effect.TargetType)
+                {
+                    case EffectTargetType.EnemyUnit:
+                    case EffectTargetType.FriendlyUnit:
+                    case EffectTargetType.AnyUnit:
+                        canTargetUnit = true;
+                        break;
+
+                    case EffectTargetType.EnemyHero:
+                    case EffectTargetType.FriendlyHero:
+                        canTargetHero = true;
+                        break;
+
+                    case EffectTargetType.AnyTarget:
+                    case EffectTargetType.EnemyTarget:
+                        canTargetUnit = true;
+                        canTargetHero = true;
+                        break;
+                }
+            }
+
+            // =================================================
+            // TRY UNIT TARGET
+            // =================================================
+
+            if (canTargetUnit)
+            {
+                MinionView targetView = GetMinionUnderPointer(eventData);
+
+                if (targetView != null)
+                {
+                    bool cast = GameManager.Instance.HandManager.PlayTargetedSpellFromHand(
                         runtimeCard,
                         targetView.RuntimeCard
                     );
 
-            if (cast)
-                return;
-        }
-    }
+                    if (cast)
+                        return;
+                }
+            }
 
-    // =================================================
-    // TRY HERO TARGET
-    // =================================================
+            // =================================================
+            // TRY HERO TARGET
+            // =================================================
 
-    if (canTargetHero)
-    {
-        PlayerView heroTarget =
-            GetPlayerUnderPointer(eventData);
+            if (canTargetHero)
+            {
+                PlayerView heroTarget = GetPlayerUnderPointer(eventData);
 
-        if (heroTarget != null)
-        {
-            bool cast =
-                GameManager.Instance.HandManager
-                    .PlayTargetedSpellFromHand(
+                if (heroTarget != null)
+                {
+                    bool cast = GameManager.Instance.HandManager.PlayTargetedSpellFromHand(
                         runtimeCard,
                         heroTarget
                     );
 
-            if (cast)
+                    if (cast)
+                        return;
+                }
+            }
+
+            // If this spell requires manual targeting,
+            // but no valid target was found, return it to hand.
+            if (canTargetUnit || canTargetHero)
+            {
+                ReturnToHand();
+                return;
+            }
+        }
+
+        // =====================================================
+        // NORMAL CARD → BATTLEFIELD
+        // =====================================================
+
+        bool droppedOnBattlefield =
+            battlefieldDropZone != null && battlefieldDropZone.IsPointerInside(eventData);
+
+        if (droppedOnBattlefield)
+        {
+            bool played = GameManager.Instance.HandManager.PlayCardFromHand(runtimeCard);
+
+            if (played)
                 return;
         }
-    }
 
-    // If this spell requires manual targeting,
-    // but no valid target was found, return it to hand.
-    if (canTargetUnit || canTargetHero)
-    {
         ReturnToHand();
-        return;
     }
-}
-
-// =====================================================
-// NORMAL CARD → BATTLEFIELD
-// =====================================================
-
-bool droppedOnBattlefield =
-    battlefieldDropZone != null &&
-    battlefieldDropZone.IsPointerInside(eventData);
-
-if (droppedOnBattlefield)
-{
-    bool played =
-        GameManager.Instance.HandManager
-            .PlayCardFromHand(runtimeCard);
-
-    if (played)
-        return;
-}
-
-    ReturnToHand();
-}
 
     private void ReturnToHand()
     {
-            HandManager handManager =
-            GameManager.Instance.HandManager;
+        HandManager handManager = GameManager.Instance.HandManager;
 
         if (runtimeCard.IsCommander)
         {
@@ -215,21 +202,15 @@ if (droppedOnBattlefield)
         RefreshLocalization();
     }
 
-    private MinionView GetMinionUnderPointer(
-    PointerEventData eventData)
+    private MinionView GetMinionUnderPointer(PointerEventData eventData)
     {
-        List<RaycastResult> results =
-            new List<RaycastResult>();
+        List<RaycastResult> results = new List<RaycastResult>();
 
-        EventSystem.current.RaycastAll(
-            eventData,
-            results
-        );
+        EventSystem.current.RaycastAll(eventData, results);
 
         foreach (RaycastResult result in results)
         {
-            MinionView minionView =
-                result.gameObject.GetComponentInParent<MinionView>();
+            MinionView minionView = result.gameObject.GetComponentInParent<MinionView>();
 
             if (minionView != null)
                 return minionView;
@@ -238,21 +219,15 @@ if (droppedOnBattlefield)
         return null;
     }
 
-    private PlayerView GetPlayerUnderPointer(
-        PointerEventData eventData)
+    private PlayerView GetPlayerUnderPointer(PointerEventData eventData)
     {
-        List<RaycastResult> results =
-            new List<RaycastResult>();
+        List<RaycastResult> results = new List<RaycastResult>();
 
-        EventSystem.current.RaycastAll(
-            eventData,
-            results
-        );
+        EventSystem.current.RaycastAll(eventData, results);
 
         foreach (RaycastResult result in results)
         {
-            PlayerView playerView =
-                result.gameObject.GetComponentInParent<PlayerView>();
+            PlayerView playerView = result.gameObject.GetComponentInParent<PlayerView>();
 
             if (playerView != null)
                 return playerView;
@@ -260,6 +235,7 @@ if (droppedOnBattlefield)
 
         return null;
     }
+
     private void RefreshLocalization()
     {
         if (runtimeCard == null)
@@ -269,15 +245,15 @@ if (droppedOnBattlefield)
         if (nameText != null)
             nameText.text = localization == null ? data.cardName : localization.GetCardName(data);
         if (descriptionText != null)
-            descriptionText.text = localization == null ? data.description : localization.GetCardText(data);
+            descriptionText.text =
+                localization == null ? data.description : localization.GetCardText(data);
     }
+
     private void OnEnable()
     {
         if (LocalizationManager.Instance != null)
         {
-            LocalizationManager.Instance
-                .OnLanguageChanged +=
-                RefreshLocalization;
+            LocalizationManager.Instance.OnLanguageChanged += RefreshLocalization;
         }
     }
 
@@ -285,10 +261,7 @@ if (droppedOnBattlefield)
     {
         if (LocalizationManager.Instance != null)
         {
-            LocalizationManager.Instance
-                .OnLanguageChanged -=
-                RefreshLocalization;
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshLocalization;
         }
     }
-
 }
