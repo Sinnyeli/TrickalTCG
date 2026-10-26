@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_MAYO
   cardName: Mayo
-  description: 'Battlecry: Create a random non-collectible merchandise Artifact.'
+  description: 'Battlecry: Create a random Artifact from Mayo''s collection.'
   manaCost: 3
   artwork: {fileID: 21300000, guid: 27c62a49e544d9372a5d13d7118937ac, type: 3}
   onDrawEffects: []

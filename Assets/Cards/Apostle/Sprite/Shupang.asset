@@ -14,9 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardID: A_SHUPANG
   cardName: Shupang
-  description: 'Battlecry: Draw 1 Card
-
-    At the end of turn, return to hand. '
+  description: 'Rush. Battlecry: Draw a card. At the end of your turn, return to hand.'
   manaCost: 3
   artwork: {fileID: 21300000, guid: 4a472666df2c58ce7bb144952f5e5600, type: 3}
   onDrawEffects: []

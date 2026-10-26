@@ -290,7 +290,7 @@ public static class CardInitializationBuilder
                 NumberEffect<DamageEffect>("FX_DamageAnyTarget1", EffectTargetType.AnyTarget, 1)
             );
             report.Add(
-                "Pending latest-design abilities: Mayo collectible pool; Polang Fairy aura; Joanne Fairy-enter trigger; Ricota enemy-death cooking; Ashur Bread-use Fireball; Shupang attack draw."
+                "Pending latest-design abilities: Joanne Fairy-enter trigger; Ricota enemy-death cooking."
             );
             report.Add(
                 "Cheap artifacts currently means collectible cost <= 2; center targeting chooses the left center on an even board. Review these provisional conventions."

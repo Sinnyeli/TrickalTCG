@@ -17,6 +17,9 @@ public static class FairyAbilityInitializer
         var karen = Require(cards, "A_KAREN");
         var erpin = Require(cards, "A_ERPIN");
         var mayo = Require(cards, "A_MAYO");
+        var polang = Require(cards, "A_POLANG");
+        var shupang = Require(cards, "A_SHUPANG");
+        var coolMayo = Require(cards, "A_CMAYO");
         var carrot = cards.SingleOrDefault(c => c.CardID == "M_CARROT");
         if (!(carrot is MonsterData))
             throw new InvalidOperationException("Initialize M_CARROT first.");
@@ -45,6 +48,22 @@ public static class FairyAbilityInitializer
         var merchandise = Make<MayoMerchandiseEffect>("FX_MayoCreateMerchandise");
         Edit(merchandise, s => Target(s, EffectTargetType.None));
         Edit(mayo, s => s.FindProperty("battlecry").objectReferenceValue = merchandise);
+        var aura = Make<PolangAuraEffect>("FX_PolangSpriteAura");
+        Edit(aura, s => Target(s, EffectTargetType.None));
+        Edit(polang, s => s.FindProperty("passive").objectReferenceValue = aura);
+        Edit(
+            shupang,
+            s =>
+            {
+                var list = s.FindProperty("keywords");
+                for (int i = 0; i < list.arraySize; i++)
+                    if (list.GetArrayElementAtIndex(i).enumValueIndex == (int)CardKeyword.Rush)
+                        return;
+                int index = list.arraySize++;
+                list.GetArrayElementAtIndex(index).enumValueIndex = (int)CardKeyword.Rush;
+            }
+        );
+        Edit(coolMayo, s => s.FindProperty("typeIcon").objectReferenceValue = polang.TypeIcon);
         var coco = Merchandise(
             cards,
             rows,
@@ -133,15 +152,27 @@ public static class FairyAbilityInitializer
         Text(
             mayo,
             rows,
-            "Battlecry: Create a random non-collectible merchandise Artifact.",
-            "등장: 무작위 수집품 1장을 생성합니다."
+            "Battlecry: Create a random Artifact from Mayo's collection.",
+            "등장: 마요의 수집품 중 무작위 아티팩트 1장을 생성합니다."
+        );
+        Text(
+            polang,
+            rows,
+            "Battlecry: Summon 3 Sprite Soldiers. Your other Sprites have +1/+1.",
+            "등장: 요정 병사 3명 소환. 다른 아군 요정은 +1/+1."
+        );
+        Text(
+            shupang,
+            rows,
+            "Rush. Battlecry: Draw a card. At the end of your turn, return to hand.",
+            "속공. 등장: 카드 1장 뽑기. 턴 종료: 패로 복귀."
         );
         var csv = new StringBuilder();
         foreach (var row in rows)
             CardDataCsv.AppendRow(csv, row);
         File.WriteAllText(CardDataCsv.LocalizationPath, csv.ToString(), new UTF8Encoding(true));
         AssetDatabase.SaveAssets();
-        Debug.Log("Karen/Erpin/Mayo configured, including all three merchandise references.");
+        Debug.Log("Karen/Erpin/Mayo/Polang/Shupang configured, including all three merchandise references.");
     }
 
     private static ApostleData Require(List<CardData> cards, string id)
