@@ -113,7 +113,7 @@ public class DeckListCardView : MonoBehaviour
             manaCostText.text = cardData.manaCost.ToString();
 
         if (artworkImage != null)
-            artworkImage.sprite = cardData.artwork;
+            artworkImage.sprite = cardData.DisplayArtwork;
         RefreshLocalization();
     }
 

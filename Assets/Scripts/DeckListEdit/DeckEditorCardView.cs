@@ -75,7 +75,7 @@ public class DeckEditorCardView
             nameText.text = cardData.cardName;
 
         if (artworkImage != null)
-            artworkImage.sprite = cardData.artwork;
+            artworkImage.sprite = cardData.DisplayArtwork;
 
         if (manaCostText != null)
             manaCostText.text = cardData.manaCost.ToString();

@@ -21,6 +21,7 @@ public class EscapeMenu : MonoBehaviour
         Main,
         Icons,
         Settings,
+        Credits,
     }
 
     private Page current;
@@ -136,6 +137,9 @@ public class EscapeMenu : MonoBehaviour
             case Page.Settings:
                 BuildSettings();
                 break;
+            case Page.Credits:
+                BuildCredits();
+                break;
             default:
                 BuildMain();
                 break;
@@ -145,30 +149,90 @@ public class EscapeMenu : MonoBehaviour
     private float PanelHeight =>
         current == Page.Icons ? 680
         : current == Page.Settings ? 600
-        : 400;
+        : current == Page.Credits ? 640
+        : CanQuitApplication ? 530
+        : 465;
 
     private string Title =>
         current == Page.Icons ? "Choose Player Icon"
         : current == Page.Settings ? "Settings"
+        : current == Page.Credits ? "Credits"
         : "Menu";
+
+    // A browser tab can't be closed by the game, so Quit Game is left out of WebGL builds.
+    private static bool CanQuitApplication => Application.platform != RuntimePlatform.WebGLPlayer;
 
     private void BuildMain()
     {
-        MenuButton("Settings", 95, () => Open(Page.Settings));
+        float y = PanelHeight / 2 - 110;
+        MenuButton("Settings", y, () => Open(Page.Settings));
+        y -= 65;
         if (InBattle)
         {
-            Button surrender = MenuButton("Surrender", 30, Surrender);
+            Button surrender = MenuButton("Surrender", y, Surrender);
             surrender.interactable =
                 GameManager.Instance != null && !GameManager.Instance.IsGameOver;
         }
         else
         {
-            Button icon = MenuButton("Player Icon", 30, () => Open(Page.Icons));
+            Button icon = MenuButton("Player Icon", y, () => Open(Page.Icons));
             icon.interactable =
                 LocalAccountSession.IsLoggedIn && catalog != null && catalog.icons.Length > 0;
         }
-        MenuButton("Quit to Login", -35, Quit);
-        MenuButton("Close", -100, Close);
+        y -= 65;
+        MenuButton("Credits", y, () => Open(Page.Credits));
+        y -= 65;
+        MenuButton("Quit to Login", y, Quit);
+        if (CanQuitApplication)
+        {
+            y -= 65;
+            MenuButton("Quit Game", y, QuitGame);
+        }
+        y -= 65;
+        MenuButton("Close", y, Close);
+    }
+
+    private void BuildCredits()
+    {
+        TextMeshProUGUI body = Text(
+            panel,
+            Korean ? CreditsKorean : CreditsEnglish,
+            new Vector2(0, 30),
+            new Vector2(460, 440),
+            19
+        );
+        body.alignment = TextAlignmentOptions.Top;
+        body.enableWordWrapping = true;
+        MenuButton("Back", -250, () => Open(Page.Main));
+    }
+
+    private const string CreditsEnglish =
+        "<b>Trickal TCG</b>\n"
+        + "A free, unofficial fan game.\n\n"
+        + "Trickal RE:VIVE and its characters, names and artwork belong to Epid Games. "
+        + "This game is not affiliated with or endorsed by Epid Games.\n\n"
+        + "<b>Made by</b>\nSinneli\n\n"
+        + "<b>Fonts</b>\nONE Mobile POP (ONE store)\nNoto Sans KR (SIL Open Font License)\n\n"
+        + "<b>Engine</b>\nUnity";
+
+    private const string CreditsKorean =
+        "<b>트릭컬 TCG</b>\n"
+        + "무료 비공식 팬 게임입니다.\n\n"
+        + "트릭컬 RE:VIVE와 그 캐릭터, 이름, 일러스트의 권리는 에피드게임즈에 있습니다. "
+        + "이 게임은 에피드게임즈와 관련이 없으며 공식 승인을 받지 않았습니다.\n\n"
+        + "<b>제작</b>\nSinneli\n\n"
+        + "<b>글꼴</b>\nONE 모바일 POP (원스토어)\nNoto Sans KR (SIL Open Font License)\n\n"
+        + "<b>엔진</b>\nUnity";
+
+    private void QuitGame()
+    {
+        if (InBattle && GameManager.Instance != null && !GameManager.Instance.IsGameOver)
+            BattleActions.Submit(PlayerSide.Player, BattleActionKind.Surrender);
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     private void BuildSettings()
@@ -418,6 +482,10 @@ public class EscapeMenu : MonoBehaviour
                 return "항복";
             case "Quit to Login":
                 return "로그인 화면으로";
+            case "Quit Game":
+                return "게임 종료";
+            case "Credits":
+                return "크레딧";
             case "Close":
                 return "닫기";
             case "Previous":
