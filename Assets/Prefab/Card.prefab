@@ -451,7 +451,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5868742332946140290
 RectTransform:
   m_ObjectHideFlags: 0
@@ -869,7 +869,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5770154618276027567
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1035,6 +1035,8 @@ MonoBehaviour:
   healthText: {fileID: 3246118748991911803}
   raceImage: {fileID: 1453364510362493362}
   typeText: {fileID: 2045455795384918710}
+  attackBadge: {fileID: 4298188018847750044}
+  healthBadge: {fileID: 1695532256758584124}
 --- !u!1 &7811190230848344745
 GameObject:
   m_ObjectHideFlags: 0

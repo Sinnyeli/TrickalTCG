@@ -29,6 +29,16 @@ public class DeckEditorCardView
     [SerializeField]
     private TMP_Text healthText;
 
+    // Same orb and shield badges as the battle card and minion; hidden for spells and artifacts.
+    [SerializeField]
+    private GameObject attackBadge;
+
+    [SerializeField]
+    private GameObject healthBadge;
+
+    [SerializeField]
+    private Image raceImage;
+
     private CardData cardData;
     private DeckEditorManager deckEditor;
 
@@ -227,11 +237,10 @@ public class DeckEditorCardView
 
     private void RefreshStats()
     {
-        if (attackText != null)
-            attackText.gameObject.SetActive(false);
+        SetStatsVisible(false);
 
-        if (healthText != null)
-            healthText.gameObject.SetActive(false);
+        if (raceImage != null)
+            raceImage.gameObject.SetActive(false);
 
         // =========================================
         // APOSTLE
@@ -239,16 +248,14 @@ public class DeckEditorCardView
 
         if (cardData is ApostleData apostle)
         {
-            if (attackText != null)
-            {
-                attackText.gameObject.SetActive(true);
-                attackText.text = apostle.attack.ToString();
-            }
+            SetStatsVisible(true);
+            attackText.text = apostle.attack.ToString();
+            healthText.text = apostle.health.ToString();
 
-            if (healthText != null)
+            if (raceImage != null)
             {
-                healthText.gameObject.SetActive(true);
-                healthText.text = apostle.health.ToString();
+                raceImage.gameObject.SetActive(true);
+                raceImage.sprite = apostle.TypeIcon;
             }
 
             return;
@@ -260,18 +267,25 @@ public class DeckEditorCardView
 
         if (cardData is MonsterData monster)
         {
-            if (attackText != null)
-            {
-                attackText.gameObject.SetActive(true);
-                attackText.text = monster.attack.ToString();
-            }
-
-            if (healthText != null)
-            {
-                healthText.gameObject.SetActive(true);
-                healthText.text = monster.health.ToString();
-            }
+            SetStatsVisible(true);
+            attackText.text = monster.attack.ToString();
+            healthText.text = monster.health.ToString();
         }
+    }
+
+    private void SetStatsVisible(bool visible)
+    {
+        if (attackText != null)
+            attackText.gameObject.SetActive(visible);
+
+        if (healthText != null)
+            healthText.gameObject.SetActive(visible);
+
+        if (attackBadge != null)
+            attackBadge.SetActive(visible);
+
+        if (healthBadge != null)
+            healthBadge.SetActive(visible);
     }
 
     // =========================================================

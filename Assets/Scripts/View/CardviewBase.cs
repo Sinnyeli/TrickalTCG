@@ -15,6 +15,10 @@ public abstract class CardviewBase : MonoBehaviour
     public Image raceImage;
     public TMP_Text typeText;
 
+    // Orb and shield behind attack and health, matching the minion; hidden for spells and artifacts.
+    public GameObject attackBadge;
+    public GameObject healthBadge;
+
     public RuntimeCard runtimeCard;
     private HandManager handManager;
 
@@ -41,11 +45,13 @@ public abstract class CardviewBase : MonoBehaviour
         healthText.gameObject.SetActive(false);
         raceImage.gameObject.SetActive(false);
         typeText.gameObject.SetActive(false);
+        SetBadgesVisible(false);
 
         if (data is MonsterData monster)
         {
             attackText.gameObject.SetActive(true);
             healthText.gameObject.SetActive(true);
+            SetBadgesVisible(true);
 
             attackText.text = monster.attack.ToString();
             healthText.text = monster.health.ToString();
@@ -56,11 +62,21 @@ public abstract class CardviewBase : MonoBehaviour
             attackText.gameObject.SetActive(true);
             healthText.gameObject.SetActive(true);
             raceImage.gameObject.SetActive(true);
+            SetBadgesVisible(true);
 
             attackText.text = apostle.attack.ToString();
             healthText.text = apostle.health.ToString();
             raceImage.sprite = apostle.TypeIcon;
         }
+    }
+
+    private void SetBadgesVisible(bool visible)
+    {
+        if (attackBadge != null)
+            attackBadge.SetActive(visible);
+
+        if (healthBadge != null)
+            healthBadge.SetActive(visible);
     }
 
     public void RefreshCardView()
