@@ -27,13 +27,21 @@ public class GameAudio : MonoBehaviour
     {
         if (instance != null || !Application.isPlaying)
             return instance;
-        instance = new GameObject("Game Audio").AddComponent<GameAudio>();
-        DontDestroyOnLoad(instance.gameObject);
+        // Awake registers the instance, so anything it calls back into Get() finds it
+        // instead of creating another GameAudio (which recursed until Unity crashed).
+        new GameObject("Game Audio").AddComponent<GameAudio>();
         return instance;
     }
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+        DontDestroyOnLoad(gameObject);
         music = CreateSource(loop: true);
         effects = CreateSource(loop: false);
         ApplyVolumes();
@@ -44,22 +52,28 @@ public class GameAudio : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (instance != this)
+            return;
         GameSettings.Changed -= ApplyVolumes;
         SceneManager.sceneLoaded -= SceneLoaded;
     }
 
     public static void PlaySfx(AudioClip clip, float volumeScale = 1f)
     {
+        if (clip == null)
+            return;
         GameAudio audio = Get();
-        if (clip != null && audio != null)
+        if (audio != null)
             audio.effects.PlayOneShot(clip, volumeScale);
     }
 
     // Keeps the current track playing when it is asked for again (for example, between menu scenes).
     public static void PlayMusic(AudioClip clip, bool loop = true)
     {
+        if (clip == null)
+            return;
         GameAudio audio = Get();
-        if (clip == null || audio == null || (audio.music.clip == clip && audio.music.isPlaying))
+        if (audio == null || (audio.music.clip == clip && audio.music.isPlaying))
             return;
         audio.music.clip = clip;
         audio.music.loop = loop;
